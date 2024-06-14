@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "173533741874",
+    "project_id": "playhub-e2ca5",
+    "storage_bucket": "playhub-e2ca5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173533741874:android:ea9076ac3afebb7f338d2b",
+        "android_client_info": {
+          "package_name": "com.example.playhub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBucFIn5ArTyXAlPfTlIKQdRal3dfFXwcY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
