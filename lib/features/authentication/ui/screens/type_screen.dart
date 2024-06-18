@@ -32,7 +32,7 @@ class TypeScreen extends StatelessWidget {
             left: 0,
             right: 0,
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   color: AppColors.white,
                   borderRadius:
                       BorderRadius.vertical(top: Radius.circular(40))),
@@ -47,7 +47,7 @@ class TypeScreen extends StatelessWidget {
                         img: "assets/images/football.png",
                         backgroundColor: AppColors.green1,
                         onTap: (){
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegisterScreen(type: UserType.player,)));
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RegisterScreen(type: UserType.player,)));
                         },
                       ),
                       CustomCardUser(
@@ -55,7 +55,7 @@ class TypeScreen extends StatelessWidget {
                         img: "assets/images/coach.png",
                         backgroundColor: AppColors.green2,
                         onTap: (){
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegisterScreen(type: UserType.trainer,)));
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RegisterScreen(type: UserType.trainer,)));
 
                         },
                       ),
@@ -67,26 +67,26 @@ class TypeScreen extends StatelessWidget {
                     img: "assets/images/playground.png",
                     backgroundColor: AppColors.green3,
                     onTap: (){
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegisterScreen(type: UserType.playgroundOwner,)));
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RegisterScreen(type: UserType.playgroundOwner,)));
                     },
 
                   ),
                   30.verticalSpace,
                   RichText(
                       text: TextSpan(
-                        style: TextStyle(color: AppColors.black),
+                        style: const TextStyle(color: AppColors.black),
                     children: [
-                      TextSpan(text:"Do you already have an account? ",
+                      const TextSpan(text:"Do you already have an account? ",
                       ),
                       TextSpan(
                           text: "Login",
-                          style: TextStyle(color: AppColors.green),
+                          style: const TextStyle(color: AppColors.green),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => LoginScreen()));
+                                      builder: (context) => const LoginScreen()));
                             }),
                     ],
                   )),

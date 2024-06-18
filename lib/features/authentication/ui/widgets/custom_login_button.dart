@@ -6,7 +6,7 @@ class LoginButton extends StatelessWidget {
   final String text;
   final List<Color> gradiantColor;
   final List<Color> tapedGradiantColor;
-  LoginButton({required this.onTap, required this.text, required this.gradiantColor, required this.tapedGradiantColor});
+  LoginButton({super.key, required this.onTap, required this.text, required this.gradiantColor, required this.tapedGradiantColor});
 
   void _onTapDown(TapDownDetails details) {
     _isPressed.value = true;
@@ -31,7 +31,7 @@ class LoginButton extends StatelessWidget {
         valueListenable: _isPressed,
         builder: (context, isPressed, child) {
           return AnimatedContainer(
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: isPressed ? tapedGradiantColor: gradiantColor,
@@ -41,7 +41,7 @@ class LoginButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(30.0),
               boxShadow: [
                 if (isPressed)
-                  BoxShadow(
+                  const BoxShadow(
                     color: Colors.black26,
                     blurRadius: 10.0,
                     offset: Offset(0, 4),
@@ -49,11 +49,11 @@ class LoginButton extends StatelessWidget {
               ],
             ),
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 13.0, horizontal: 40.0),
+              padding: const EdgeInsets.symmetric(vertical: 13.0, horizontal: 40.0),
               child: Center(
                 child: Text(
                   text,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 22.0,
                     fontWeight: FontWeight.bold,

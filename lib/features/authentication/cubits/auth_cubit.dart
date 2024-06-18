@@ -30,8 +30,13 @@ class AuthCubit extends Cubit<AuthStates>{
     confirmPassword=value;
   }
 
+    Future<User?> getCurrentUser() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    return auth.currentUser;
+  }
+
   Future<void> registeration({required UserType type}) async {
-   var user=UserModel(fullName:name, email:email, phoneNumber:phone, password:password, type:type, city:null, region:null);
+   var user=UserModel(fullName:name, email:email, phoneNumber:phone, password:password, type:type, city:null, region:null, image: null);
       try {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: email??"",

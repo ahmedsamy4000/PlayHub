@@ -23,7 +23,7 @@ class LoginScreen extends StatelessWidget {
                   text: "Don't have an account? ",
                   link: "Register",
                   onTap: (){
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TypeScreen()));
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const TypeScreen()));
                   },
                 ),
             ),

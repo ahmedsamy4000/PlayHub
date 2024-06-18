@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:playhub/cubit/app_cubit.dart';
-import 'package:playhub/ex.dart';
 import 'package:playhub/features/authentication/ui/screens/login_screen.dart';
 import 'package:playhub/features/authentication/ui/screens/register_screen.dart';
+import 'package:playhub/features/authentication/ui/screens/type_screen.dart';
+import 'package:playhub/features/profile/cubits/profile_cubit.dart';
+import 'package:playhub/features/profile/ui/screens/profile_screen.dart';
 import 'package:playhub/firebase_options.dart';
 
 void main() async {
@@ -21,19 +23,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) => AppCubit(),
+        create: (context) => ProfileCubit(),
         child: ScreenUtilInit(
-          designSize: Size(360,960),
+          designSize: const Size(360,960),
           minTextAdapt: true,
           splitScreenMode: true,
           builder: (_,child) {
             return MaterialApp(
+              debugShowCheckedModeBanner: false,
                 title: 'Flutter Demo',
                 theme: ThemeData(
                   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
                   useMaterial3: true,
                 ),
-                home: LoginScreen(),
+                home: const TypeScreen(),
             );
           }
         ));

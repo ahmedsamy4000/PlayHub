@@ -24,7 +24,7 @@ class RegisterScreen extends StatelessWidget {
                 text: "Do you have already an account? ",
                 link: "Login",
                 onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
 
                 },
               ),

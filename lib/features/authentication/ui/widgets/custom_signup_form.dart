@@ -6,6 +6,7 @@ import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/core/padding.dart';
 import 'package:playhub/core/validator.dart';
 import 'package:playhub/features/authentication/cubits/auth_cubit.dart';
+import 'package:playhub/features/profile/ui/screens/profile_screen.dart';
 
 import '../../../../core/app_colors.dart';
 import 'custom_login_button.dart';
@@ -31,7 +32,7 @@ class SignupForm extends StatelessWidget {
               BoxShadow(
                 color: Colors.black.withOpacity(0.2),
                 blurRadius: 10.0,
-                offset: Offset(3, 5),
+                offset: const Offset(3, 5),
               ),
             ]
         ),
@@ -44,7 +45,7 @@ class SignupForm extends StatelessWidget {
                 style:
                 TextStyle(color: AppColors.darkGray, fontSize: 30.sp),
               ),
-              CustomDivider(colorDivider: AppColors.darkGreen,),
+              const CustomDivider(colorDivider: AppColors.darkGreen,),
               30.verticalSpace,
               CustomTextFormField(
                 hint: "Enter your full name",
@@ -101,6 +102,7 @@ class SignupForm extends StatelessWidget {
                     print("outtttt");
                     if(formRegisterKey.currentState!.validate()){
                       cubit.registeration(type: type);
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
                     }
                   },
                   gradiantColor: AppColors.loginGradiantColorButton ,

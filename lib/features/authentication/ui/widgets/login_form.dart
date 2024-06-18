@@ -30,7 +30,7 @@ class CustomLoginForm extends StatelessWidget {
               BoxShadow(
                 color: Colors.black.withOpacity(0.2),
                 blurRadius: 10.0,
-                offset: Offset(3, 5),
+                offset: const Offset(3, 5),
               ),
             ]
         ),
@@ -43,7 +43,7 @@ class CustomLoginForm extends StatelessWidget {
                 style:
                 TextStyle(color: AppColors.darkGray, fontSize: 30.sp),
               ),
-              CustomDivider(colorDivider: AppColors.darkGreen,),
+              const CustomDivider(colorDivider: AppColors.darkGreen,),
               35.verticalSpace,
               CustomTextFormField(
                 hint: "Enter your email",
