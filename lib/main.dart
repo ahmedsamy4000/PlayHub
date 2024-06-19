@@ -4,16 +4,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:playhub/Layout/MainApp.dart';
 import 'package:playhub/cubit/app_cubit.dart';
+import 'package:playhub/ex.dart';
 import 'package:playhub/features/authentication/ui/screens/login_screen.dart';
 import 'package:playhub/features/authentication/ui/screens/register_screen.dart';
 import 'package:playhub/features/authentication/ui/screens/type_screen.dart';
 import 'package:playhub/features/profile/ui/screens/profile_screen.dart';
 import 'package:playhub/firebase_options.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MyApp());
+  initializeDateFormatting().then((_) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -23,7 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) => AppCubit(),
+        create: (context) => AppCubit()..fillWeek(),
         child: ScreenUtilInit(
             designSize: const Size(360, 960),
             minTextAdapt: true,

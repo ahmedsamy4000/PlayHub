@@ -108,6 +108,16 @@ class AppCubit extends Cubit<AppStates> {
     return playgroundOrders;
   }
 
+  List<DateTime> daysPerWeek = [];
+  void fillWeek() {
+    for (int i = 0; i < 7; i++) {
+      daysPerWeek.add(DateTime.now().add(Duration(days: i)));
+    }
+    daysPerWeek.forEach((element) {
+      print(element.toString());
+    });
+    emit(GetPlaygroundDataErrorState());
+  }
   // String? img;
   // Future<void> getPlayGrounds() async {
   //   QuerySnapshot snap =

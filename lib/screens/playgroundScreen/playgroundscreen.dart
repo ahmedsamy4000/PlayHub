@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/models/playgroundmodel.dart';
+import 'package:playhub/widgets/datestable.dart';
 
 class PlayGroundScreen extends StatefulWidget {
   final String? name;
@@ -27,12 +28,13 @@ class _PlayGroundScreenState extends State<PlayGroundScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Demo"),
+          title: Text(widget.name!),
+          centerTitle: true,
         ),
         body: BlocBuilder<AppCubit, AppStates>(builder: (context, state) {
           if (state is GetPlaygroundDataSuccessState) {
             return Center(
-              child: Text("Data Recieved"),
+              child: DatesPerWeek(),
             );
           } else {
             return Center(
