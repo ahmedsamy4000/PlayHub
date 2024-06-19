@@ -25,20 +25,20 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
         create: (context) => AppCubit(),
         child: ScreenUtilInit(
-          designSize: const Size(360,960),
-          minTextAdapt: true,
-          splitScreenMode: true,
-          builder: (_,child) {
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
+            designSize: const Size(360, 960),
+            minTextAdapt: true,
+            splitScreenMode: true,
+            builder: (_, child) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
                 title: 'Flutter Demo',
                 theme: ThemeData(
-                  colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+                  colorScheme:
+                      ColorScheme.fromSeed(seedColor: Colors.deepPurple),
                   useMaterial3: true,
                 ),
                 home: Main(),
-            );
-          }
-        ));
+              );
+            }));
   }
 }

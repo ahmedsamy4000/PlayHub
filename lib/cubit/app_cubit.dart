@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:playhub/cubit/states.dart';
+import 'package:playhub/models/ordermodel.dart';
+import 'package:playhub/models/playgroundmodel.dart';
 import 'package:playhub/screens/HomeScreen/home.dart';
 
 class AppCubit extends Cubit<AppStates> {
@@ -18,7 +20,7 @@ class AppCubit extends Cubit<AppStates> {
     Home(),
   ];
 
-  void changeScreenIdx(int idx){
+  void changeScreenIdx(int idx) {
     currentScreenIdx = idx;
     emit(AppChangeBottomNavBarScreen());
   }
@@ -34,7 +36,7 @@ class AppCubit extends Cubit<AppStates> {
       var userData;
 
       for (var doc in snapshot.docs) {
-        if (user.uid == doc.data()['Id']) userData =  doc.data();
+        if (user.uid == doc.data()['Id']) userData = doc.data();
       }
       log('$userData');
       return userData;
@@ -66,6 +68,44 @@ class AppCubit extends Cubit<AppStates> {
     } catch (e) {
       emit(ChangeProfilePhotoFailedState());
     }
+  }
+
+  PlaygroundModel? playground;
+  Future<void> getPlaygroundById(String id) async {
+    emit(GetPlaygroundDataLoadingState());
+    try {
+      DocumentSnapshot playgroundDoc = await FirebaseFirestore.instance
+          .collection('PlayGrounds')
+          .doc(id)
+          .get();
+      if (playgroundDoc.exists) {
+        QuerySnapshot ordersSnapshot =
+            await playgroundDoc.reference.collection('Orders').get();
+        playground = PlaygroundModel.fromJson(
+            playgroundDoc.data() as Map<String, dynamic>,
+            playgroundDoc.id,
+            ordersSnapshot.docs.toList());
+        playground!.orders = customizeOrders(playground!.orders);
+        // playground!.orders.forEach((element) {
+        //   print("time is ${element.time} and result is ${element.booked}");
+        // });
+        emit(GetPlaygroundDataSuccessState());
+      }
+    } catch (error) {
+      print(error);
+      emit(GetPlaygroundDataErrorState());
+    }
+  }
+
+  List<Ordermodel> customizeOrders(List<Ordermodel> orders) {
+    List<Ordermodel> playgroundOrders = [];
+    for (int i = 1; i <= 12; i++) {
+      Ordermodel? matchedOrder = orders.firstWhere((order) => order.time == i,
+          orElse: () => Ordermodel(
+              userName: "__", time: i, date: "19-2-2024", booked: false));
+      playgroundOrders.add(matchedOrder);
+    }
+    return playgroundOrders;
   }
 
   // String? img;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:playhub/screens/playgroundScreen/playgroundscreen.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -111,14 +112,15 @@ class Home extends StatelessWidget {
                       final name = playground['Name'];
                       final city = playground['City'];
                       final imageUrl = playground['Image'];
+                      final playgroundId = playground.id;
 
                       return GestureDetector(
                         onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => DetailsScreen()),
-                          // );
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PlayGroundScreen(
+                                      name, city, imageUrl, playgroundId)));
                         },
                         child: Container(
                           margin: EdgeInsets.only(bottom: 16),
