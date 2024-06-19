@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -12,116 +13,151 @@ class Home extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Welcome Reem Hatem'),
-            // User level, confidence
             const SizedBox(height: 16),
-            // Browse all courts banner
-            Container(
-              width: double.infinity,
-              height: 150,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                image: DecorationImage(
-                  image: AssetImage(
-                      'assets/browse_courts.jpg'), // Add your image here
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  'Browse all courts',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+            Text(
+              'Categories',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+            StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('Categories')
+                  .snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.hasData) {
+                  final playgrounds = snapshot.data!.docs;
+
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: playgrounds.map((playground) {
+                        final name = playground['Name'];
+                        final imageUrl = playground['Image'];
+
+                        return GestureDetector(
+                          onTap: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => DetailsScreen()),
+                            // );
+                          },
+                          child: Container(
+                            width: 200,
+                            margin: EdgeInsets.only(right: 16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                imageUrl != null
+                                    ? Image.network(imageUrl,
+                                        width: 200,
+                                        height: 150,
+                                        fit: BoxFit.cover)
+                                    : Icon(Icons.image, size: 150),
+                                SizedBox(height: 8),
+                                Text(
+                                  name,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  );
+                } else {
+                  return Center(child: Text('No data available'));
+                }
+              },
             ),
             SizedBox(height: 16),
-            // Buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildButton(context, 'Search Court', Icons.search),
-                _buildButton(context, 'Support', Icons.support),
-              ],
+            Text(
+              'Playgrounds',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildButton(context, 'My Bookings', Icons.book_online),
-                _buildButton(context, 'Notifications', Icons.notifications),
-              ],
+            StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('PlayGrounds')
+                  .snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.hasData) {
+                  final playgrounds = snapshot.data!.docs;
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: playgrounds.length,
+                    itemBuilder: (context, index) {
+                      final playground = playgrounds[index];
+                      final name = playground['Name'];
+                      final city = playground['City'];
+                      final imageUrl = playground['Image'];
+
+                      return GestureDetector(
+                        onTap: () {
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //       builder: (context) => DetailsScreen()),
+                          // );
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(bottom: 16),
+                          child: Row(
+                            children: [
+                              imageUrl != null
+                                  ? Image.network(imageUrl,
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit.cover)
+                                  : Icon(Icons.image, size: 100),
+                              SizedBox(width: 16),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    name,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(city),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  return Center(child: Text('No data available'));
+                }
+              },
             ),
-            SizedBox(height: 16),
-            // Favorites and upcoming matches
-            Row(
-              children: [
-                Icon(Icons.favorite_border),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  'My Favorites',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            SizedBox(height: 8),
-            Text('You have no favorites'),
-            SizedBox(height: 16),
-            Row(
-              children: [
-                Icon(Icons.sports_tennis),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  'My upcoming open matches',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            SizedBox(height: 8),
-            Text('You have no upcoming open matches'),
-            SizedBox(height: 16),
-            // Browse all courts button
-            // Center(
-            //   child: ElevatedButton.icon(
-            //     onPressed: () {},
-            //     icon: Icon(Icons.search),
-            //     label: Text('Browse all courts'),
-            //     style: ElevatedButton.styleFrom(
-            //       padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),
     );
   }
-}
-
-Widget _buildButton(BuildContext context, String label, IconData icon) {
-  return Expanded(
-    child: Container(
-      margin: EdgeInsets.symmetric(horizontal: 8),
-      child: ElevatedButton.icon(
-        onPressed: () {},
-        icon: Icon(icon, size: 24),
-        label: Text(label),
-        style: ElevatedButton.styleFrom(
-          // primary: Colors.white,
-          // onPrimary: Colors.black,
-          padding: EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          side: BorderSide(color: Colors.grey.shade300),
-        ),
-      ),
-    ),
-  );
 }

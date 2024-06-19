@@ -3,12 +3,25 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:playhub/cubit/states.dart';
+import 'package:playhub/screens/HomeScreen/home.dart';
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(InitialState());
+  static AppCubit get(context) => BlocProvider.of(context);
+
+  int currentScreenIdx = 0;
+  List<Widget> pages = [
+    Home(),
+  ];
+
+  void changeScreenIdx(int idx){
+    currentScreenIdx = idx;
+    emit(AppChangeBottomNavBarScreen());
+  }
 
   File? selectedImage;
 
