@@ -7,97 +7,115 @@ import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/features/authentication/cubits/auth_states.dart';
 import 'package:playhub/features/authentication/data/user_model.dart';
 
-class AuthCubit extends Cubit<AuthStates>{
-  AuthCubit():super(AuthInitialState());
+class AuthCubit extends Cubit<AuthStates> {
+  AuthCubit() : super(AuthInitialState());
   String? name;
   String? email;
   String? phone;
   String? password;
   String? confirmPassword;
- void setName (String? value){
-   name=value;
- }
-  void setEmail (String? value){
-    email=value;
-  }
-  void setPhone (String? value){
-    phone=value;
-  }
-  void setPassword (String? value){
-    password=value;
-  }
-  void setConfirmPassword (String? value){
-    confirmPassword=value;
+  void setName(String? value) {
+    name = value;
   }
 
-    Future<User?> getCurrentUser() async {
+  void setEmail(String? value) {
+    email = value;
+  }
+
+  void setPhone(String? value) {
+    phone = value;
+  }
+
+  void setPassword(String? value) {
+    password = value;
+  }
+
+  void setConfirmPassword(String? value) {
+    confirmPassword = value;
+  }
+
+  Future<User?> getCurrentUser() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     return auth.currentUser;
   }
 
   Future<void> registeration({required UserType type}) async {
-   var user=UserModel(fullName:name, email:email, phoneNumber:phone, password:password, type:type, city:null, region:null, image: null);
-      try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: email??"",
-          password: password??"",
-        ).then((UserCredential value){
-          FirebaseFirestore.instance.collection('Users').add(user.toJson()).then((DocumentReference docRef) {
-            log('DocumentSnapshot added with ID: ${docRef.id}');
-          }).catchError((error) {
-            log('Error adding document: $error');
-          });
+    try {
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+        email: email ?? "",
+        password: password ?? "",
+      )
+          .then((UserCredential value) {
+        var user = UserModel(
+            id: value.user?.uid,
+            fullName: name,
+            email: email,
+            phoneNumber: phone,
+            password: password,
+            type: type,
+            city: null,
+            region: null,
+            image: null);
+        FirebaseFirestore.instance
+            .collection('Users')
+            .add(user.toJson())
+            .then((DocumentReference docRef) {
+          log('DocumentSnapshot added with ID: ${docRef.id}');
+        }).catchError((error) {
+          log('Error adding document: $error');
         });
-        /*Fluttertoast.showToast(
+      });
+      /*Fluttertoast.showToast(
           msg: "Successfully registered!",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.green,
           textColor: Colors.white,
         );*/
-        /*Navigator.pushReplacement(
+      /*Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Login()),
         );*/
-      } on FirebaseAuthException catch (e) {
-          log(e.message!);
-        /*Fluttertoast.showToast(
+    } on FirebaseAuthException catch (e) {
+      log(e.message!);
+      /*Fluttertoast.showToast(
           msg: e.code,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.red,
           textColor: Colors.white,
         );*/
-      }
-
+    }
   }
-  Future<void> login() async {
-      try {
-        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email??"",
-          password: password??"",
-        );
-        print("Doneeeeeeeee");
-        // Fluttertoast.showToast(
-        //   msg: "Successfully logged in!",
-        //   toastLength: Toast.LENGTH_SHORT,
-        //   gravity: ToastGravity.BOTTOM,
-        //   backgroundColor: Colors.green,
-        //   textColor: Colors.white,
-        // );
-        // Navigator.pushReplacement(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => HomeScreen()),
-        // );
-      } on FirebaseAuthException catch (e) {
-        // Fluttertoast.showToast(
-        //   msg: e.code,
-        //   toastLength: Toast.LENGTH_SHORT,
-        //   gravity: ToastGravity.BOTTOM,
-        //   backgroundColor: Colors.red,
-        //   textColor: Colors.white,
-        // );
-      }
 
+  Future<void> login() async {
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email ?? "",
+        password: password ?? "",
+      );
+      print("Doneeeeeeeee");
+      // Fluttertoast.showToast(
+      //   msg: "Successfully logged in!",
+      //   toastLength: Toast.LENGTH_SHORT,
+      //   gravity: ToastGravity.BOTTOM,
+      //   backgroundColor: Colors.green,
+      //   textColor: Colors.white,
+      // );
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => HomeScreen()),
+      // );
+    } on FirebaseAuthException catch (e) {
+      // Fluttertoast.showToast(
+      //   msg: e.code,
+      //   toastLength: Toast.LENGTH_SHORT,
+      //   gravity: ToastGravity.BOTTOM,
+      //   backgroundColor: Colors.red,
+      //   textColor: Colors.white,
+      // );
+    }
   }
 }

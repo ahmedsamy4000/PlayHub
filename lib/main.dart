@@ -6,7 +6,6 @@ import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/features/authentication/ui/screens/login_screen.dart';
 import 'package:playhub/features/authentication/ui/screens/register_screen.dart';
 import 'package:playhub/features/authentication/ui/screens/type_screen.dart';
-import 'package:playhub/features/profile/cubits/profile_cubit.dart';
 import 'package:playhub/features/profile/ui/screens/profile_screen.dart';
 import 'package:playhub/firebase_options.dart';
 
@@ -23,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) => ProfileCubit(),
+        create: (context) => AppCubit(),
         child: ScreenUtilInit(
           designSize: const Size(360,960),
           minTextAdapt: true,

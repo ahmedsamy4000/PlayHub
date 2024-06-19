@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/padding.dart';
+import 'package:playhub/features/profile/ui/screens/profile_screen.dart';
 
 import '../../../../core/validator.dart';
 import '../../cubits/auth_cubit.dart';
@@ -70,6 +71,7 @@ class CustomLoginForm extends StatelessWidget {
                   onTap: (){
                     if(loginFormKey.currentState!.validate()){
                       cubit.login();
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
                     }
                   },
                   gradiantColor: AppColors.loginGradiantColorButton ,

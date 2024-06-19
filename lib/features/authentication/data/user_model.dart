@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import '../../../core/enums/type_enum.dart';
 
-
 UserModel welcomeFromJson(String str) => UserModel.fromJson(json.decode(str));
 
 String welcomeToJson(UserModel data) => json.encode(data.toJson());
 
-class UserModel{
+class UserModel {
+  final String? id;
   final String? fullName;
   final String? email;
   final String? phoneNumber;
@@ -17,7 +17,8 @@ class UserModel{
   final String? region;
   final String? image;
   UserModel(
-      {this.fullName,
+      {this.id,
+      this.fullName,
       this.email,
       this.phoneNumber,
       this.password,
@@ -27,24 +28,28 @@ class UserModel{
       this.image});
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-    fullName:json["Name"],
-    email:json["Email"],
-    phoneNumber:json["PhoneNumber"],
-    password:json["Password"],
-    type:json["Type"],
-    city:json["City"],
-    region:json["Region"],
-    image: json["image"]
-  );
+      id: json["Id"],
+      fullName: json["Name"],
+      email: json["Email"],
+      phoneNumber: json["PhoneNumber"],
+      password: json["Password"],
+      type: json["Type"],
+      city: json["City"],
+      region: json["Region"],
+      image: json["image"]);
 
   Map<String, dynamic> toJson() => {
-    "Name":fullName,
-    "Email":email,
-    "PhoneNumber":phoneNumber,
-    "Type":type==UserType.trainer?"Trainer":type==UserType.player?"Player":"Owner",
-    "City":city,
-    "Region":region,
-    "Image": image,
-  };
-
+        "Id": id,
+        "Name": fullName,
+        "Email": email,
+        "PhoneNumber": phoneNumber,
+        "Type": type == UserType.trainer
+            ? "Trainer"
+            : type == UserType.player
+                ? "Player"
+                : "Owner",
+        "City": city,
+        "Region": region,
+        "Image": image,
+      };
 }
