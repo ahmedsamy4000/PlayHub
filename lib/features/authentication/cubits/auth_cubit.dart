@@ -2,10 +2,15 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/features/authentication/cubits/auth_states.dart';
 import 'package:playhub/features/authentication/data/user_model.dart';
+
+import '../../profile/ui/screens/profile_screen.dart';
 
 class AuthCubit extends Cubit<AuthStates> {
   AuthCubit() : super(AuthInitialState());
@@ -39,7 +44,7 @@ class AuthCubit extends Cubit<AuthStates> {
     return auth.currentUser;
   }
 
-  Future<void> registeration({required UserType type}) async {
+  Future<void> registeration({required UserType type,required BuildContext context}) async {
     try {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
@@ -66,56 +71,52 @@ class AuthCubit extends Cubit<AuthStates> {
           log('Error adding document: $error');
         });
       });
-      /*Fluttertoast.showToast(
+      Fluttertoast.showToast(
           msg: "Successfully registered!",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-        );*/
-      /*Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Login()),
-        );*/
+          backgroundColor: AppColors.green,
+          textColor: AppColors.white,
+        );
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+
     } on FirebaseAuthException catch (e) {
       log(e.message!);
-      /*Fluttertoast.showToast(
+      Fluttertoast.showToast(
           msg: e.code,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-        );*/
+          backgroundColor: AppColors.red,
+          textColor: AppColors.white,
+        );
     }
   }
 
-  Future<void> login() async {
+  Future<void> login({required BuildContext context}) async {
     try {
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email ?? "",
         password: password ?? "",
       );
-      print("Doneeeeeeeee");
-      // Fluttertoast.showToast(
-      //   msg: "Successfully logged in!",
-      //   toastLength: Toast.LENGTH_SHORT,
-      //   gravity: ToastGravity.BOTTOM,
-      //   backgroundColor: Colors.green,
-      //   textColor: Colors.white,
-      // );
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => HomeScreen()),
-      // );
+      log("Doneeeeeeeee");
+      Fluttertoast.showToast(
+        msg: "Successfully logged in!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: AppColors.green,
+        textColor: AppColors.white,
+      );
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+
     } on FirebaseAuthException catch (e) {
-      // Fluttertoast.showToast(
-      //   msg: e.code,
-      //   toastLength: Toast.LENGTH_SHORT,
-      //   gravity: ToastGravity.BOTTOM,
-      //   backgroundColor: Colors.red,
-      //   textColor: Colors.white,
-      // );
+      Fluttertoast.showToast(
+        msg: e.code,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: AppColors.red,
+        textColor: AppColors.white,
+      );
     }
   }
 }

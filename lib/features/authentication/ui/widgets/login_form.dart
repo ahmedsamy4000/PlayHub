@@ -6,6 +6,7 @@ import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/padding.dart';
 import 'package:playhub/features/profile/ui/screens/profile_screen.dart';
 
+import '../../../../common/fade_in_slide.dart';
 import '../../../../core/validator.dart';
 import '../../cubits/auth_cubit.dart';
 import 'custom_login_button.dart';
@@ -39,44 +40,55 @@ class CustomLoginForm extends StatelessWidget {
           key: loginFormKey,
           child: Column(
             children: [
-              Text(
-                "Welcome",
-                style:
-                TextStyle(color: AppColors.darkGray, fontSize: 30.sp),
+              FadeInSlide(
+                duration: 0.5,
+                child: Text(
+                  "Welcome",
+                  style:
+                  TextStyle(color: AppColors.darkGray, fontSize: 30.sp),
+                ),
               ),
               const CustomDivider(colorDivider: AppColors.darkGreen,),
               35.verticalSpace,
-              CustomTextFormField(
-                hint: "Enter your email",
-                validator: Validator.validateEmail,
-                keyboardType: TextInputType.emailAddress,
-                onChanged: (value){
-                  cubit.setEmail(value);
-                },
+              FadeInSlide(
+                duration: 0.6,
+                child: CustomTextFormField(
+                  hint: "Enter your email",
+                  validator: Validator.validateEmail,
+                  keyboardType: TextInputType.emailAddress,
+                  onChanged: (value){
+                    cubit.setEmail(value);
+                  },
+                ),
               ),
               35.verticalSpace,
-              CustomTextFormField(
-                hint: "Enter your password",
-                validator: Validator.validatePassword,
-                keyboardType: TextInputType.text,
-                onChanged: (value){
-                  cubit.setPassword(value);
-                },
-                isPassword: true,
+              FadeInSlide(
+                duration: 0.7,
+                child: CustomTextFormField(
+                  hint: "Enter your password",
+                  validator: Validator.validatePassword,
+                  keyboardType: TextInputType.text,
+                  onChanged: (value){
+                    cubit.setPassword(value);
+                  },
+                  isPassword: true,
+                ),
               ),
               40.verticalSpace,
-              Padding(
-                padding: 23.padHorizontal,
-                child: LoginButton(
-                  onTap: (){
-                    if(loginFormKey.currentState!.validate()){
-                      cubit.login();
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
-                    }
-                  },
-                  gradiantColor: AppColors.loginGradiantColorButton ,
-                  tapedGradiantColor: AppColors.loginGradiantColorButtonTaped ,
-                  text: "Login",
+              FadeInSlide(
+                duration: 0.8,
+                child: Padding(
+                  padding: 23.padHorizontal,
+                  child: LoginButton(
+                    onTap: (){
+                      if(loginFormKey.currentState!.validate()){
+                        cubit.login(context: context);
+                      }
+                    },
+                    gradiantColor: AppColors.loginGradiantColorButton ,
+                    tapedGradiantColor: AppColors.loginGradiantColorButtonTaped ,
+                    text: "Login",
+                  ),
                 ),
               ),
               20.verticalSpace,

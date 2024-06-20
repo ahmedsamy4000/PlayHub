@@ -19,7 +19,7 @@ class LoginScreen extends StatelessWidget {
           children: [
             Positioned.fill(
                 child: CustomBackgroundLogin(
-                  flex: 2,
+                  flex: 3,
                   text: "Don't have an account? ",
                   link: "Register",
                   onTap: (){
@@ -28,7 +28,7 @@ class LoginScreen extends StatelessWidget {
                 ),
             ),
             Positioned(
-              top: 240.h,
+              top: 220.h,
                 left: 20.w,
                 right: 20.w,
                 child: CustomLoginForm()),

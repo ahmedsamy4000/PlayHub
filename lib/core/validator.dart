@@ -53,4 +53,17 @@ class Validator{
     return null;
   }
 
+  static String? validatePositiveNumber(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Number of players cannot be empty';
+    }
+    try{
+    if (int.parse(value) <= 0) {
+      return 'Number of players must be positive';
+    }}catch(e){
+      return 'Number of players must be numbers only';
+    }
+    return null;
+  }
+
 }
