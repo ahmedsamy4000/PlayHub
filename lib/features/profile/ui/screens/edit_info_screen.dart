@@ -87,6 +87,7 @@ class EditInformationScreen extends StatelessWidget {
                                           .then((_) {
                                         if (cubit.state
                                             is UpdateUserInfoSuccessState) {
+                                              cubit.getCurrentUserData();
                                           Navigator.pop(context);
                                         }
                                       });

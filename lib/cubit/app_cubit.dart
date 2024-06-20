@@ -13,6 +13,7 @@ import 'package:playhub/features/authentication/data/user_model.dart';
 import 'package:playhub/models/ordermodel.dart';
 import 'package:playhub/models/playgroundmodel.dart';
 import 'package:playhub/screens/HomeScreen/home.dart';
+import 'package:toastification/toastification.dart';
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(InitialState());
@@ -196,6 +197,80 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
+  Future<void> changePassword(BuildContext context,
+      {required String currentPassword, required String newPassword}) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        AuthCredential credential = EmailAuthProvider.credential(
+            email: user.email!, password: currentPassword);
+
+        await user.reauthenticateWithCredential(credential);
+
+        await user.updatePassword(newPassword);
+
+        toastification.show(
+          context: context,
+          type: ToastificationType.success,
+          style: ToastificationStyle.fillColored,
+          autoCloseDuration: const Duration(seconds: 5),
+          title: const Text('Password updated successfully'),
+          alignment: Alignment.topRight,
+          direction: TextDirection.ltr,
+          icon: const Icon(Icons.check_circle_outline),
+          primaryColor: Colors.green[700],
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x07000000),
+              offset: Offset(0, 16),
+              spreadRadius: 0,
+            )
+          ],
+          showProgressBar: false,
+          closeButtonShowType: CloseButtonShowType.onHover,
+          closeOnClick: false,
+          pauseOnHover: true,
+          dragToClose: true,
+        );
+        Navigator.pop(context);
+      } catch (e) {
+        toastification.show(
+          context: context,
+          type: ToastificationType.error,
+          style: ToastificationStyle.fillColored,
+          autoCloseDuration: const Duration(seconds: 5),
+          title: const Text('Current password is incorrect'),
+          alignment: Alignment.topRight,
+          direction: TextDirection.ltr,
+          icon: const Icon(Icons.error),
+          primaryColor: Colors.red[700],
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x07000000),
+              offset: Offset(0, 16),
+              spreadRadius: 0,
+            )
+          ],
+          showProgressBar: false,
+          closeButtonShowType: CloseButtonShowType.onHover,
+          closeOnClick: false,
+          pauseOnHover: true,
+          dragToClose: true,
+        );
+      }
+    }
+  }
+
   Future<void> logout() async {
     User? user = FirebaseAuth.instance.currentUser;
 
@@ -221,6 +296,54 @@ class AppCubit extends Cubit<AppStates> {
       }
     }
   }
+
+  List<Map<String, dynamic>> categoryPlaygrounds = [];
+  List<String> playgroundsId = [];
+  Future<void> getCategoryPlaygrounds(String categoryId) async {
+    emit(GetCategoryPlaygroundsLoadingState());
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance.collection('PlayGrounds').get();
+           List<Map<String, dynamic>> newCategoryPlaygrounds = [];
+           List<String> newPlaygroundsId = [];
+      for (var doc in snapshot.docs) {
+        if (categoryId == doc.data()['CategoryId']) {
+          newCategoryPlaygrounds.add(doc.data());
+          newPlaygroundsId.add(doc.id);
+        }
+        categoryPlaygrounds = newCategoryPlaygrounds;
+        playgroundsId = newPlaygroundsId;
+        log('$categoryPlaygrounds');
+        emit(GetCategoryPlaygroundsSuccessState());
+      }
+    } catch (e) {
+      log('$e');
+      emit(GetCategoryPlaygroundsErrorState());
+    }
+  }
+
+  // Map<String, Map<String, dynamic>> categoryPlaygrounds = {};
+
+  // Future<void> getCategoryPlaygrounds(String categoryId) async {
+  //   emit(GetCategoryPlaygroundsLoadingState());
+  //   try {
+  //     final snapshot =
+  //         await FirebaseFirestore.instance.collection('PlayGrounds').get();
+  //          Map<String, Map<String, dynamic>> newCategoryPlaygrounds = {};
+
+  //     for (var doc in snapshot.docs) {
+  //       if (categoryId == doc.data()['CategoryId']) {
+  //         newCategoryPlaygrounds[doc.id] = doc.data();
+  //       }
+  //       categoryPlaygrounds = newCategoryPlaygrounds;
+  //       log('$categoryPlaygrounds');
+  //       emit(GetCategoryPlaygroundsSuccessState());
+  //     }
+  //   } catch (e) {
+  //     log('$e');
+  //     emit(GetCategoryPlaygroundsErrorState());
+  //   }
+  // }
 
   PlaygroundModel? playground;
   Future<void> getPlaygroundById(String id) async {

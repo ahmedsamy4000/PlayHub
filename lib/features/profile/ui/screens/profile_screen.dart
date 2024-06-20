@@ -9,6 +9,7 @@ import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/features/authentication/ui/screens/login_screen.dart';
 import 'package:playhub/features/authentication/ui/screens/type_screen.dart';
+import 'package:playhub/features/profile/ui/screens/change_password_screen.dart';
 import 'package:playhub/features/profile/ui/screens/edit_info_screen.dart';
 import 'package:playhub/features/profile/ui/widgets/basketball.dart';
 import 'package:playhub/features/profile/ui/widgets/football.dart';
@@ -24,8 +25,11 @@ class ProfileScreen extends StatelessWidget {
     var cubit = BlocProvider.of<AppCubit>(context);
     cubit.getCurrentUserData();
     return BlocBuilder<AppCubit, AppStates>(
-      builder: (context, state) => state is GetCurrentUserLoadingState || state is ChangeProfilePhotoLoadingState
-          ? const Scaffold(backgroundColor: AppColors.white ,body: Center(child: CircularProgressIndicator()))
+      builder: (context, state) => state is GetCurrentUserLoadingState ||
+              state is ChangeProfilePhotoLoadingState
+          ? const Scaffold(
+              backgroundColor: AppColors.white,
+              body: Center(child: CircularProgressIndicator()))
           : DefaultTabController(
               length: 5,
               child: Scaffold(
@@ -55,8 +59,15 @@ class ProfileScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                const PopupMenuItem(
-                                  child: Text(
+                               PopupMenuItem(
+                                onTap: (){
+                                  Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const ChangePasswordScreen()));
+                                },
+                                  child: const Text(
                                     'Change Password',
                                     style: TextStyle(
                                       fontFamily: 'Open Sans',
@@ -99,14 +110,14 @@ class ProfileScreen extends StatelessWidget {
                                     ),
                                   ),
                                   onTap: () {
-                                    cubit.logout().then((_){
-                                      if(cubit.state is UserLogoutSuccessState)
-                                      {
+                                    cubit.logout().then((_) {
+                                      if (cubit.state
+                                          is UserLogoutSuccessState) {
                                         Navigator.pushReplacement(
-                                        context, 
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const LoginScreen()));
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const LoginScreen()));
                                       }
                                     });
                                   },
@@ -133,13 +144,13 @@ class ProfileScreen extends StatelessWidget {
                                         cubit.userData == null
                                             ? ''
                                             : '${cubit.userData['Name'][0]}',
-                                        style: const TextStyle( 
+                                        style: const TextStyle(
                                             fontSize: 40,
                                             color: AppColors.white),
                                       ),
                                     )
                                   : CircleAvatar(
-                                    backgroundColor: AppColors.darkGreen,
+                                      backgroundColor: AppColors.darkGreen,
                                       backgroundImage:
                                           NetworkImage(cubit.userData['Image']),
                                       radius: 50,
@@ -186,7 +197,11 @@ class ProfileScreen extends StatelessWidget {
                                                   ),
                                                   onTap: () {
                                                     cubit
-                                                        .pickImageFromGallery();
+                                                        .pickImageFromGallery()
+                                                        .then((_) {
+                                                      cubit
+                                                          .getCurrentUserData();
+                                                    });
                                                     Navigator.pop(context);
                                                   },
                                                 ),
@@ -204,7 +219,12 @@ class ProfileScreen extends StatelessWidget {
                                                     ),
                                                   ),
                                                   onTap: () {
-                                                    cubit.pickImageFromCamera();
+                                                    cubit
+                                                        .pickImageFromCamera()
+                                                        .then((_) {
+                                                      cubit
+                                                          .getCurrentUserData();
+                                                    });
                                                     Navigator.pop(context);
                                                   },
                                                 ),

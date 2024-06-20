@@ -43,3 +43,10 @@ class DeleteUserSuccessState extends AppStates {}
 class DeleteUserErrorState extends AppStates {}
 
 class UpdateUserInfoErrorState extends AppStates {}
+
+class GetCategoryPlaygroundsLoadingState extends AppStates {}
+
+class GetCategoryPlaygroundsSuccessState extends AppStates {}
+
+class GetCategoryPlaygroundsErrorState extends AppStates {}
+

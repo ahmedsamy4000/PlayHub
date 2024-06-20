@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:playhub/features/categories/ui/screens/category_screen.dart';
 import 'package:playhub/screens/playgroundScreen/playgroundscreen.dart';
 
 class Home extends StatelessWidget {
@@ -41,14 +42,15 @@ class Home extends StatelessWidget {
                       children: playgrounds.map((playground) {
                         final name = playground['Name'];
                         final imageUrl = playground['Image'];
+                        final categoryId = playground['Id'];
 
                         return GestureDetector(
                           onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => DetailsScreen()),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CategoryScreen(categoryId: categoryId, name: name)),
+                            );
                           },
                           child: Container(
                             width: 200,
