@@ -26,6 +26,7 @@ class _PlayGroundScreenState extends State<PlayGroundScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var cubit = BlocProvider.of<AppCubit>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.name!),
@@ -39,10 +40,36 @@ class _PlayGroundScreenState extends State<PlayGroundScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   DatesPerWeek(),
+                  // List.generate(12, (index) {
+                  //     return Container(
+                  //       margin: const EdgeInsets.symmetric(vertical: 8.0), // Margin around each button
+                  //       padding: const EdgeInsets.all(8.0), // Padding inside each button
+                  //       child: SizedBox(
+                  //         width: 200, // Set the width of the button
+                  //         height: 50, // Set the height of the button
+                  //         child: ElevatedButton(
+                  //           onPressed: () {
+                  //             // Button press action
+                  //           },
+                  //           style: ButtonStyle(
+                  //             backgroundColor: MaterialStateProperty.all(
+                  //               index == 0 ? Colors.red : Colors.white,
+                  //             ),
+                  //           ),
+                  //           child: Text('Name ${index + 1}'),
+                  //         ),
+                  //       ),
+                  //     );
+                  //   }),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(12, (index) {
-                      return Container(
+                    children: [
+                      ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: cubit.playground?.orders.length,
+                    itemBuilder: (context, index) {
+                          return Container(
                         margin: const EdgeInsets.symmetric(vertical: 8.0), // Margin around each button
                         padding: const EdgeInsets.all(8.0), // Padding inside each button
                         child: SizedBox(
@@ -53,15 +80,17 @@ class _PlayGroundScreenState extends State<PlayGroundScreen> {
                               // Button press action
                             },
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                index == 0 ? Colors.red : Colors.white,
+                              backgroundColor: WidgetStateProperty.all(
+                                 cubit.playground?.orders[index].booked == true ? Colors.red : Colors.white,
                               ),
                             ),
                             child: Text('Name ${index + 1}'),
                           ),
                         ),
                       );
-                    }),
+                      }
+                      )
+                    ]
                   ),
                 ],
               ),
