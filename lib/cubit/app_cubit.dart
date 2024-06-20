@@ -32,10 +32,11 @@ class AppCubit extends Cubit<AppStates> {
   TextEditingController searchController = TextEditingController();
   String searchQuery = "";
   String selectedCategory = "All";
-  String selectedCity = "";
+  String selectedCity = "All";
 
   void changeSearchQuery(String val) {
     searchQuery = val;
+    searchFunction();
     emit(AppChangeSearchQuery());
   }
 
@@ -45,8 +46,60 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   void changeSelectedCity(String city) {
+    // log("$city");
+
     selectedCity = city;
+    searchFunction();
+    // log("$selectedCity");
     emit(AppChangeSelectedCity()); // Emit a new state for city selection
+  }
+
+  var items = [];
+  List<T> getCommonElements<T>(List<T> list1, List<T> list2) {
+    // Convert lists to sets
+    Set<T> set1 = list1.toSet();
+    Set<T> set2 = list2.toSet();
+
+    // Find the intersection of the two sets
+    Set<T> intersection = set1.intersection(set2);
+
+    // Convert the result back to a list
+    return intersection.toList();
+  }
+
+  void searchFunction() async {
+    final snapshot =
+        await FirebaseFirestore.instance.collection('PlayGrounds').get();
+    var newItems = [];
+    var Names = [];
+    for (var doc in snapshot.docs) {
+      var itemData = doc.data() as Map<String, dynamic>;
+      if (itemData['Name'].toString().toLowerCase().contains(searchQuery.toLowerCase())) {
+        Names.add(itemData);
+      }
+      if (itemData['City'] == selectedCity) {
+        newItems.add(itemData);
+      }
+      
+
+      // log("$items");
+      // log("$matchesCity");
+      // log("$selectedCity");
+      // items = matchesCity
+    }
+    if(Names.length == 0){
+      items = newItems;
+    }
+    else if(newItems.length == 0){
+      items = Names;
+    }
+    else{
+      items = getCommonElements(newItems,Names);
+    }
+    
+      log("$items");
+
+    emit(AppChangeSearchFunction());
   }
 
   late var userData;

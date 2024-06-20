@@ -20,6 +20,8 @@ class AppChangeSelectedCategory extends AppStates {}
 
 class AppChangeSelectedCity extends AppStates {}
 
+class AppChangeSearchFunction extends AppStates {}
+
 class GetCurrentUserLoadingState extends AppStates {}
 
 class GetCurrentUserSuccessState extends AppStates {}
