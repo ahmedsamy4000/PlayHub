@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/screens/HomeScreen/home.dart';
+import 'package:playhub/screens/SearchScreen/search.dart';
 
 class Main extends StatelessWidget {
   @override
@@ -20,7 +21,10 @@ class Main extends StatelessWidget {
               ),
               actions: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Search()));
+                  },
                   icon: Icon(Icons.favorite),
                 )
               ],
@@ -28,7 +32,10 @@ class Main extends StatelessWidget {
             body: AppCubit.get(context)
                 .pages[AppCubit.get(context).currentScreenIdx],
             floatingActionButton: FloatingActionButton.extended(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Search()));
+              },
               icon: Icon(Icons.search),
               label: Text('Browse all courts'),
             ),

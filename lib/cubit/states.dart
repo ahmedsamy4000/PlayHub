@@ -13,3 +13,9 @@ class GetPlaygroundDataLoadingState extends AppStates {}
 class GetPlaygroundDataSuccessState extends AppStates {}
 
 class GetPlaygroundDataErrorState extends AppStates {}
+
+class AppChangeSearchQuery extends AppStates {}
+
+class AppChangeSelectedCategory extends AppStates {}
+
+class AppChangeSelectedCity extends AppStates {}

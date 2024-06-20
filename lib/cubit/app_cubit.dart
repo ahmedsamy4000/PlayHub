@@ -25,6 +25,24 @@ class AppCubit extends Cubit<AppStates> {
     emit(AppChangeBottomNavBarScreen());
   }
 
+  TextEditingController searchController = TextEditingController();
+  String searchQuery = "";
+  String selectedCategory = "All";
+  String selectedCity = "";
+
+  void changeSearchQuery(String val){
+    searchQuery = val;
+    emit(AppChangeSearchQuery());
+  }
+  void changeSelectedCategory(String val){
+    selectedCategory = val;
+    emit(AppChangeSelectedCategory());
+  }
+  void changeSelectedCity(String city) {
+    selectedCity = city;
+    emit(AppChangeSelectedCity());  // Emit a new state for city selection
+  }
+
   File? selectedImage;
 
   Future<Map<String, dynamic>?> getCurrentUserData() async {
