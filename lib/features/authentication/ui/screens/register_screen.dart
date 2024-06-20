@@ -16,27 +16,34 @@ class RegisterScreen extends StatelessWidget {
     return BlocProvider(
       create: (context)=>AuthCubit(),
       child: Scaffold(
-        body: Stack(
-          children: [
-            Positioned.fill(
-              child: CustomBackgroundLogin(
-                flex: 6,
-                text: "Do you have already an account? ",
-                link: "Login",
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+        resizeToAvoidBottomInset: true,
+        body: SingleChildScrollView(
+          child: Container(
+            height: 1000.h,
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: CustomBackgroundLogin(
+                    flex: 10,
+                    text: "Do you have already an account? ",
+                    link: "Login",
+                    onTap: (){
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
 
-                },
-              ),
-            ),
-            Positioned(
-                top: 70.h,
-                left: 20.w,
-                right: 20.w,
-                child: SignupForm(type: type,),
-            ),
+                    },
+                  ),
+                ),
+                Positioned(
+                    //bottom: 100.h,
+                    left: 20.w,
+                    right: 20.w,
+                    top:140.h,
+                    child: SignupForm(type: type,),
+                ),
 
-          ],
+              ],
+            ),
+          ),
         ),
       ),
     );

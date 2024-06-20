@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/features/authentication/ui/screens/register_screen.dart';
 
+import '../../../../common/fade_in_slide.dart';
 import '../../../../core/app_colors.dart';
 import '../widgets/custom_card_user.dart';
 import 'login_screen.dart';
@@ -42,34 +43,43 @@ class TypeScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      CustomCardUser(
-                        text: "Player",
-                        img: "assets/images/football.png",
-                        backgroundColor: AppColors.green1,
-                        onTap: (){
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RegisterScreen(type: UserType.player,)));
-                        },
+                      FadeInSlide(
+                        duration: 1.1,
+                        child: CustomCardUser(
+                          text: "Player",
+                          img: "assets/images/football.png",
+                          backgroundColor: AppColors.green1,
+                          onTap: (){
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RegisterScreen(type: UserType.player,)));
+                          },
+                        ),
                       ),
-                      CustomCardUser(
-                        text: "Trainer",
-                        img: "assets/images/coach.png",
-                        backgroundColor: AppColors.green2,
-                        onTap: (){
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RegisterScreen(type: UserType.trainer,)));
+                      FadeInSlide(
+                        duration: 1.2,
+                        child: CustomCardUser(
+                          text: "Trainer",
+                          img: "assets/images/coach.png",
+                          backgroundColor: AppColors.green2,
+                          onTap: (){
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RegisterScreen(type: UserType.trainer,)));
 
-                        },
+                          },
+                        ),
                       ),
                     ],
                   ),
                   30.verticalSpace,
-                  CustomCardUser(
-                    text: "Playground Owner",
-                    img: "assets/images/playground.png",
-                    backgroundColor: AppColors.green3,
-                    onTap: (){
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RegisterScreen(type: UserType.playgroundOwner,)));
-                    },
+                  FadeInSlide(
+                    duration: 1.3,
+                    child: CustomCardUser(
+                      text: "Playground Owner",
+                      img: "assets/images/playground.png",
+                      backgroundColor: AppColors.green3,
+                      onTap: (){
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RegisterScreen(type: UserType.playgroundOwner,)));
+                      },
 
+                    ),
                   ),
                   30.verticalSpace,
                   RichText(
