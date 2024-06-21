@@ -27,6 +27,10 @@ class EditInformationScreen extends StatelessWidget {
     emailController.text = cubit.userData['Email'];
     TextEditingController phoneController = TextEditingController();
     phoneController.text = cubit.userData['PhoneNumber'];
+    TextEditingController cityController = TextEditingController();
+    cityController.text = cubit.userData['City'] ?? '';
+    TextEditingController regionController = TextEditingController();
+    regionController.text = cubit.userData['Region'] ?? '';
     return Scaffold(
         backgroundColor: AppColors.white,
         appBar: AppBar(
@@ -73,6 +77,18 @@ class EditInformationScreen extends StatelessWidget {
                                     FilteringTextInputFormatter.digitsOnly,
                                 keyboardType: TextInputType.phone,
                               ),
+                              30.verticalSpace,
+                              CustomTextFormField(
+                                controller: cityController,
+                                label: 'City',
+                                keyboardType: TextInputType.text,
+                              ),
+                              30.verticalSpace,
+                              CustomTextFormField(
+                                controller: regionController,
+                                label: 'Region',
+                                keyboardType: TextInputType.text,
+                              ),
                               35.verticalSpace,
                               Padding(
                                 padding: 23.padHorizontal,
@@ -83,11 +99,13 @@ class EditInformationScreen extends StatelessWidget {
                                           .updateUserInfo(
                                               name: nameController.text,
                                               phone: phoneController.text,
-                                              email: emailController.text)
+                                              email: emailController.text,
+                                              city: cityController.text,
+                                              region: regionController.text)
                                           .then((_) {
                                         if (cubit.state
                                             is UpdateUserInfoSuccessState) {
-                                              cubit.getCurrentUserData();
+                                          cubit.getCurrentUserData();
                                           Navigator.pop(context);
                                         }
                                       });

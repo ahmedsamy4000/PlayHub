@@ -141,7 +141,9 @@ class AppCubit extends Cubit<AppStates> {
   Future updateUserInfo(
       {required String name,
       required String phone,
-      required String email}) async {
+      required String email,
+      String? city,
+      String? region}) async {
     emit(UpdateUserInfoLoadingState());
     try {
       await getCurrentUserData();
@@ -156,9 +158,9 @@ class AppCubit extends Cubit<AppStates> {
               : userData['Type'] == 'Trainer'
                   ? UserType.trainer
                   : UserType.playgroundOwner,
-          city: userData['City'],
+          city: city ?? userData['City'],
           image: userData['Image'],
-          region: userData['Region']);
+          region: region ?? userData['Region']);
       final snapshot =
           await FirebaseFirestore.instance.collection('Users').get();
       for (var doc in snapshot.docs) {

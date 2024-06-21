@@ -272,9 +272,11 @@ class ProfileScreen extends StatelessWidget {
                                           fontFamily: 'Open Sans',
                                           fontWeight: FontWeight.bold),
                                     ),
+                                    cubit.userData['City'] != null && cubit.userData['City'] != '' ? 
                                     const SizedBox(
                                       width: 10,
-                                    ),
+                                    ):Container(),
+                                    cubit.userData['City'] != null && cubit.userData['City'] != '' ? 
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 5.0),
@@ -284,20 +286,20 @@ class ProfileScreen extends StatelessWidget {
                                         width: 1,
                                         height: 20,
                                       ),
-                                    ),
+                                    ) : Container(),
+                                    cubit.userData['City'] != null && cubit.userData['City'] != '' ? 
                                     const SizedBox(
                                       width: 10,
-                                    ),
+                                    ) : Container(),
+                                    cubit.userData['City'] != null && cubit.userData['City'] != '' ? 
                                     Text(
-                                      cubit.userData == null
-                                          ? 'Cairo'
-                                          : '${cubit.userData['City'] ?? 'Cairo'}',
+                                      '${cubit.userData['City']}',
                                       style: const TextStyle(
                                           color: AppColors.darkGray,
                                           fontSize: 15,
                                           fontFamily: 'Open Sans',
                                           fontWeight: FontWeight.bold),
-                                    ),
+                                    ):Container(),
                                   ],
                                 ),
                               ),

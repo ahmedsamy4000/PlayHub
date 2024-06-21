@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:playhub/common/fade_in_slide.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/padding.dart';
 import 'package:playhub/core/validator.dart';
@@ -33,31 +34,43 @@ class ChangePasswordScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Form(
-                key: formKey,
-                child: Column(
-                  children: [
-                    CustomTextFormField(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            FadeInSlide(
+              duration: 0.5,
+              child: Image.asset('assets/images/password.jpg', width: 280.w, height: 280.h,)
+            ),
+            30.horizontalSpace,
+            Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  FadeInSlide(
+                    duration: 0.6,
+                    child: CustomTextFormField(
                       controller: oldPassController,
                       label: "Current Password",
                       validator: Validator.validatePassword,
                       keyboardType: TextInputType.text,
                       isPassword: true,
                     ),
-                    30.verticalSpace,
-                    CustomTextFormField(
+                  ),
+                  30.verticalSpace,
+                  FadeInSlide(
+                    duration: 0.7,
+                    child: CustomTextFormField(
                       controller: newPassController,
                       label: "New Password",
                       validator: Validator.validatePassword,
                       keyboardType: TextInputType.text,
                       isPassword: true,
                     ),
-                    30.verticalSpace,
-                    CustomTextFormField(
+                  ),
+                  30.verticalSpace,
+                  FadeInSlide(
+                    duration: 0.8,
+                    child: CustomTextFormField(
                       controller: confirmPassController,
                       label: "Confirm New Password",
                       validator: (value) {
@@ -75,9 +88,12 @@ class ChangePasswordScreen extends StatelessWidget {
                       keyboardType: TextInputType.text,
                       isPassword: true,
                     ),
-                    35.verticalSpace,
-                    Padding(
-                      padding: 23.padHorizontal,
+                  ),
+                  35.verticalSpace,
+                  Padding(
+                    padding: 23.padHorizontal,
+                    child: FadeInSlide(
+                      duration: 0.9,
                       child: LoginButton(
                         onTap: () {
                           if (formKey.currentState!.validate()) {
@@ -92,12 +108,12 @@ class ChangePasswordScreen extends StatelessWidget {
                         text: "Update Password",
                       ),
                     ),
-                    20.verticalSpace,
-                  ],
-                ),
+                  ),
+                  20.verticalSpace,
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
