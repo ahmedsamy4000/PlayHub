@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:playhub/Layout/MainApp.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/features/authentication/cubits/auth_states.dart';
@@ -107,7 +108,7 @@ class AuthCubit extends Cubit<AuthStates> {
         backgroundColor: AppColors.green,
         textColor: AppColors.white,
       );
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Main()));
 
     } on FirebaseAuthException catch (e) {
       Fluttertoast.showToast(

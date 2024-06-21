@@ -87,16 +87,12 @@ class ProfileScreen extends StatelessWidget {
                                     ),
                                   ),
                                   onTap: () {
-                                    cubit.deleteUser().then((_) {
-                                      if (cubit.state
-                                          is DeleteUserSuccessState) {
-                                        Navigator.pushReplacement(
+                                    cubit.deleteUser();
+                                    Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     const TypeScreen()));
-                                      }
-                                    });
                                   },
                                 ),
                                 PopupMenuItem(

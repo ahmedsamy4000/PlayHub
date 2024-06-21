@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
+import 'package:playhub/features/favorites/ui/screens/favorites_playgrounds_screen.dart';
 import 'package:playhub/screens/HomeScreen/home.dart';
 import 'package:playhub/screens/SearchScreen/search.dart';
 
@@ -23,7 +24,7 @@ class Main extends StatelessWidget {
                 IconButton(
                   onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Search()));
+                        MaterialPageRoute(builder: (context) => FavoritesPlaygroundsScreen()));
                   },
                   icon: Icon(Icons.favorite),
                 )

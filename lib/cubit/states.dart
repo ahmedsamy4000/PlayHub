@@ -52,3 +52,16 @@ class GetCategoryPlaygroundsSuccessState extends AppStates {}
 
 class GetCategoryPlaygroundsErrorState extends AppStates {}
 
+class AddPlaygroundToFavoritesSuccessState extends AppStates {}
+
+class AddPlaygroundToFavoritesErrorState extends AppStates {}
+
+class GetFavoritesPlaygroundsLoadingState extends AppStates {}
+
+class GetFavoritesPlaygroundsSuccessState extends AppStates {}
+
+class GetFavoritesPlaygroundsErrorState extends AppStates {}
+
+class DeletePlaygroundFromFavoritesSuccessState extends AppStates {}
+
+class DeletePlaygroundFromFavoritesErrorState extends AppStates {}

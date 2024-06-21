@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/features/categories/ui/screens/category_screen.dart';
+import 'package:playhub/models/playgroundmodel.dart';
 import 'package:playhub/screens/playgroundScreen/playgroundscreen.dart';
 
 class Home extends StatelessWidget {
@@ -8,6 +11,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var cubit = BlocProvider.of<AppCubit>(context);
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -49,7 +53,8 @@ class Home extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => CategoryScreen(categoryId: categoryId, name: name)),
+                                  builder: (context) => CategoryScreen(
+                                      categoryId: categoryId, name: name)),
                             );
                           },
                           child: Container(
@@ -148,6 +153,13 @@ class Home extends StatelessWidget {
                                   Text(city),
                                 ],
                               ),
+                              const Spacer(),
+                              IconButton(
+                                onPressed: () {
+                                  cubit.addPlaygroundToFavorites(playgroundId);
+                                },
+                                icon: const Icon(Icons.favorite),
+                              )
                             ],
                           ),
                         ),

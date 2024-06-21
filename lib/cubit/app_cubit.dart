@@ -6,7 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/features/authentication/data/user_model.dart';
@@ -74,30 +76,30 @@ class AppCubit extends Cubit<AppStates> {
     var Names = [];
     for (var doc in snapshot.docs) {
       var itemData = doc.data() as Map<String, dynamic>;
-      if (itemData['Name'].toString().toLowerCase().contains(searchQuery.toLowerCase())) {
+      if (itemData['Name']
+          .toString()
+          .toLowerCase()
+          .contains(searchQuery.toLowerCase())) {
         Names.add(itemData);
       }
       if (itemData['City'] == selectedCity) {
         newItems.add(itemData);
       }
-      
 
       // log("$items");
       // log("$matchesCity");
       // log("$selectedCity");
       // items = matchesCity
     }
-    if(Names.length == 0){
+    if (Names.length == 0) {
       items = newItems;
-    }
-    else if(newItems.length == 0){
+    } else if (newItems.length == 0) {
       items = Names;
+    } else {
+      items = getCommonElements(newItems, Names);
     }
-    else{
-      items = getCommonElements(newItems,Names);
-    }
-    
-      log("$items");
+
+    log("$items");
 
     emit(AppChangeSearchFunction());
   }
@@ -122,6 +124,18 @@ class AppCubit extends Cubit<AppStates> {
     } catch (e) {
       emit(GetCurrentUserErrorState());
     }
+  }
+
+  Future<String> getUserDocID() async {
+    await getCurrentUserData();
+    late var id;
+    final snapshot = await FirebaseFirestore.instance.collection('Users').get();
+    if (userData != null) {
+      for (var doc in snapshot.docs) {
+        if (userData['Id'] == doc.data()['Id']) id = doc.id;
+      }
+    }
+    return id;
   }
 
   Future updateUserInfo(
@@ -262,63 +276,21 @@ class AppCubit extends Cubit<AppStates> {
 
         await user.updatePassword(newPassword);
 
-        toastification.show(
-          context: context,
-          type: ToastificationType.success,
-          style: ToastificationStyle.fillColored,
-          autoCloseDuration: const Duration(seconds: 5),
-          title: const Text('Password updated successfully'),
-          alignment: Alignment.topRight,
-          direction: TextDirection.ltr,
-          icon: const Icon(Icons.check_circle_outline),
-          primaryColor: Colors.green[700],
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x07000000),
-              offset: Offset(0, 16),
-              spreadRadius: 0,
-            )
-          ],
-          showProgressBar: false,
-          closeButtonShowType: CloseButtonShowType.onHover,
-          closeOnClick: false,
-          pauseOnHover: true,
-          dragToClose: true,
+        Fluttertoast.showToast(
+          msg: 'Password updated successfully',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: AppColors.green,
+          textColor: AppColors.white,
         );
         Navigator.pop(context);
       } catch (e) {
-        toastification.show(
-          context: context,
-          type: ToastificationType.error,
-          style: ToastificationStyle.fillColored,
-          autoCloseDuration: const Duration(seconds: 5),
-          title: const Text('Current password is incorrect'),
-          alignment: Alignment.topRight,
-          direction: TextDirection.ltr,
-          icon: const Icon(Icons.error),
-          primaryColor: Colors.red[700],
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x07000000),
-              offset: Offset(0, 16),
-              spreadRadius: 0,
-            )
-          ],
-          showProgressBar: false,
-          closeButtonShowType: CloseButtonShowType.onHover,
-          closeOnClick: false,
-          pauseOnHover: true,
-          dragToClose: true,
+        Fluttertoast.showToast(
+          msg: 'Current password is incorrect',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: AppColors.red,
+          textColor: AppColors.white,
         );
       }
     }
@@ -339,10 +311,23 @@ class AppCubit extends Cubit<AppStates> {
 
   Future<void> deleteUser() async {
     User? user = FirebaseAuth.instance.currentUser;
+    getCurrentUserData();
+    late var uid;
 
     if (user != null) {
       try {
-        await user.delete();
+        if (userData != null) {
+          final snapshot =
+              await FirebaseFirestore.instance.collection('Users').get();
+          for (var doc in snapshot.docs) {
+            if (userData['Id'] == doc.data()['Id']) uid = doc.id;
+          }
+          await FirebaseFirestore.instance
+              .collection('Users')
+              .doc(uid)
+              .delete();
+          await user.delete();
+        }
         emit(DeleteUserSuccessState());
       } catch (e) {
         emit(DeleteUserErrorState());
@@ -357,8 +342,8 @@ class AppCubit extends Cubit<AppStates> {
     try {
       final snapshot =
           await FirebaseFirestore.instance.collection('PlayGrounds').get();
-           List<Map<String, dynamic>> newCategoryPlaygrounds = [];
-           List<String> newPlaygroundsId = [];
+      List<Map<String, dynamic>> newCategoryPlaygrounds = [];
+      List<String> newPlaygroundsId = [];
       for (var doc in snapshot.docs) {
         if (categoryId == doc.data()['CategoryId']) {
           newCategoryPlaygrounds.add(doc.data());
@@ -374,29 +359,6 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetCategoryPlaygroundsErrorState());
     }
   }
-
-  // Map<String, Map<String, dynamic>> categoryPlaygrounds = {};
-
-  // Future<void> getCategoryPlaygrounds(String categoryId) async {
-  //   emit(GetCategoryPlaygroundsLoadingState());
-  //   try {
-  //     final snapshot =
-  //         await FirebaseFirestore.instance.collection('PlayGrounds').get();
-  //          Map<String, Map<String, dynamic>> newCategoryPlaygrounds = {};
-
-  //     for (var doc in snapshot.docs) {
-  //       if (categoryId == doc.data()['CategoryId']) {
-  //         newCategoryPlaygrounds[doc.id] = doc.data();
-  //       }
-  //       categoryPlaygrounds = newCategoryPlaygrounds;
-  //       log('$categoryPlaygrounds');
-  //       emit(GetCategoryPlaygroundsSuccessState());
-  //     }
-  //   } catch (e) {
-  //     log('$e');
-  //     emit(GetCategoryPlaygroundsErrorState());
-  //   }
-  // }
 
   PlaygroundModel? playground;
   Future<void> getPlaygroundById(String id) async {
@@ -446,11 +408,87 @@ class AppCubit extends Cubit<AppStates> {
     });
     emit(GetPlaygroundDataErrorState());
   }
-  // String? img;
-  // Future<void> getPlayGrounds() async {
-  //   QuerySnapshot snap =
-  //       await FirebaseFirestore.instance.collection('PlayGrounds').get();
-  //   DocumentSnapshot docsnap = snap.docs.first;
-  //   img = docsnap.get('Image');
-  // }
+
+  Future<void> addPlaygroundToFavorites(String id) async {
+    try {
+      late var uid;
+      getCurrentUserData();
+      final fPlayground = await FirebaseFirestore.instance
+          .collection('PlayGrounds')
+          .doc(id)
+          .get();
+      final snapshot =
+          await FirebaseFirestore.instance.collection('Users').get();
+      for (var doc in snapshot.docs) {
+        if (userData['Id'] == doc.data()['Id']) uid = doc.id;
+      }
+      if (fPlayground.exists) {
+        Map<String, dynamic> favPlayground = fPlayground.data()!;
+        favPlayground.addAll({"Id": id});
+        await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(uid)
+            .collection('PFavorites')
+            .add(favPlayground);
+      }
+      emit(AddPlaygroundToFavoritesSuccessState());
+    } catch (e) {
+      log('$e');
+      emit(AddPlaygroundToFavoritesErrorState());
+    }
+  }
+
+  Future<void> deletePlaygroundFromFavorites(String id) async {
+    try {
+      var uid = await getUserDocID();
+      late var pid;
+      final snapshot = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(uid)
+          .collection('PFavorites')
+          .get();
+      for (var doc in snapshot.docs) {
+        if (id == doc.data()['Id']) pid = doc.id;
+      }
+      await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(uid)
+          .collection('PFavorites')
+          .doc(pid)
+          .delete();
+      getFavoritesPlaygrounds();
+      emit(DeletePlaygroundFromFavoritesSuccessState());
+    } catch (e) {
+      log('$e');
+      emit(DeletePlaygroundFromFavoritesErrorState());
+    }
+  }
+
+  List<Map<String, dynamic>> favoritesPlaygrounds = [];
+
+  Future<void> getFavoritesPlaygrounds() async {
+    favoritesPlaygrounds = [];
+    emit(GetFavoritesPlaygroundsLoadingState());
+    try {
+      late var uid;
+      getCurrentUserData();
+      final snapshot =
+          await FirebaseFirestore.instance.collection('Users').get();
+      for (var doc in snapshot.docs) {
+        if (userData['Id'] == doc.data()['Id']) uid = doc.id;
+      }
+      var playgrounds = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(uid)
+          .collection('PFavorites')
+          .get();
+      favoritesPlaygrounds = playgrounds.docs.map((doc) => doc.data()).toList();
+
+      log('$favoritesPlaygrounds');
+      emit(GetFavoritesPlaygroundsSuccessState());
+    } catch (e) {
+      log('$e');
+      emit(GetFavoritesPlaygroundsErrorState());
+    }
+  }
 }
