@@ -12,6 +12,8 @@ import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/features/authentication/data/user_model.dart';
+import 'package:playhub/features/profile/ui/screens/profile_screen.dart';
+import 'package:playhub/features/rooms/ui/screens/rooms_screen.dart';
 import 'package:playhub/models/ordermodel.dart';
 import 'package:playhub/models/playgroundmodel.dart';
 import 'package:playhub/screens/HomeScreen/home.dart';
@@ -24,6 +26,9 @@ class AppCubit extends Cubit<AppStates> {
   int currentScreenIdx = 0;
   List<Widget> pages = [
     Home(),
+    RoomsScreen(),
+    Home(),
+    ProfileScreen(),
   ];
 
   void changeScreenIdx(int idx) {
@@ -48,12 +53,9 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   void changeSelectedCity(String city) {
-    // log("$city");
-
     selectedCity = city;
     searchFunction();
-    // log("$selectedCity");
-    emit(AppChangeSelectedCity()); // Emit a new state for city selection
+    emit(AppChangeSelectedCity());
   }
 
   var items = [];
@@ -79,10 +81,10 @@ class AppCubit extends Cubit<AppStates> {
       if (itemData['Name']
           .toString()
           .toLowerCase()
-          .contains(searchQuery.toLowerCase())) {
+          .contains(searchQuery.toLowerCase()) || searchQuery.isEmpty) {
         Names.add(itemData);
       }
-      if (itemData['City'] == selectedCity) {
+      if (itemData['City'] == selectedCity || selectedCity == "All") {
         newItems.add(itemData);
       }
 

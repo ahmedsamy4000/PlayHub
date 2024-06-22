@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/models/playgroundmodel.dart';
@@ -28,7 +29,9 @@ class _PlayGroundScreenState extends State<PlayGroundScreen> {
   Widget build(BuildContext context) {
     var cubit = BlocProvider.of<AppCubit>(context);
     return Scaffold(
+      backgroundColor: AppColors.white,
       appBar: AppBar(
+        backgroundColor: AppColors.white,
         title: Text(widget.name!),
         centerTitle: true,
       ),
@@ -81,7 +84,7 @@ class _PlayGroundScreenState extends State<PlayGroundScreen> {
                             },
                             style: ButtonStyle(
                               backgroundColor: WidgetStateProperty.all(
-                                 cubit.playground?.orders[index].booked == true ? Colors.red : Colors.white,
+                                 cubit.playground?.orders[index].booked == true ? AppColors.red : AppColors.green3,
                               ),
                             ),
                             child: Text('Name ${index + 1}'),

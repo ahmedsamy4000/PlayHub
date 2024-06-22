@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:playhub/core/app_colors.dart';
 
 class CategoryButton extends StatelessWidget {
   final String text;
@@ -16,12 +17,12 @@ class CategoryButton extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           decoration: BoxDecoration(
-            color: isSelected ? Colors.blue : Colors.grey[800],
+            color: isSelected ? AppColors.darkGreen : AppColors.green3,
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: Text(
             text,
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: AppColors.white),
           ),
         ),
       ),

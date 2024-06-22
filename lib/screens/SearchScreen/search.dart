@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/screens/SearchScreen/CityFilterDialog.dart';
@@ -11,18 +13,6 @@ import 'CategoryButton.dart';
 class Search extends StatelessWidget {
   const Search({super.key});
 
-  List<T> getCommonElements<T>(List<T> list1, List<T> list2) {
-  // Convert lists to sets
-  Set<T> set1 = list1.toSet();
-  Set<T> set2 = list2.toSet();
-
-  // Find the intersection of the two sets
-  Set<T> intersection = set1.intersection(set2);
-
-  // Convert the result back to a list
-  return intersection.toList();
-}
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
@@ -30,7 +20,7 @@ class Search extends StatelessWidget {
       builder: (BuildContext context, AppStates state) {
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.black,
+            backgroundColor: AppColors.white,
             title: Row(
               children: [
                 Expanded(
@@ -38,17 +28,17 @@ class Search extends StatelessWidget {
                     controller: AppCubit.get(context).searchController,
                     decoration: InputDecoration(
                       hintText: 'Search',
-                      hintStyle: TextStyle(color: Colors.white54),
+                      hintStyle: TextStyle(color: AppColors.grey),
                       border: InputBorder.none,
                     ),
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: AppColors.black),
                     onChanged: (value) {
                       AppCubit.get(context).changeSearchQuery(value);
                     },
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.filter_list, color: Colors.white),
+                  icon: Icon(Icons.filter_list, color: AppColors.darkGreen),
                   onPressed: () {
                     showDialog(
                       context: context,
@@ -69,7 +59,7 @@ class Search extends StatelessWidget {
           body: Column(
             children: [
               Container(
-                color: Colors.black,
+                color: AppColors.white,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -107,28 +97,77 @@ class Search extends StatelessWidget {
               ),
               Expanded(
                 child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
                       itemCount: AppCubit.get(context).items.length,
                       itemBuilder: (context, index) {
-                        var item =
-                            AppCubit.get(context).items[index];
-                            print("reem");
-                            log("dohaaaaaaaa&polaaaaaaaa$item");
-                        return ListTile(
-                          leading: Image.network(item['Image']),
-                          title: Text(item['Name'],
-                              style: TextStyle(color: Colors.white)),
-                          subtitle: Text(item['Region'],
-                              style: TextStyle(color: Colors.white70)),
-                          // trailing: Text(item['City']),
-                          //     style: TextStyle(color: Colors.white)),
-                          tileColor: Colors.grey[900],
+                        final playground = AppCubit.get(context).items[index];
+                        final name = playground['Name'];
+                        final city = playground['City'];
+                        final imageUrl = playground['Image'];
+                        return Container(
+                          width: 200.w,
+                          margin: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: AppColors.green3,
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.green2,
+                                blurRadius: 10,
+                                offset: const Offset(0, 5),
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          child: Row(
+                            children: [
+                              imageUrl != null
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(20.0),
+                                        child: Image.network(
+                                          imageUrl,
+                                          width: 70,
+                                          height: 70,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Icon(Icons.image, size: 70),
+                                    ),
+                              const SizedBox(width: 10.0),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    name,
+                                    style: TextStyle(
+                                      color: AppColors.black.withOpacity(0.7),
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                  Text(
+                                    city,
+                                    style: TextStyle(
+                                      color: AppColors.black.withOpacity(0.4),
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         );
                       },
-                    )
+                    ),
               ),
             ],
           ),
-          backgroundColor: Colors.black,
+          backgroundColor: AppColors.white,
         );
       },
     );

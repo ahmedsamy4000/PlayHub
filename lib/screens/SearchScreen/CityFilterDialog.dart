@@ -37,6 +37,13 @@ class CityFilterDialog extends StatelessWidget {
                 Navigator.of(context).pop();
               },
             ),
+            ListTile(
+              title: Text('PortSaid', style: TextStyle(color: Colors.white)),
+              onTap: () {
+                onCitySelected('PortSaid');
+                Navigator.of(context).pop();
+              },
+            ),
             // Add more cities as needed
           ],
         ),
