@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/features/favorites/ui/screens/favorites_playgrounds_screen.dart';
@@ -15,30 +16,16 @@ class Main extends StatelessWidget {
         listener: (BuildContext context, AppStates state) {},
         builder: (BuildContext context, AppStates state) {
           return Scaffold(
-            appBar: AppBar(
-              title: Text(
-                'PlayHub',
-                textAlign: TextAlign.left,
-              ),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => FavoritesPlaygroundsScreen()));
-                  },
-                  icon: Icon(Icons.favorite),
-                )
-              ],
-            ),
             body: AppCubit.get(context)
                 .pages[AppCubit.get(context).currentScreenIdx],
-            floatingActionButton: FloatingActionButton.extended(
+            floatingActionButton: FloatingActionButton(
               onPressed: () {
                 Navigator.push(
                     context, MaterialPageRoute(builder: (context) => Search()));
               },
-              icon: Icon(Icons.search),
-              label: Text('Browse all courts'),
+              child: Icon(Icons.search, color: AppColors.white,),
+              backgroundColor: AppColors.darkGreen,
+              // label: Text('Browse all courts'),
             ),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             bottomNavigationBar: BottomNavigationBar(
@@ -47,9 +34,9 @@ class Main extends StatelessWidget {
               onTap: (index) {
                 AppCubit.get(context).changeScreenIdx(index);
               },
-              backgroundColor: Colors.blueGrey,
-              selectedItemColor: Colors.white,
-              unselectedItemColor: Colors.grey,
+              backgroundColor: AppColors.green3,
+              selectedItemColor: AppColors.white,
+              unselectedItemColor: AppColors.darkGray,
               items: [
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home),
