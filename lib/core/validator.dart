@@ -65,5 +65,11 @@ class Validator{
     }
     return null;
   }
+  static String? notEmpty(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'This field cannot be empty';
+    }
+    return null;
+  }
 
 }

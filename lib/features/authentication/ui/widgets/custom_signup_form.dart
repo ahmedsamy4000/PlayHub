@@ -128,7 +128,6 @@ class SignupForm extends StatelessWidget {
                         print("outtttt");
                         if(formRegisterKey.currentState!.validate()){
                           cubit.registeration(type: type,context: context);
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
                         }
                       },
                       gradiantColor: AppColors.loginGradiantColorButton ,

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/padding.dart';
+import 'package:playhub/features/authentication/cubits/auth_states.dart';
 import 'package:playhub/features/profile/ui/screens/profile_screen.dart';
 
 import '../../../../common/fade_in_slide.dart';
@@ -18,7 +19,11 @@ class CustomLoginForm extends StatelessWidget {
     super.key,
   });
   final loginFormKey=GlobalKey<FormState>();
-  @override
+  bool isError =false;
+  TextEditingController emailController=TextEditingController();
+   TextEditingController passwordController=TextEditingController();
+
+   @override
   Widget build(BuildContext context) {
     var cubit =BlocProvider.of<AuthCubit>(context);
     return Padding(
@@ -36,64 +41,77 @@ class CustomLoginForm extends StatelessWidget {
               ),
             ]
         ),
-        child: Form(
-          key: loginFormKey,
-          child: Column(
-            children: [
-              FadeInSlide(
-                duration: 0.5,
-                child: Text(
-                  "Welcome",
-                  style:
-                  TextStyle(color: AppColors.darkGray, fontSize: 30.sp),
-                ),
-              ),
-              const CustomDivider(colorDivider: AppColors.darkGreen,),
-              35.verticalSpace,
-              FadeInSlide(
-                duration: 0.6,
-                child: CustomTextFormField(
-                  hint: "Enter your email",
-                  validator: Validator.validateEmail,
-                  keyboardType: TextInputType.emailAddress,
-                  onChanged: (value){
-                    cubit.setEmail(value);
-                  },
-                ),
-              ),
-              35.verticalSpace,
-              FadeInSlide(
-                duration: 0.7,
-                child: CustomTextFormField(
-                  hint: "Enter your password",
-                  validator: Validator.validatePassword,
-                  keyboardType: TextInputType.text,
-                  onChanged: (value){
-                    cubit.setPassword(value);
-                  },
-                  isPassword: true,
-                ),
-              ),
-              40.verticalSpace,
-              FadeInSlide(
-                duration: 0.8,
-                child: Padding(
-                  padding: 23.padHorizontal,
-                  child: LoginButton(
-                    onTap: (){
-                      if(loginFormKey.currentState!.validate()){
-                        cubit.login(context: context);
-                      }
-                    },
-                    gradiantColor: AppColors.loginGradiantColorButton ,
-                    tapedGradiantColor: AppColors.loginGradiantColorButtonTaped ,
-                    text: "Login",
+        child: BlocBuilder<AuthCubit,AuthStates>(
+          builder: (context,state) {
+            if(state is AuthErrorState){
+              isError =true;
+            }
+            return Form(
+              key: loginFormKey,
+              child: Column(
+                children: [
+                  FadeInSlide(
+                    duration: 0.5,
+                    child: Text(
+                      "Welcome",
+                      style:
+                      TextStyle(color: AppColors.darkGray, fontSize: 30.sp),
+                    ),
                   ),
-                ),
+                  const CustomDivider(colorDivider: AppColors.darkGreen,),
+                  35.verticalSpace,
+
+                  FadeInSlide(
+                    duration: 0.6,
+                    child: CustomTextFormField(
+                      hint: "Enter your email",
+                      validator: Validator.validateEmail,
+                      keyboardType: TextInputType.emailAddress,
+                      onChanged: (value){
+                        cubit.setEmail(value);
+                      },
+                      isError:isError,
+                      controller: emailController,
+                    ),
+                  ),
+                  35.verticalSpace,
+                  FadeInSlide(
+                    duration: 0.7,
+                    child: CustomTextFormField(
+                      hint: "Enter your password",
+                      validator: Validator.validatePassword,
+                      keyboardType: TextInputType.text,
+                      onChanged: (value){
+                        cubit.setPassword(value);
+                      },
+                      isPassword: true,
+                        isError:isError,
+                      controller: passwordController,
+                    ),
+
+                  ),
+                  40.verticalSpace,
+                  FadeInSlide(
+                    duration: 0.8,
+                    child: Padding(
+                      padding: 23.padHorizontal,
+                      child: LoginButton(
+                        onTap: (){
+                          if(loginFormKey.currentState!.validate()){
+                            cubit.login(context: context);
+                          }
+                        },
+                        gradiantColor: AppColors.loginGradiantColorButton ,
+                        tapedGradiantColor: AppColors.loginGradiantColorButtonTaped ,
+                        text: "Login",
+                      ),
+                    ),
+                  ),
+                  20.verticalSpace,
+                ],
               ),
-              20.verticalSpace,
-            ],
-          ),
+            );
+          }
         ),
       ),
     );
