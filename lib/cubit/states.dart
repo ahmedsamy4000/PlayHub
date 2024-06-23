@@ -65,3 +65,4 @@ class GetFavoritesPlaygroundsErrorState extends AppStates {}
 class DeletePlaygroundFromFavoritesSuccessState extends AppStates {}
 
 class DeletePlaygroundFromFavoritesErrorState extends AppStates {}
+

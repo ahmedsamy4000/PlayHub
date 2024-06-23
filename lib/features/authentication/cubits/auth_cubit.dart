@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:playhub/Layout/MainApp.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/enums/type_enum.dart';
+import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/features/authentication/cubits/auth_states.dart';
 import 'package:playhub/features/authentication/data/user_model.dart';
 
@@ -79,6 +80,7 @@ class AuthCubit extends Cubit<AuthStates> {
           backgroundColor: AppColors.green,
           textColor: AppColors.white,
         );
+      BlocProvider.of<AppCubit>(context).getCurrentUserData();
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
 
     } on FirebaseAuthException catch (e) {
@@ -108,7 +110,8 @@ class AuthCubit extends Cubit<AuthStates> {
         backgroundColor: AppColors.green,
         textColor: AppColors.white,
       );
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
+      BlocProvider.of<AppCubit>(context).getCurrentUserData();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Main()));
 
     } on FirebaseAuthException catch (e) {
       Fluttertoast.showToast(

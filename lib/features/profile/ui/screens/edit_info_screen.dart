@@ -22,11 +22,11 @@ class EditInformationScreen extends StatelessWidget {
     var cubit = BlocProvider.of<AppCubit>(context);
     cubit.getCurrentUserData();
     TextEditingController nameController = TextEditingController();
-    nameController.text = cubit.userData['Name'];
+    nameController.text = cubit.userData['Name'] ?? '';
     TextEditingController emailController = TextEditingController();
-    emailController.text = cubit.userData['Email'];
+    emailController.text = cubit.userData['Email'] ?? '';
     TextEditingController phoneController = TextEditingController();
-    phoneController.text = cubit.userData['PhoneNumber'];
+    phoneController.text = cubit.userData['PhoneNumber'] ?? '';
     TextEditingController cityController = TextEditingController();
     cityController.text = cubit.userData['City'] ?? '';
     TextEditingController regionController = TextEditingController();

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/cubit/app_cubit.dart';
+import 'package:playhub/cubit/states.dart';
 import 'package:playhub/features/categories/ui/screens/category_screen.dart';
 import 'package:playhub/features/favorites/ui/screens/favorites_playgrounds_screen.dart';
 import 'package:playhub/screens/HomeScreen/CategoryCard.dart';
@@ -82,15 +83,21 @@ class Home extends StatelessWidget {
                             imageUrl: imageUrl ?? '',
                             name: name,
                             onTap: () {
-                              Navigator.push(
+                              cubit.getFavoritesPlaygrounds().then((_){
+                                if(cubit.state is GetFavoritesPlaygroundsSuccessState)
+                                {
+                                  Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => CategoryScreen(
                                     categoryId: categoryId,
                                     name: name,
+                                    favorites: cubit.favoritesId
                                   ),
                                 ),
                               );
+                                }
+                              });
                             },
                           );
                         },

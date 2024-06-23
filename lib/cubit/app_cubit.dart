@@ -71,7 +71,7 @@ class AppCubit extends Cubit<AppStates> {
     return intersection.toList();
   }
 
-  void searchFunction() async {
+  Future<void> searchFunction() async {
     final snapshot =
         await FirebaseFirestore.instance.collection('PlayGrounds').get();
     var newItems = [];
@@ -79,9 +79,10 @@ class AppCubit extends Cubit<AppStates> {
     for (var doc in snapshot.docs) {
       var itemData = doc.data() as Map<String, dynamic>;
       if (itemData['Name']
-          .toString()
-          .toLowerCase()
-          .contains(searchQuery.toLowerCase()) || searchQuery.isEmpty) {
+              .toString()
+              .toLowerCase()
+              .contains(searchQuery.toLowerCase()) ||
+          searchQuery.isEmpty) {
         Names.add(itemData);
       }
       if (itemData['City'] == selectedCity || selectedCity == "All") {
@@ -435,6 +436,7 @@ class AppCubit extends Cubit<AppStates> {
             .collection('PFavorites')
             .add(favPlayground);
       }
+      getFavoritesPlaygrounds();
       emit(AddPlaygroundToFavoritesSuccessState());
     } catch (e) {
       log('$e');
@@ -469,6 +471,7 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   List<Map<String, dynamic>> favoritesPlaygrounds = [];
+  List<String> favoritesId = [];
 
   Future<void> getFavoritesPlaygrounds() async {
     favoritesPlaygrounds = [];
@@ -481,12 +484,18 @@ class AppCubit extends Cubit<AppStates> {
       for (var doc in snapshot.docs) {
         if (userData['Id'] == doc.data()['Id']) uid = doc.id;
       }
+      List<String> ids = [];
       var playgrounds = await FirebaseFirestore.instance
           .collection('Users')
           .doc(uid)
           .collection('PFavorites')
           .get();
+      for (var doc in playgrounds.docs) {
+        ids.add(doc.data()['Id']);
+      }
       favoritesPlaygrounds = playgrounds.docs.map((doc) => doc.data()).toList();
+      favoritesId = ids;
+      log('Favorites: $favoritesId');
 
       log('$favoritesPlaygrounds');
       emit(GetFavoritesPlaygroundsSuccessState());
