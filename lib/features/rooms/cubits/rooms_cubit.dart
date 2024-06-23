@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:playhub/features/authentication/data/user_model.dart';
 import 'package:playhub/features/rooms/cubits/rooms_states.dart';
 import 'package:playhub/features/rooms/data/playground_model.dart';
 import 'package:playhub/features/rooms/data/room_model.dart';
@@ -69,7 +70,6 @@ class RoomsCubit extends Cubit<RoomsStates> {
   }
   late var userData;
   Future<void> getCurrentUserData() async {
-    //emit(GetCurrentUserLoadingState());
     try {
       FirebaseAuth auth = FirebaseAuth.instance;
       User? user = auth.currentUser;
@@ -83,12 +83,32 @@ class RoomsCubit extends Cubit<RoomsStates> {
 
       }
     } catch (e) {
+    }
+  }
+  Future<UserModel?> getUserById({required String id}) async {
+    UserModel? user;
+    try {
+        final snapshot = await FirebaseFirestore.instance.collection('Users').get();
+        log('$snapshot');
+        for (var doc in snapshot.docs) {
+          log('message1');
+          if (id == doc.data()['Id']){
+            log('${doc.data()}');
+            user = UserModel.fromJson(doc.data());
+            log('message3');
+          }
+
+        }
+        return user;
+    } catch (e) {
+      log('$e');
+      return null;
       //emit(GetCurrentUserErrorState());
     }
   }
   void createRoom({required String? playground,required String date,required String time,required String? period,required String? level})async{
     await getCurrentUserData();
-    RoomModel room =RoomModel(playground: playground!, category: category!, city: city!, date: date, time: time, period: period!, playersNum: playersNum!, comment: comment,level: level!, authUserId: userData["Id"]);
+    RoomModel room =RoomModel(playground: playground!, category: category!, city: city!, date: date, time: time, period: period!, playersNum: playersNum!, comment: comment,level: level!, authUserId: userData["Id"],players: []);
 
     FirebaseFirestore.instance
         .collection('Rooms')
@@ -98,6 +118,34 @@ class RoomsCubit extends Cubit<RoomsStates> {
     }).catchError((error) {
       //log('Error adding document: $error');
     });
-
   }
+
+  void getAllRooms()async{
+    try {
+      var data = await FirebaseFirestore.instance.collection('Rooms').get();
+      List<RoomModel> rooms = [];
+      List<UserModel> roomOwners=[];
+      List<List<UserModel>> roomsPlayers=[];
+      List<UserModel> players;
+      for (var document in data.docs) {
+        RoomModel room = RoomModel.fromJson(document.data());
+        rooms.add(room);
+        log('${room}');
+        UserModel? user=await getUserById(id:room.authUserId);
+        log('${user}');
+        roomOwners.add(user!);
+        players=[];
+        for(var playerId in room.players){
+          UserModel? player=await getUserById(id:playerId);
+          players.add(player!);
+        }
+        roomsPlayers.add(players);
+      }
+
+      emit(GetRoomsDataState(rooms: rooms,roomOwners:roomOwners,roomsPlayers: roomsPlayers));
+    } catch (e) {
+      print('Error retrieving playgrounds: $e');
+    }
+  }
+
 }

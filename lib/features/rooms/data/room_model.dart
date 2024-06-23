@@ -9,8 +9,12 @@ class RoomModel {
   final String period;
   final String playersNum;
   final String? comment;
+  final List<dynamic> players;
 
-  RoomModel({required this.authUserId, required this.level,
+  RoomModel( {
+    required this.players,
+    required this.authUserId,
+    required this.level,
   required this.playground,
   required this.category,
   required this.city,
@@ -24,7 +28,7 @@ class RoomModel {
 
   factory RoomModel.fromJson(Map<String, dynamic> json) {
     return RoomModel(
-        authUserId: json['UserId'],
+        authUserId: json['AuthUserId'],
         playground: json['Playground'],
         category: json['Category'],
         city: json['City'],
@@ -33,7 +37,8 @@ class RoomModel {
         period: json['Period'],
         playersNum: json['PlayersNum'],
         comment: json['Comment'],
-      level: json['Level']
+      level: json['Level'],
+      players: json['Players']
     );
   }
 
@@ -49,6 +54,7 @@ class RoomModel {
       'PlayersNum': playersNum,
       'Comment': comment,
       'Level': level,
+      'Players': players
     };
   }
 }

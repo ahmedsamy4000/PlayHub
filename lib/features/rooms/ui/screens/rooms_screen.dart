@@ -1,111 +1,84 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:playhub/core/padding.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:playhub/features/authentication/data/user_model.dart';
+import 'package:playhub/features/rooms/cubits/rooms_states.dart';
 import 'package:playhub/features/rooms/ui/screens/add_room_screen.dart';
+import '../../cubits/rooms_cubit.dart';
+import '../../data/room_model.dart';
+import '../widgets/custom_list_room_item.dart';
 
 class RoomsScreen extends StatelessWidget {
-  const RoomsScreen({super.key});
-
+  RoomsScreen({super.key});
+  List<RoomModel> rooms=[];
+  List<UserModel> roomOwners=[];
+  List<List<UserModel>> roomsPlayers=[];
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      initialIndex: 0,
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Rooms"),
-          bottom: const TabBar(
-            tabs: <Widget>[
-              Tab(
-                child: Text("All"),
-              ),
-              Tab(
-                child: Text("Created by me"),
-              ),
-              Tab(
-                child: Text("Joined"),
-              ),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: <Widget>[
-            Column(
-        children: [
-        Container(
-          margin: 10.padVertical,
-          padding: 10.padAll,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 10.0,
-                offset: const Offset(3, 5),
-              ),
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10.0,
-                offset: const Offset(-1, -1),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    backgroundImage: AssetImage("assets/images/login.jpg"),
+    return BlocProvider(
+      create: (context) => RoomsCubit()..getAllRooms(),
+      child: BlocBuilder<RoomsCubit,RoomsStates>(
+          builder: (context,state) {
+            if(state is GetRoomsDataState){
+              rooms=state.rooms;
+              roomOwners=state.roomOwners;
+              roomsPlayers=state.roomsPlayers;
+            }
+            return DefaultTabController(
+              initialIndex: 0,
+              length: 3,
+              child: Scaffold(
+                appBar: AppBar(
+                  title: const Text("Rooms"),
+                  actions: [
+                    IconButton(onPressed: (){
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => AddRoomScreen()));
+                    }, icon: Icon(Icons.add_circle))
+                  ],
+                  bottom: const TabBar(
+                    tabs: <Widget>[
+                      Tab(
+                        child: Text("All"),
+                      ),
+                      Tab(
+                        child: Text("Created by me"),
+                      ),
+                      Tab(
+                        child: Text("Joined"),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 10), // Add spacing between the avatar and the text
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Mera Fahmy"),
-                        const Text("Playground Name"),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            Text("Date "),
-                            Text(" remain time"),
-                          ],
-                        ),
-                        const Text("Description"),
-                      ],
+                ),
+                body: TabBarView(
+                  children: <Widget>[
+                    ListView.separated(
+                      itemCount: rooms.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: ListRoomItem(room:rooms[index],roomOwner:roomOwners[index],roomsPlayers: roomsPlayers[index],),
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return Divider();
+                      },
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text("Level "),
-                  Text("Match time"),
-                  Text("People count"),
-                ],
-              ),
-            ],
-          ),
-        ),
-        ],
-      ),
-            Center(
-              child: Text("It's rainy here"),
-            ),
-            Center(
-              child: Text("It's sunny here"),
-            ),
-          ],
-        ),
-        
-        floatingActionButton: FloatingActionButton(
-          onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => AddRoomScreen()));
 
-          },
-          child: Text("Create Room"),
-        ),
+                    Center(
+                      child: Text("It's rainy here"),
+                    ),
+                    Center(
+                      child: Text("It's sunny here"),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
       ),
     );
   }
 }
+
+

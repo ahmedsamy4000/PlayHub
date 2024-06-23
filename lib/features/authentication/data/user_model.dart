@@ -11,7 +11,6 @@ class UserModel {
   final String? fullName;
   final String? email;
   final String? phoneNumber;
-  final String? password;
   final UserType? type;
   final String? city;
   final String? region;
@@ -21,7 +20,6 @@ class UserModel {
       this.fullName,
       this.email,
       this.phoneNumber,
-      this.password,
       this.type,
       this.city,
       this.region,
@@ -32,11 +30,10 @@ class UserModel {
       fullName: json["Name"],
       email: json["Email"],
       phoneNumber: json["PhoneNumber"],
-      password: json["Password"],
-      type: json["Type"],
+      type: json["Type"]=="Trainer"?UserType.trainer:json["Type"]=="Player"?UserType.player:UserType.playgroundOwner,
       city: json["City"],
       region: json["Region"],
-      image: json["image"]);
+      image: json["Image"]);
 
   Map<String, dynamic> toJson() => {
         "Id": id,

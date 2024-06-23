@@ -1,6 +1,6 @@
 enum UserType{
   player,
   trainer,
-  playgroundOwner
-
+  playgroundOwner,
+  admin
 }

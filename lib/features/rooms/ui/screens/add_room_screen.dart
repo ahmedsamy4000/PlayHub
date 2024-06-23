@@ -46,8 +46,9 @@ class AddRoomScreen extends StatelessWidget {
         }
         var cubit=context.read<RoomsCubit>();
         return Scaffold(
+          appBar: AppBar(),
           body: Padding(
-            padding: 15.padAll,
+            padding: 10.padAll,
             child: SingleChildScrollView(
               child: Form(
                 key: creationFormKey,

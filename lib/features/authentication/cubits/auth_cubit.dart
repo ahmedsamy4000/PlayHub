@@ -5,13 +5,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:playhub/Layout/MainApp.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/enums/type_enum.dart';
-import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/features/authentication/cubits/auth_states.dart';
 import 'package:playhub/features/authentication/data/user_model.dart';
+import 'package:playhub/features/authentication/ui/screens/login_screen.dart';
+import 'package:playhub/features/rooms/ui/screens/rooms_screen.dart';
+import 'package:playhub/screens/HomeScreen/home.dart';
 
+import '../../../Layout/MainApp.dart';
 import '../../profile/ui/screens/profile_screen.dart';
 
 class AuthCubit extends Cubit<AuthStates> {
@@ -59,7 +61,6 @@ class AuthCubit extends Cubit<AuthStates> {
             fullName: name,
             email: email,
             phoneNumber: phone,
-            password: password,
             type: type,
             city: null,
             region: null,
@@ -73,47 +74,17 @@ class AuthCubit extends Cubit<AuthStates> {
           log('Error adding document: $error');
         });
       });
-      Fluttertoast.showToast(
-          msg: "Successfully registered!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: AppColors.green,
-          textColor: AppColors.white,
-        );
-      BlocProvider.of<AppCubit>(context).getCurrentUserData();
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+      // Fluttertoast.showToast(
+      //     msg: "Successfully registered!",
+      //     toastLength: Toast.LENGTH_SHORT,
+      //     gravity: ToastGravity.BOTTOM,
+      //     backgroundColor: AppColors.green,
+      //     textColor: AppColors.white,
+      //   );
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  Main()));
 
     } on FirebaseAuthException catch (e) {
       log(e.message!);
-      Fluttertoast.showToast(
-          msg: e.code,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: AppColors.red,
-          textColor: AppColors.white,
-        );
-    }
-  }
-
-  Future<void> login({required BuildContext context}) async {
-    try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email ?? "",
-        password: password ?? "",
-      );
-      log("Doneeeeeeeee");
-      Fluttertoast.showToast(
-        msg: "Successfully logged in!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: AppColors.green,
-        textColor: AppColors.white,
-      );
-      BlocProvider.of<AppCubit>(context).getCurrentUserData();
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Main()));
-
-    } on FirebaseAuthException catch (e) {
       Fluttertoast.showToast(
         msg: e.code,
         toastLength: Toast.LENGTH_SHORT,
@@ -121,6 +92,37 @@ class AuthCubit extends Cubit<AuthStates> {
         backgroundColor: AppColors.red,
         textColor: AppColors.white,
       );
+    }
+  }
+
+  Future<void> login({required BuildContext context}) async {
+    if(email!=null&&password!=null){
+      try {
+        UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email!,
+          password: password!,
+        );
+        log("Doneeeeeeeee");
+        Fluttertoast.showToast(
+          msg: "Successfully logged in!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: AppColors.green,
+          textColor: AppColors.white,
+        );
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RoomsScreen()));
+
+      } on FirebaseAuthException catch (e) {
+        Fluttertoast.showToast(
+          msg: e.code,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: AppColors.red,
+          textColor: AppColors.white,
+        );
+      }}else{
+      emit(AuthErrorState());
     }
   }
 }
