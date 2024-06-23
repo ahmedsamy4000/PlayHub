@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/cubit/states.dart';
@@ -25,10 +26,10 @@ class AppCubit extends Cubit<AppStates> {
 
   int currentScreenIdx = 0;
   List<Widget> pages = [
-    Home(),
-    RoomsScreen(),
-    Home(),
-    ProfileScreen(),
+    const Home(),
+    const RoomsScreen(),
+    const Home(),
+    const ProfileScreen(),
   ];
 
   void changeScreenIdx(int idx) {
@@ -366,7 +367,7 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   PlaygroundModel? playground;
-  Future<void> getPlaygroundById(String id) async {
+  Future<void> getPlaygroundById(String id, String date) async {
     emit(GetPlaygroundDataLoadingState());
     try {
       DocumentSnapshot playgroundDoc = await FirebaseFirestore.instance
@@ -380,7 +381,7 @@ class AppCubit extends Cubit<AppStates> {
             playgroundDoc.data() as Map<String, dynamic>,
             playgroundDoc.id,
             ordersSnapshot.docs.toList());
-        playground!.orders = customizeOrders(playground!.orders);
+        playground!.orders = customizeOrders(playground!.orders, date);
         // playground!.orders.forEach((element) {
         //   print("time is ${element.time} and result is ${element.booked}");
         // });
@@ -392,12 +393,35 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
-  List<Ordermodel> customizeOrders(List<Ordermodel> orders) {
+  Future<void> addNewOrder(
+      String? playGroundId, int? time, String? date, bool? booked) async {
+    emit(AddNewOrderLoadingState());
+    Ordermodel newModel = Ordermodel(
+        userName: userData["Name"], booked: booked, date: date, time: time);
+    CollectionReference ref = FirebaseFirestore.instance
+        .collection('PlayGrounds')
+        .doc(playGroundId)
+        .collection('Orders');
+    try {
+      await ref.add(newModel.toJson());
+      print("OrderAdded");
+      emit(AddNewOrderSuccessState());
+    } catch (e) {
+      print(e);
+      emit(AddNewOrderErrorState());
+    }
+  }
+
+  List<Ordermodel> customizeOrders(List<Ordermodel> orders, String date) {
     List<Ordermodel> playgroundOrders = [];
     for (int i = 1; i <= 12; i++) {
-      Ordermodel? matchedOrder = orders.firstWhere((order) => order.time == i,
+      Ordermodel? matchedOrder = orders.firstWhere(
+          (order) => order.time == i && order.date == date,
           orElse: () => Ordermodel(
-              userName: "__", time: i, date: "19-2-2024", booked: false));
+              userName: "__",
+              time: i,
+              date: DateFormat("dd-MM-yyyy").format(DateTime.now()).toString(),
+              booked: false));
       playgroundOrders.add(matchedOrder);
     }
     return playgroundOrders;

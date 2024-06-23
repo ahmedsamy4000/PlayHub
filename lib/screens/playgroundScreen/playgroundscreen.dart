@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/models/playgroundmodel.dart';
+import 'package:playhub/screens/playgroundScreen/book_screen.dart';
 import 'package:playhub/widgets/datestable.dart';
 
 class PlayGroundScreen extends StatefulWidget {
@@ -11,18 +13,25 @@ class PlayGroundScreen extends StatefulWidget {
   final String? image;
   final String? city;
   final String? id;
-  const PlayGroundScreen(this.name, this.city, this.image, this.id, {super.key});
+  const PlayGroundScreen(this.name, this.city, this.image, this.id,
+      {super.key});
 
   @override
   State<PlayGroundScreen> createState() => _PlayGroundScreenState();
 }
 
 class _PlayGroundScreenState extends State<PlayGroundScreen> {
+  String date = DateFormat("dd-MM-yyyy").format(DateTime.now()).toString();
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<AppCubit>(context).getPlaygroundById(widget.id!);
-    
+    BlocProvider.of<AppCubit>(context).getPlaygroundById(widget.id!, date);
+  }
+
+  void handleDateSelected(String newdate) {
+    setState(() {
+      date = newdate;
+    });
   }
 
   @override
@@ -35,76 +44,87 @@ class _PlayGroundScreenState extends State<PlayGroundScreen> {
         title: Text(widget.name!),
         centerTitle: true,
       ),
-      body: BlocBuilder<AppCubit, AppStates>(builder: (context, state) {
-        if (state is GetPlaygroundDataSuccessState) {
-          return Center(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  DatesPerWeek(),
-                  // List.generate(12, (index) {
-                  //     return Container(
-                  //       margin: const EdgeInsets.symmetric(vertical: 8.0), // Margin around each button
-                  //       padding: const EdgeInsets.all(8.0), // Padding inside each button
-                  //       child: SizedBox(
-                  //         width: 200, // Set the width of the button
-                  //         height: 50, // Set the height of the button
-                  //         child: ElevatedButton(
-                  //           onPressed: () {
-                  //             // Button press action
-                  //           },
-                  //           style: ButtonStyle(
-                  //             backgroundColor: MaterialStateProperty.all(
-                  //               index == 0 ? Colors.red : Colors.white,
-                  //             ),
-                  //           ),
-                  //           child: Text('Name ${index + 1}'),
-                  //         ),
-                  //       ),
-                  //     );
-                  //   }),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: cubit.playground?.orders.length,
-                    itemBuilder: (context, index) {
-                          return Container(
-                        margin: const EdgeInsets.symmetric(vertical: 8.0), // Margin around each button
-                        padding: const EdgeInsets.all(8.0), // Padding inside each button
-                        child: SizedBox(
-                          width: 200, // Set the width of the button
-                          height: 50, // Set the height of the button
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // Button press action
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: WidgetStateProperty.all(
-                                 cubit.playground?.orders[index].booked == true ? AppColors.red : AppColors.green3,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: DatesPerWeek(widget.id, handleDateSelected),
+          ),
+          // List.generate(12, (index) {
+          //     return Container(
+          //       margin: const EdgeInsets.symmetric(vertical: 8.0), // Margin around each button
+          //       padding: const EdgeInsets.all(8.0), // Padding inside each button
+          //       child: SizedBox(
+          //         width: 200, // Set the width of the button
+          //         height: 50, // Set the height of the button
+          //         child: ElevatedButton(
+          //           onPressed: () {
+          //             // Button press action
+          //           },
+          //           style: ButtonStyle(
+          //             backgroundColor: MaterialStateProperty.all(
+          //               index == 0 ? Colors.red : Colors.white,
+          //             ),
+          //           ),
+          //           child: Text('Name ${index + 1}'),
+          //         ),
+          //       ),
+          //     );
+          //   }),
+          Expanded(
+            child: BlocBuilder<AppCubit, AppStates>(
+              builder: (context, state) {
+                if (state is GetPlaygroundDataSuccessState) {
+                  return ListView.builder(
+                      itemCount: cubit.playground?.orders.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 8.0), // Margin around each button
+                          padding: const EdgeInsets.all(
+                              8.0), // Padding inside each button
+                          child: SizedBox(
+                            width: 200, // Set the width of the button
+                            height: 50, // Set the height of the button
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (cubit.playground!.orders[index].booked ==
+                                    false) {
+                                  showAnimatedDialog(
+                                      context,
+                                      widget.id,
+                                      widget.name!,
+                                      cubit.userData["Name"],
+                                      cubit.playground!.orders[index].time
+                                          .toString(),
+                                      date,
+                                      "10",
+                                      "200Egp");
+                                }
+                              },
+                              style: ButtonStyle(
+                                backgroundColor: WidgetStateProperty.all(
+                                  cubit.playground?.orders[index].booked == true
+                                      ? AppColors.red
+                                      : AppColors.green3,
+                                ),
                               ),
+                              child: Text('${index + 1}:00  PM'),
                             ),
-                            child: Text('Name ${index + 1}'),
                           ),
-                        ),
-                      );
-                      }
-                      )
-                    ]
-                  ),
-                ],
-              ),
+                        );
+                      });
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
             ),
-          );
-        } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      }),
+          ),
+        ],
+      ),
     );
   }
 }

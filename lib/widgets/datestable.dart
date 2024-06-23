@@ -4,14 +4,16 @@ import 'package:intl/intl.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 
 class DatesPerWeek extends StatefulWidget {
-  const DatesPerWeek({Key? key}) : super(key: key);
+  final String? playGroundId;
+  final Function? handleDate;
+  const DatesPerWeek(this.playGroundId, this.handleDate, {super.key});
 
   @override
-  _DatesPerWeekState createState() => _DatesPerWeekState();
+  State<DatesPerWeek> createState() => _DatesPerWeekState();
 }
 
 class _DatesPerWeekState extends State<DatesPerWeek> {
-  int _selectedIndex = 0; // Initially no item is selected
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,19 @@ class _DatesPerWeekState extends State<DatesPerWeek> {
                     .toString());
                 _selectedIndex = index;
               });
+              widget.handleDate!(
+                DateFormat("dd-MM-yyyy")
+                    .format(
+                        BlocProvider.of<AppCubit>(context).daysPerWeek[index])
+                    .toString(),
+              );
+              BlocProvider.of<AppCubit>(context).getPlaygroundById(
+                widget.playGroundId!,
+                DateFormat("dd-MM-yyyy")
+                    .format(
+                        BlocProvider.of<AppCubit>(context).daysPerWeek[index])
+                    .toString(),
+              );
             },
           ),
         );

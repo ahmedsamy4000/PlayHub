@@ -66,3 +66,8 @@ class DeletePlaygroundFromFavoritesSuccessState extends AppStates {}
 
 class DeletePlaygroundFromFavoritesErrorState extends AppStates {}
 
+class AddNewOrderLoadingState extends AppStates {}
+
+class AddNewOrderSuccessState extends AppStates {}
+
+class AddNewOrderErrorState extends AppStates {}

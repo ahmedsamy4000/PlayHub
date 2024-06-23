@@ -19,4 +19,13 @@ class Ordermodel {
       booked: json['Booked'] as bool?,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'UserName': userName,
+      'Time': time,
+      'Date': date,
+      'Booked': booked,
+    };
+  }
 }
