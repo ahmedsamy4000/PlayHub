@@ -102,3 +102,34 @@ class GetTrainerPackagesErrorState extends AppStates {
   final String error;
   GetTrainerPackagesErrorState(this.error);
 }
+
+class AddNewPlaygroundSuccessState extends AppStates {}
+
+class AddNewPlaygroundErrorState extends AppStates {}
+
+class PickPlaygroundImageLoadingState extends AppStates {}
+
+class PickPlaygroundImageSuccessState extends AppStates {}
+
+class PickPlaygroundImageErrorState extends AppStates {}
+
+class RemoveSelectedPlaygroundImageSuccessState extends AppStates {}
+
+class GetOwnerPlaygroundsLoadingState extends AppStates {}
+
+class GetOwnerPlaygroundsSuccessState extends AppStates {}
+
+class GetOwnerPlaygroundsErrorState extends AppStates {}
+
+class DeletePlaygroundLoadingState extends AppStates {}
+
+class DeletePlaygroundSuccessState extends AppStates {}
+
+class DeletePlaygroundErrorState extends AppStates {}
+
+class UpdatePlaygroundSuccessState extends AppStates {}
+
+class UpdatePlaygroundErrorState extends AppStates {}
+
+
+

@@ -36,10 +36,6 @@ class Main extends StatelessWidget {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.sports_baseball_rounded),
-                label: 'Playgrounds',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.sports_baseball_rounded),
                 label: "Statistics",
               ),
               BottomNavigationBarItem(

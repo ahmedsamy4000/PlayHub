@@ -41,7 +41,8 @@ class AddPlaygroundScreen extends StatelessWidget {
               ),
             ),
             body: BlocBuilder<AppCubit, AppStates>(
-              builder: (context, state) => state is GetCurrentUserLoadingState
+              builder: (context, state) => state
+                      is PickPlaygroundImageLoadingState
                   ? const Center(child: CircularProgressIndicator())
                   : Center(
                       child: SingleChildScrollView(
@@ -78,44 +79,90 @@ class AddPlaygroundScreen extends StatelessWidget {
                                     keyboardType: TextInputType.text,
                                   ),
                                   30.verticalSpace,
-                                  cubit.playgroundImage != null
-                                      ? Image.network(
-                                          cubit.playgroundImage!,
-                                          width: 100,
-                                          height: 100,
-                                        )
-                                      : Container(),
-                                  ElevatedButton(
-                                      onPressed: () {
-                                        cubit.pickPlaygroundImageFromGallery();
-                                      },
-                                      child: const Text('Pick an image')),
+                                  GestureDetector(
+                                    onTap: () {
+                                      cubit.pickPlaygroundImageFromGallery();
+                                    },
+                                    child: Container(
+                                      width: double.infinity,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Icon(
+                                            Icons.add_photo_alternate_rounded,
+                                            size: 35,
+                                            color: AppColors.darkGreen,
+                                          ),
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8.0),
+                                            child: Text(
+                                              'Add Image',
+                                              style: TextStyle(
+                                                  fontFamily: 'Open Sans',
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 22),
+                                            ),
+                                          ),
+                                          cubit.playgroundImage != null
+                                              ? Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 8.0),
+                                                  child: Stack(
+                                                    alignment:
+                                                        Alignment.topRight,
+                                                    children: [
+                                                      Image.network(
+                                                        cubit.playgroundImage!,
+                                                        width: 200,
+                                                        height: 200,
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                top: 16.0,
+                                                                left: 32),
+                                                        child: IconButton(
+                                                            onPressed: () {
+                                                              cubit
+                                                                  .removeSelectedPlaygroundImage();
+                                                            },
+                                                            icon: const Icon(
+                                                                Icons.close)),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              : Container(),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                   35.verticalSpace,
                                   Padding(
                                     padding: 23.padHorizontal,
                                     child: LoginButton(
                                       onTap: () {
                                         if (formKey.currentState!.validate()) {
-                                          cubit.addNewPlayground(
-                                              name: nameController.text,
-                                              category: categoryController.text,
-                                              city: cityController.text,
-                                              region: regionController.text,
-                                              image: cubit.playgroundImage);
-                                          // cubit
-                                          //     .updateUserInfo(
-                                          //         name: nameController.text,
-                                          //         phone: phoneController.text,
-                                          //         email: emailController.text,
-                                          //         city: cityController.text,
-                                          //         region: regionController.text)
-                                          //     .then((_) {
-                                          //   if (cubit.state
-                                          //       is UpdateUserInfoSuccessState) {
-                                          //     cubit.getCurrentUserData();
-                                          //     Navigator.pop(context);
-                                          //   }
-                                          // });
+                                          cubit
+                                              .addNewPlayground(
+                                                  name: nameController.text,
+                                                  category:
+                                                      categoryController.text,
+                                                  city: cityController.text,
+                                                  region: regionController.text,
+                                                  image: cubit.playgroundImage)
+                                              .then((_) {
+                                            if (cubit.state
+                                                is AddNewPlaygroundSuccessState) {
+                                              cubit.getOwnerPlaygrounds();
+                                              Navigator.pop(context);
+                                              cubit.playgroundImage = null;
+                                            }
+                                          });
                                         }
                                       },
                                       gradiantColor:

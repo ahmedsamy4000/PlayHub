@@ -13,9 +13,9 @@ import 'package:playhub/common/data/local/local_storage.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/features/authentication/data/user_model.dart';
-import 'package:playhub/features/playgrounds/ui/screens/playgrounds_screen.dart';
 import 'package:playhub/features/profile/data/trainer_package_model.dart';
 import 'package:playhub/features/profile/ui/screens/profile_screen.dart';
+import 'package:playhub/features/rooms/data/playground_model.dart';
 import 'package:playhub/features/rooms/ui/screens/rooms_screen.dart';
 import 'package:playhub/models/bookingmodel.dart';
 import 'package:playhub/models/ordermodel.dart';
@@ -31,7 +31,6 @@ class AppCubit extends Cubit<AppStates> {
   List<Widget> pages = [
     const Home(),
     RoomsScreen(),
-    const PlaygroundsScreen(),
     StatisticsScreen(),
     const Home(),
     const ProfileScreen(),
@@ -562,7 +561,7 @@ class AppCubit extends Cubit<AppStates> {
 
   String? playgroundImage;
   Future pickPlaygroundImageFromGallery() async {
-    emit(ChangeProfilePhotoLoadingState());
+    emit(PickPlaygroundImageLoadingState());
     final FirebaseStorage storage = FirebaseStorage.instance;
     try {
       final returnedImage =
@@ -571,21 +570,25 @@ class AppCubit extends Cubit<AppStates> {
         File selectedImage = File(returnedImage.path);
         User? user = FirebaseAuth.instance.currentUser;
         if (user != null) {
-          Reference ref =
-              storage.ref().child('playground_images').child('${user.uid}.jpg');
+          String uniqueID = DateTime.now().millisecondsSinceEpoch.toString();
+          Reference ref = storage.ref().child('playground_images/$uniqueID');
           UploadTask uploadTask = ref.putFile(selectedImage);
 
           await uploadTask;
 
           playgroundImage = await ref.getDownloadURL();
-          log('$playgroundImage');
 
-          emit(ChangeProfilePhotoSuccessState());
+          emit(PickPlaygroundImageSuccessState());
         }
       }
     } catch (e) {
-      emit(ChangeProfilePhotoErrorState());
+      emit(PickPlaygroundImageErrorState());
     }
+  }
+
+  removeSelectedPlaygroundImage() {
+    playgroundImage = null;
+    emit(RemoveSelectedPlaygroundImageSuccessState());
   }
 
   Future<void> addNewPlayground(
@@ -594,23 +597,116 @@ class AppCubit extends Cubit<AppStates> {
       required city,
       required region,
       required image}) async {
-    final snapshot =
-        await FirebaseFirestore.instance.collection('Categories').get();
-    var id;
-    for (var doc in snapshot.docs) {
-      if (category == doc.data()['Name']) {
-        id = doc.data()['Id'];
-        log('${doc.data()['Id']}');
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance.collection('Categories').get();
+      var id;
+      for (var doc in snapshot.docs) {
+        if (category == doc.data()['Name']) {
+          id = doc.data()['Id'];
+          log('${doc.data()['Id']}');
+        }
+      }
+      var newPlayground = Playground(
+          categoryId: id,
+          city: city,
+          image: image,
+          name: name,
+          ownerId: LocalStorage().userData!.id!,
+          region: region);
+      await FirebaseFirestore.instance
+          .collection('PlayGrounds')
+          .add(newPlayground.toJson());
+      emit(AddNewPlaygroundSuccessState());
+    } catch (e) {
+      emit(AddNewPlaygroundErrorState());
+    }
+  }
+
+   Future<void> updatePlayground(
+      {required pid,
+      required name,
+      required category,
+      required city,
+      required region,
+      required image}) async {
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance.collection('Categories').get();
+      var id;
+      for (var doc in snapshot.docs) {
+        if (category == doc.data()['Name']) {
+          id = doc.data()['Id'];
+          log('${doc.data()['Id']}');
+        }
+      }
+      var newPlayground = Playground(
+          categoryId: id,
+          city: city,
+          image: image,
+          name: name,
+          ownerId: LocalStorage().userData!.id!,
+          region: region);
+      await FirebaseFirestore.instance
+          .collection('PlayGrounds')
+          .doc(pid)
+          .update(newPlayground.toJson());
+      emit(UpdatePlaygroundSuccessState());
+    } catch (e) {
+      log('$e');
+      emit(UpdatePlaygroundErrorState());
+    }
+  }
+
+  Future<void> deletePlayground(String id) async {
+    emit(DeletePlaygroundLoadingState());
+    try {
+      await FirebaseFirestore.instance
+          .collection('PlayGrounds')
+          .doc(id)
+          .delete();
+          getOwnerPlaygrounds();
+      emit(DeletePlaygroundSuccessState());
+    } catch (e) {
+      emit(DeletePlaygroundErrorState());
+    }
+  }
+
+List<Map<String, dynamic>> ownerReservations = [];
+  Future<void> getOwnerReservations() async {
+List<Map<String, dynamic>> reservations = [];
+    final snapshot = await FirebaseFirestore.instance.collection('PlayGrounds').get();
+    for(var doc in snapshot.docs)
+    {
+      if(doc.data()['Owner_Id'] == LocalStorage().currentId)
+      {
+        final orders = await FirebaseFirestore.instance.collection('PlayGrounds').doc(doc.id).collection('Orders').get();
+        reservations.addAll(orders.docs.map((d)=> d.data()));
       }
     }
-    await FirebaseFirestore.instance.collection('PlayGrounds').add({
-      'CategoryId': id,
-      'City': city,
-      'Image': image,
-      'Name': name,
-      'Owner_id': LocalStorage().userData?.id,
-      'Region': region,
-    });
+  }
+
+  List<Playground> ownerPlaygrounds = [];
+  List<String> ownerPlaygroundsIds = [];
+  Future<void> getOwnerPlaygrounds() async {
+    emit(GetOwnerPlaygroundsLoadingState());
+    try {
+      List<Playground> playgrounds = [];
+      List<String> ids = [];
+      final snapshot =
+          await FirebaseFirestore.instance.collection('PlayGrounds').get();
+      for (var doc in snapshot.docs) {
+        if (doc.data()['Owner_Id'] == LocalStorage().userData?.id) {
+          playgrounds.add(Playground.fromJson(doc.data()));
+          ids.add(doc.id);
+        }
+      }
+      ownerPlaygrounds = playgrounds;
+      ownerPlaygroundsIds = ids;
+      emit(GetOwnerPlaygroundsSuccessState());
+    } catch (e) {
+      emit(GetOwnerPlaygroundsErrorState());
+    }
   }
 
   List<Map<String, int>> playgroundStatistics = [];
