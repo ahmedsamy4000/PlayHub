@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:playhub/common/data/local/local_storage.dart';
 import 'package:playhub/core/padding.dart';
 import 'package:playhub/features/authentication/data/user_model.dart';
 import 'package:playhub/features/rooms/data/room_model.dart';
@@ -19,14 +20,21 @@ class ListRoomItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cubit=context.read<RoomsCubit>();
+    String currentUserType;
     return InkWell(
       onTap: (){
         cubit.getRoomPlayers(roomPlayers: room.players).then((_){
-          //if(roomOwner==){}
+          if(roomOwner.id==LocalStorage().userData?.id){
+            currentUserType="Owner";
+          }else if(room.players.contains(LocalStorage().userData?.id)){
+            currentUserType="Player";
+          }else{
+            currentUserType="Stranger";
+          }
           Navigator.push(context,
               MaterialPageRoute(builder: (con) => BlocProvider.value(
                 value: context.read<RoomsCubit>(),
-                  child: RoomDetailsScreen(room: room,roomOwner: roomOwner,roomId:roomId))));
+                  child: RoomDetailsScreen(room: room,roomOwner: roomOwner,roomId:roomId,currentUserType:currentUserType))));
         });
         },
       child: Container(

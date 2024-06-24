@@ -5,8 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:playhub/common/data/local/local_storage.dart';
 import 'package:playhub/features/authentication/data/user_model.dart';
 import 'package:playhub/features/rooms/cubits/rooms_states.dart';
+import 'package:playhub/features/rooms/data/category_model.dart';
 import 'package:playhub/features/rooms/data/playground_model.dart';
 import 'package:playhub/features/rooms/data/room_model.dart';
 
@@ -68,23 +70,6 @@ class RoomsCubit extends Cubit<RoomsStates> {
     }
     return true;
   }
-  late var userData;
-  Future<void> getCurrentUserData() async {
-    try {
-      FirebaseAuth auth = FirebaseAuth.instance;
-      User? user = auth.currentUser;
-      if (user != null) {
-        final snapshot =
-        await FirebaseFirestore.instance.collection('Users').get();
-
-        for (var doc in snapshot.docs) {
-          if (user.uid == doc.data()['Id']) userData = doc.data();
-        }
-
-      }
-    } catch (e) {
-    }
-  }
   Future<UserModel?> getUserById({required String id}) async {
     UserModel? user;
     try {
@@ -107,8 +92,8 @@ class RoomsCubit extends Cubit<RoomsStates> {
     }
   }
   void createRoom({required String? playground,required String date,required String time,required String? period,required String? level})async{
-    await getCurrentUserData();
-    RoomModel room =RoomModel(playground: playground!, category: category!, city: city!, date: date, time: time, period: period!, playersNum: playersNum!, comment: comment,level: level!, authUserId: userData["Id"],players: []);
+
+    RoomModel room =RoomModel(playground: playground!, category: category!, city: city!, date: date, time: time, period: period!, playersNum: playersNum!, comment: comment,level: level!, authUserId: LocalStorage().userData!.id!,players: []);
 
     FirebaseFirestore.instance
         .collection('Rooms')
@@ -142,6 +127,21 @@ class RoomsCubit extends Cubit<RoomsStates> {
       print('Error retrieving playgrounds: $e');
     }
   }
+  List<CategoryModel> categories = [];
+
+  void getAllCategory()async{
+    try {
+      var data = await FirebaseFirestore.instance.collection('Categories').get();
+
+      for (var document in data.docs) {
+        CategoryModel category = CategoryModel.fromJson(document.data());
+        categories.add(category);
+      }
+      emit(GetAllCategoryState());
+    } catch (e) {
+    }
+  }
+
   List<UserModel> players=[];
   Future<void> getRoomPlayers({required List<dynamic> roomPlayers}) async{
     players=[];
@@ -152,8 +152,16 @@ class RoomsCubit extends Cubit<RoomsStates> {
   }
 
   Future<void> playerJoinRoom({required String id,required RoomModel room}) async{
-    await getCurrentUserData();
-    room.players.add(userData["Id"]);
+
+    room.players.add(LocalStorage().userData?.id);
+    await FirebaseFirestore.instance
+        .collection('Rooms')
+        .doc(id)
+        .update(room.toJson());
+  }
+
+  Future<void> playerUnJoinRoom({required String id,required RoomModel room}) async{
+    room.players.remove(LocalStorage().userData?.id);
     await FirebaseFirestore.instance
         .collection('Rooms')
         .doc(id)

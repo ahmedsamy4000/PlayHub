@@ -10,10 +10,11 @@ import '../../../../core/app_colors.dart';
 import '../widgets/user_component.dart';
 
 class RoomDetailsScreen extends StatelessWidget {
-  const RoomDetailsScreen({super.key, required this.room, required this.roomOwner, required this.roomId});
+  const RoomDetailsScreen({super.key, required this.room, required this.roomOwner, required this.roomId, required this.currentUserType});
   final RoomModel room;
   final UserModel roomOwner;
   final String roomId;
+  final String currentUserType;
   @override
   Widget build(BuildContext context) {
     var cubit=context.read<RoomsCubit>();
@@ -77,6 +78,7 @@ class RoomDetailsScreen extends StatelessWidget {
               },
             ),
           ),
+          currentUserType=="Stranger"?
           LoginButton(
               onTap: (){
                 cubit.playerJoinRoom(id: roomId, room: room).then((_){
@@ -86,7 +88,19 @@ class RoomDetailsScreen extends StatelessWidget {
               text: "Join",
               gradiantColor: AppColors.loginGradiantColorButton,
               tapedGradiantColor: AppColors.loginGradiantColorButtonTaped
-          )
+          ):
+          currentUserType=="Player"?
+          LoginButton(
+              onTap: (){
+                cubit.playerUnJoinRoom(id: roomId, room: room).then((_){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RoomsScreen()));
+                });
+              },
+              text: "Cancel",
+              gradiantColor: AppColors.loginGradiantColorButton,
+              tapedGradiantColor: AppColors.loginGradiantColorButtonTaped
+          ) :
+          const SizedBox.shrink()
         ],
       ),
     );

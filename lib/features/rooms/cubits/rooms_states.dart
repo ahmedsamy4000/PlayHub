@@ -1,4 +1,5 @@
 import 'package:playhub/features/authentication/data/user_model.dart';
+import 'package:playhub/features/rooms/data/category_model.dart';
 import 'package:playhub/features/rooms/data/room_model.dart';
 
 class RoomsStates{}
@@ -42,5 +43,9 @@ class GetRoomPlayers extends RoomsStates{
   final List<UserModel>? players;
 
   GetRoomPlayers({required this.players});
+
+}
+
+class GetAllCategoryState extends RoomsStates{
 
 }
