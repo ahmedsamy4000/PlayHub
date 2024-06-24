@@ -8,10 +8,11 @@ class PlaygroundModel {
   String? ownerId;
   String? region;
   String? city;
+  String? categoryId;
   List<Ordermodel> orders;
 
-  PlaygroundModel(
-      this.id, this.name, this.image, this.ownerId, this.orders, this.region, this.city);
+  PlaygroundModel(this.id, this.name, this.image, this.ownerId, this.orders,
+      this.region, this.city, this.categoryId);
 
   factory PlaygroundModel.fromJson(Map<String, dynamic> json, String id,
       List<DocumentSnapshot> ordersSnapShot) {
@@ -26,6 +27,7 @@ class PlaygroundModel {
       orders,
       json["Region"],
       json["City"],
+      json["CategoryId"],
     );
   }
 
@@ -36,5 +38,6 @@ class PlaygroundModel {
         "Owner_Id": ownerId,
         "Region": region,
         "City": city,
+        "CategoryId": categoryId
       };
 }

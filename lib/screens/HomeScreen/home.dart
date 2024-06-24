@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/cubit/app_cubit.dart';
@@ -8,6 +9,7 @@ import 'package:playhub/cubit/states.dart';
 import 'package:playhub/features/categories/ui/screens/category_screen.dart';
 import 'package:playhub/features/favorites/ui/screens/favorites_playgrounds_screen.dart';
 import 'package:playhub/screens/HomeScreen/CategoryCard.dart';
+import 'package:playhub/screens/HomeScreen/floatingactionmenu.dart';
 import 'package:playhub/screens/playgroundScreen/playgroundscreen.dart';
 
 class Home extends StatelessWidget {
@@ -34,10 +36,15 @@ class Home extends StatelessWidget {
                 ),
               );
             },
-            icon: Icon(Icons.favorite, color: AppColors.darkGreen,),
+            icon: Icon(
+              Icons.favorite,
+              color: AppColors.darkGreen,
+            ),
           ),
         ],
       ),
+      floatingActionButtonLocation: ExpandableFab.location,
+      floatingActionButton: FloatingActionMenu(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -83,19 +90,19 @@ class Home extends StatelessWidget {
                             imageUrl: imageUrl ?? '',
                             name: name,
                             onTap: () {
-                              cubit.getFavoritesPlaygrounds().then((_){
-                                if(cubit.state is GetFavoritesPlaygroundsSuccessState)
-                                {
+                              cubit.getFavoritesPlaygrounds().then((_) {
+                                if (cubit.state
+                                    is GetFavoritesPlaygroundsSuccessState) {
                                   Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CategoryScreen(
-                                    categoryId: categoryId,
-                                    name: name,
-                                    favorites: cubit.favoritesId,
-                                  ),
-                                ),
-                              );
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => CategoryScreen(
+                                        categoryId: categoryId,
+                                        name: name,
+                                        favorites: cubit.favoritesId,
+                                      ),
+                                    ),
+                                  );
                                 }
                               });
                             },
@@ -141,12 +148,12 @@ class Home extends StatelessWidget {
                         final playgroundId = playground.id;
 
                         return GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PlayGroundScreen(
-                                      name, city, imageUrl, playgroundId)));
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => PlayGroundScreen(
+                                        name, city, imageUrl, playgroundId)));
                           },
                           child: Container(
                             width: 200.w,
@@ -170,7 +177,8 @@ class Home extends StatelessWidget {
                                         ? Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(20.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0),
                                               child: Image.network(
                                                 imageUrl,
                                                 width: 70,
@@ -185,20 +193,24 @@ class Home extends StatelessWidget {
                                           ),
                                     const SizedBox(width: 10.0),
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           name,
                                           style: TextStyle(
-                                            color: AppColors.black.withOpacity(0.7),
+                                            color: AppColors.black
+                                                .withOpacity(0.7),
                                             fontWeight: FontWeight.w800,
                                           ),
                                         ),
                                         Text(
                                           city,
                                           style: TextStyle(
-                                            color: AppColors.black.withOpacity(0.4),
+                                            color: AppColors.black
+                                                .withOpacity(0.4),
                                             fontWeight: FontWeight.w600,
                                             fontSize: 12.0,
                                           ),
@@ -220,7 +232,8 @@ class Home extends StatelessWidget {
                                         size: 15,
                                       ),
                                       onPressed: () {
-                                        cubit.addPlaygroundToFavorites(playgroundId);
+                                        cubit.addPlaygroundToFavorites(
+                                            playgroundId);
                                       },
                                     ),
                                   ),

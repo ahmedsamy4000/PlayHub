@@ -16,6 +16,7 @@ import 'package:playhub/features/authentication/data/user_model.dart';
 import 'package:playhub/features/playgrounds/ui/screens/playgrounds_screen.dart';
 import 'package:playhub/features/profile/ui/screens/profile_screen.dart';
 import 'package:playhub/features/rooms/ui/screens/rooms_screen.dart';
+import 'package:playhub/models/bookingmodel.dart';
 import 'package:playhub/models/ordermodel.dart';
 import 'package:playhub/models/playgroundmodel.dart';
 import 'package:playhub/screens/HomeScreen/home.dart';
@@ -122,9 +123,12 @@ class AppCubit extends Cubit<AppStates> {
       if (user != null) {
         final snapshot =
             await FirebaseFirestore.instance.collection('Users').get();
-
+        print(user.uid);
         for (var doc in snapshot.docs) {
-          if (user.uid == doc.data()['Id']) userData = doc.data();
+          if (user.uid == doc.data()['Id']) {
+            userId = doc.id;
+            userData = doc.data();
+          }
         }
         log('$userData');
         if (userData != null) emit(GetCurrentUserSuccessState());
@@ -188,6 +192,7 @@ class AppCubit extends Cubit<AppStates> {
 
   Future<void> updateUserImage(String image) async {
     await getCurrentUserData();
+
     late var id;
     var newUser = UserModel(
         id: userData['Id'],
@@ -397,17 +402,39 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
+  String? userId;
   Future<void> addNewOrder(
       String? playGroundId, int? time, String? date, bool? booked) async {
     emit(AddNewOrderLoadingState());
+    if (userData != null) {
+      final snapshot =
+          await FirebaseFirestore.instance.collection('Users').get();
+      for (var doc in snapshot.docs) {
+        if (userData['Id'] == doc.data()['Id']) userId = doc.id;
+      }
+    }
     Ordermodel newModel = Ordermodel(
         userName: userData["Name"], booked: booked, date: date, time: time);
+
+    BookingModel bookModel = BookingModel(
+        categoryId: playground!.categoryId,
+        playGroundName: playground!.name,
+        userName: userData["Name"],
+        booked: booked,
+        date: date,
+        time: time);
     CollectionReference ref = FirebaseFirestore.instance
         .collection('PlayGrounds')
         .doc(playGroundId)
         .collection('Orders');
+    CollectionReference profileRef = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(userId)
+        .collection('Booking');
     try {
       await ref.add(newModel.toJson());
+      await profileRef.add(bookModel.toJson());
+      print(playground!.categoryId);
       print("OrderAdded");
       emit(AddNewOrderSuccessState());
     } catch (e) {
@@ -429,6 +456,32 @@ class AppCubit extends Cubit<AppStates> {
       playgroundOrders.add(matchedOrder);
     }
     return playgroundOrders;
+  }
+
+  List<BookingModel> bookings = [];
+  Future<void> getbookingByCategories(String? categoryId) async {
+    emit(GetBookingListLoadingState());
+    bookings = [];
+    try {
+      CollectionReference bookRef = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(userId)
+          .collection('Booking');
+
+      QuerySnapshot snapshot = await bookRef.get();
+      for (QueryDocumentSnapshot doc in snapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        log("$data");
+        if (data["CategoryId"] == categoryId) {
+          bookings.add(BookingModel.fromJson(data));
+        }
+      }
+      print(bookings.length);
+      emit(GetBookingListSuccessState());
+    } catch (error) {
+      print(error);
+      emit(GetBookingListErrorState());
+    }
   }
 
   List<DateTime> daysPerWeek = [];
@@ -574,15 +627,15 @@ class AppCubit extends Cubit<AppStates> {
       required city,
       required region,
       required image}) async {
-        String c = city;
+    String c = city;
     final snapshot =
         await FirebaseFirestore.instance.collection('Categories').get();
     await getCurrentUserData();
     var id;
     for (var doc in snapshot.docs) {
-      if (category == doc.data()['Name']) 
-      {id = doc.data()['Id'];
-      log('${doc.data()['Id']}');
+      if (category == doc.data()['Name']) {
+        id = doc.data()['Id'];
+        log('${doc.data()['Id']}');
       }
     }
     if (userData != null) {

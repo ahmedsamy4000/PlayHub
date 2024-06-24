@@ -80,3 +80,8 @@ class ChangeMonthSuccessState extends AppStates {}
 
 class GetCategoriesSuccessState extends AppStates {}
 
+class GetBookingListErrorState extends AppStates {}
+
+class GetBookingListSuccessState extends AppStates {}
+
+class GetBookingListLoadingState extends AppStates {}

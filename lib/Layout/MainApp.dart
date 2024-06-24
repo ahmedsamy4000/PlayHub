@@ -16,23 +16,6 @@ class Main extends StatelessWidget {
         return Scaffold(
           body: AppCubit.get(context)
               .pages[AppCubit.get(context).currentScreenIdx],
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              AppCubit.get(context).searchFunction().then((_) {
-                if (AppCubit.get(context).state is AppChangeSearchFunction) {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Search()));
-                }
-              });
-            },
-            child: Icon(
-              Icons.search,
-              color: AppColors.white,
-            ),
-            backgroundColor: AppColors.darkGreen,
-            // label: Text('Browse all courts'),
-          ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             currentIndex: AppCubit.get(context).currentScreenIdx,
