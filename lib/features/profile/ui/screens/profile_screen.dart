@@ -11,6 +11,7 @@ import 'package:playhub/features/authentication/ui/screens/login_screen.dart';
 import 'package:playhub/features/authentication/ui/screens/type_screen.dart';
 import 'package:playhub/features/profile/ui/screens/change_password_screen.dart';
 import 'package:playhub/features/profile/ui/screens/edit_info_screen.dart';
+import 'package:playhub/features/profile/ui/screens/trainer_add_package.dart';
 import 'package:playhub/features/profile/ui/widgets/basketball.dart';
 import 'package:playhub/features/profile/ui/widgets/football.dart';
 import 'package:playhub/features/profile/ui/widgets/tennis.dart';
@@ -59,14 +60,14 @@ class ProfileScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                               PopupMenuItem(
-                                onTap: (){
-                                  Navigator.push(
+                                PopupMenuItem(
+                                  onTap: () {
+                                    Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 const ChangePasswordScreen()));
-                                },
+                                  },
                                   child: const Text(
                                     'Change Password',
                                     style: TextStyle(
@@ -89,10 +90,10 @@ class ProfileScreen extends StatelessWidget {
                                   onTap: () {
                                     cubit.deleteUser();
                                     Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const TypeScreen()));
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const TypeScreen()));
                                   },
                                 ),
                                 PopupMenuItem(
@@ -272,34 +273,42 @@ class ProfileScreen extends StatelessWidget {
                                           fontFamily: 'Open Sans',
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    cubit.userData['City'] != null && cubit.userData['City'] != '' ? 
-                                    const SizedBox(
-                                      width: 10,
-                                    ):Container(),
-                                    cubit.userData['City'] != null && cubit.userData['City'] != '' ? 
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 5.0),
-                                      child: Container(
-                                        color:
-                                            AppColors.darkGray.withOpacity(.4),
-                                        width: 1,
-                                        height: 20,
-                                      ),
-                                    ) : Container(),
-                                    cubit.userData['City'] != null && cubit.userData['City'] != '' ? 
-                                    const SizedBox(
-                                      width: 10,
-                                    ) : Container(),
-                                    cubit.userData['City'] != null && cubit.userData['City'] != '' ? 
-                                    Text(
-                                      '${cubit.userData['City']}',
-                                      style: const TextStyle(
-                                          color: AppColors.darkGray,
-                                          fontSize: 15,
-                                          fontFamily: 'Open Sans',
-                                          fontWeight: FontWeight.bold),
-                                    ):Container(),
+                                    cubit.userData['City'] != null &&
+                                            cubit.userData['City'] != ''
+                                        ? const SizedBox(
+                                            width: 10,
+                                          )
+                                        : Container(),
+                                    cubit.userData['City'] != null &&
+                                            cubit.userData['City'] != ''
+                                        ? Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 5.0),
+                                            child: Container(
+                                              color: AppColors.darkGray
+                                                  .withOpacity(.4),
+                                              width: 1,
+                                              height: 20,
+                                            ),
+                                          )
+                                        : Container(),
+                                    cubit.userData['City'] != null &&
+                                            cubit.userData['City'] != ''
+                                        ? const SizedBox(
+                                            width: 10,
+                                          )
+                                        : Container(),
+                                    cubit.userData['City'] != null &&
+                                            cubit.userData['City'] != ''
+                                        ? Text(
+                                            '${cubit.userData['City']}',
+                                            style: const TextStyle(
+                                                color: AppColors.darkGray,
+                                                fontSize: 15,
+                                                fontFamily: 'Open Sans',
+                                                fontWeight: FontWeight.bold),
+                                          )
+                                        : Container(),
                                   ],
                                 ),
                               ),
@@ -311,72 +320,118 @@ class ProfileScreen extends StatelessWidget {
                     const SizedBox(
                       height: 32,
                     ),
-                    cubit.userData['Type'] == 'Player' ? const TabBar(
-                      isScrollable: true,
-                      tabAlignment: TabAlignment.start,
-                      tabs: [
-                        Tab(
-                          child: Text(
-                            'Football',
-                            style: TextStyle(
-                                fontFamily: 'Open Sans',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
-                          ),
-                        ),
-                        Tab(
-                          child: Text(
-                            'Volleyball',
-                            style: TextStyle(
-                                fontFamily: 'Open Sans',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
-                          ),
-                        ),
-                        Tab(
-                          child: Text(
-                            'Basketball',
-                            style: TextStyle(
-                                fontFamily: 'Open Sans',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
-                          ),
-                        ),
-                        Tab(
-                          child: Text(
-                            'Tennis',
-                            style: TextStyle(
-                                fontFamily: 'Open Sans',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
-                          ),
-                        ),
-                        Tab(
-                          child: Text(
-                            'Workout',
-                            style: TextStyle(
-                                fontFamily: 'Open Sans',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
-                          ),
-                        ),
-                      ],
-                      labelColor: Colors.black,
-                      indicatorColor: AppColors.darkGreen,
-                    ) : Container(),
-                    cubit.userData['Type'] == 'Player' ? const Expanded(
-                      child: TabBarView(
-                        children: [
-                          FootballTab(),
-                          VolleyballTab(),
-                          BasketballTab(),
-                          TennisTab(),
-                          WorkoutTab(),
-                        ],
-                      ),
-                    ) : Container(),
+                    cubit.userData['Type'] == 'Player'
+                        ? const TabBar(
+                            isScrollable: true,
+                            tabAlignment: TabAlignment.start,
+                            tabs: [
+                              Tab(
+                                child: Text(
+                                  'Football',
+                                  style: TextStyle(
+                                      fontFamily: 'Open Sans',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                              ),
+                              Tab(
+                                child: Text(
+                                  'Volleyball',
+                                  style: TextStyle(
+                                      fontFamily: 'Open Sans',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                              ),
+                              Tab(
+                                child: Text(
+                                  'Basketball',
+                                  style: TextStyle(
+                                      fontFamily: 'Open Sans',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                              ),
+                              Tab(
+                                child: Text(
+                                  'Tennis',
+                                  style: TextStyle(
+                                      fontFamily: 'Open Sans',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                              ),
+                              Tab(
+                                child: Text(
+                                  'Workout',
+                                  style: TextStyle(
+                                      fontFamily: 'Open Sans',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                              ),
+                            ],
+                            labelColor: Colors.black,
+                            indicatorColor: AppColors.darkGreen,
+                          )
+                        : Container(),
+                    cubit.userData['Type'] == 'Player'
+                        ? const Expanded(
+                            child: TabBarView(
+                              children: [
+                                FootballTab(),
+                                VolleyballTab(),
+                                BasketballTab(),
+                                TennisTab(),
+                                WorkoutTab(),
+                              ],
+                            ),
+                          )
+                        : Container(),
+                    cubit.userData['Type'] == 'Trainer'
+                        ? Expanded(
+                          child: state is GetTrainerPackagesLoadingState
+                              ? const Center(child: CircularProgressIndicator())
+                              : ListView.builder(
+                                  itemCount: cubit.packages.length,
+                                  itemBuilder: (context, index) {
+                                    final package = cubit.packages[index];
+                                    return ListTile(
+                                      title: Text(package.description),
+                                      subtitle: Text('Price: \$${package.price}, Duration: ${package.duration} days'),
+                                    );
+                                  },
+                                ),
+                        )
+                        : Container(),
                   ],
                 ),
+                floatingActionButton: cubit.userData['Type'] == 'Trainer'
+                    ? FloatingActionButton(
+                        onPressed: () {
+                          AppCubit.get(context).searchFunction().then((_) {
+                            if (AppCubit.get(context).state
+                                is AppChangeSearchFunction) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AddPackage(
+                                            trainerId: cubit.userData['Id'],
+                                          )));
+                            }
+                          });
+                        },
+                        backgroundColor: AppColors.darkGreen,
+                        child: const Icon(
+                          Icons.add,
+                          color: AppColors.white,
+                        ),
+                      )
+                    : null,
+                floatingActionButtonLocation:
+                    cubit.userData['Type'] == 'Trainer'
+                        ? FloatingActionButtonLocation.endFloat
+                        : null,
               ),
             ),
     );

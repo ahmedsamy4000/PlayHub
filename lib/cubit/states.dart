@@ -1,3 +1,5 @@
+import 'package:playhub/features/profile/data/trainer_package_model.dart';
+
 abstract class AppStates {}
 
 class InitialState extends AppStates {}
@@ -85,3 +87,18 @@ class GetBookingListErrorState extends AppStates {}
 class GetBookingListSuccessState extends AppStates {}
 
 class GetBookingListLoadingState extends AppStates {}
+
+class PackageAdded extends AppStates {
+  final TrainingPackage package;
+
+  PackageAdded(this.package);
+}
+
+class GetTrainerPackagesLoadingState extends AppStates {}
+
+class GetTrainerPackagesSuccessState extends AppStates {}
+
+class GetTrainerPackagesErrorState extends AppStates {
+  final String error;
+  GetTrainerPackagesErrorState(this.error);
+}

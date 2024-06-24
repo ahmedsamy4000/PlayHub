@@ -14,6 +14,7 @@ import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/features/authentication/data/user_model.dart';
 import 'package:playhub/features/playgrounds/ui/screens/playgrounds_screen.dart';
+import 'package:playhub/features/profile/data/trainer_package_model.dart';
 import 'package:playhub/features/profile/ui/screens/profile_screen.dart';
 import 'package:playhub/features/rooms/ui/screens/rooms_screen.dart';
 import 'package:playhub/models/bookingmodel.dart';
@@ -111,6 +112,40 @@ class AppCubit extends Cubit<AppStates> {
     log("$items");
 
     emit(AppChangeSearchFunction());
+  }
+
+  List<TrainingPackage> packages = [];
+
+  void addPackage(
+      String description, double price, int duration, String trainerId) {
+    final newPackage = TrainingPackage(
+      description: description,
+      price: price,
+      duration: duration,
+      trainerId: trainerId,
+    );
+    CollectionReference ref = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(userId)
+        .collection('Package');
+    ref.add(newPackage.toJson());
+
+    emit(PackageAdded(newPackage));
+  }
+
+  void getTrainerPackages(String trainerId) {
+    emit(GetTrainerPackagesLoadingState());
+    FirebaseFirestore.instance
+        .collection('packages')
+        .where('trainerId', isEqualTo: trainerId)
+        .get()
+        .then((value) {
+      packages =
+          value.docs.map((e) => TrainingPackage.fromJson(e.data())).toList();
+      emit(GetTrainerPackagesSuccessState());
+    }).catchError((error) {
+      emit(GetTrainerPackagesErrorState(error.toString()));
+    });
   }
 
   late var userData;
