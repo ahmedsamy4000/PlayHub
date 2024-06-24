@@ -26,8 +26,8 @@ class GetPlaygroundDataState extends RoomsStates{
 class GetRoomsDataState extends RoomsStates{
   final List<RoomModel> rooms;
   final List<UserModel> roomOwners;
-  final List<List<UserModel>> roomsPlayers;
-  GetRoomsDataState({required this.roomsPlayers, required this.roomOwners, required this.rooms});
+  final List<String> roomsIds;
+  GetRoomsDataState( {required this.roomsIds,required this.roomOwners, required this.rooms});
 }
 
 class CreateRoomsErrorState extends RoomsStates{}
@@ -36,4 +36,11 @@ class GetUserByIdState extends RoomsStates{
   final UserModel? user;
 
   GetUserByIdState({this.user});
+}
+
+class GetRoomPlayers extends RoomsStates{
+  final List<UserModel>? players;
+
+  GetRoomPlayers({required this.players});
+
 }

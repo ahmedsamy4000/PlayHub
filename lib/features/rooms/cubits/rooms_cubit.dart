@@ -125,8 +125,8 @@ class RoomsCubit extends Cubit<RoomsStates> {
       var data = await FirebaseFirestore.instance.collection('Rooms').get();
       List<RoomModel> rooms = [];
       List<UserModel> roomOwners=[];
-      List<List<UserModel>> roomsPlayers=[];
-      List<UserModel> players;
+
+      List<String> roomsId=[];
       for (var document in data.docs) {
         RoomModel room = RoomModel.fromJson(document.data());
         rooms.add(room);
@@ -134,18 +134,30 @@ class RoomsCubit extends Cubit<RoomsStates> {
         UserModel? user=await getUserById(id:room.authUserId);
         log('${user}');
         roomOwners.add(user!);
-        players=[];
-        for(var playerId in room.players){
-          UserModel? player=await getUserById(id:playerId);
-          players.add(player!);
-        }
-        roomsPlayers.add(players);
+        roomsId.add(document.id);
       }
 
-      emit(GetRoomsDataState(rooms: rooms,roomOwners:roomOwners,roomsPlayers: roomsPlayers));
+      emit(GetRoomsDataState(rooms: rooms,roomOwners:roomOwners,roomsIds:roomsId));
     } catch (e) {
       print('Error retrieving playgrounds: $e');
     }
+  }
+  List<UserModel> players=[];
+  Future<void> getRoomPlayers({required List<dynamic> roomPlayers}) async{
+    players=[];
+    for(var playerId in roomPlayers){
+      UserModel? player=await getUserById(id:playerId);
+      players.add(player!);
+    }
+  }
+
+  Future<void> playerJoinRoom({required String id,required RoomModel room}) async{
+    await getCurrentUserData();
+    room.players.add(userData["Id"]);
+    await FirebaseFirestore.instance
+        .collection('Rooms')
+        .doc(id)
+        .update(room.toJson());
   }
 
 }

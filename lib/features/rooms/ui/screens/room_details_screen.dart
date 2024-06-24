@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:playhub/core/padding.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:playhub/features/authentication/data/user_model.dart';
+import 'package:playhub/features/authentication/ui/widgets/custom_login_button.dart';
+import 'package:playhub/features/rooms/cubits/rooms_cubit.dart';
 import 'package:playhub/features/rooms/data/room_model.dart';
+import 'package:playhub/features/rooms/ui/screens/rooms_screen.dart';
 
 import '../../../../core/app_colors.dart';
 import '../widgets/user_component.dart';
 
 class RoomDetailsScreen extends StatelessWidget {
-  const RoomDetailsScreen({super.key, required this.room, required this.roomOwner, required this.roomPlayers});
+  const RoomDetailsScreen({super.key, required this.room, required this.roomOwner, required this.roomId});
   final RoomModel room;
   final UserModel roomOwner;
-  final List<UserModel> roomPlayers;
+  final String roomId;
   @override
   Widget build(BuildContext context) {
+    var cubit=context.read<RoomsCubit>();
     return Scaffold(
       appBar: AppBar(),
       body: Column(
@@ -42,7 +45,7 @@ class RoomDetailsScreen extends StatelessWidget {
 
               Text("${room.level} Level",
                 style: TextStyle(
-                  fontSize: 20
+                    fontSize: 20
                 ),
               ),
               Text("${room.date}@${room.time}",
@@ -65,15 +68,25 @@ class RoomDetailsScreen extends StatelessWidget {
           ),
           Expanded(
             child: ListView.separated(
-              itemCount: roomPlayers.length,
+              itemCount: cubit.players.length,
               itemBuilder: (context, index) {
-                return UserComponent(user: roomPlayers[index]);
+                return UserComponent(user: cubit.players[index]);
               },
               separatorBuilder: (context, index) {
                 return Divider();
               },
             ),
           ),
+          LoginButton(
+              onTap: (){
+                cubit.playerJoinRoom(id: roomId, room: room).then((_){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RoomsScreen()));
+                });
+              },
+              text: "Join",
+              gradiantColor: AppColors.loginGradiantColorButton,
+              tapedGradiantColor: AppColors.loginGradiantColorButtonTaped
+          )
         ],
       ),
     );

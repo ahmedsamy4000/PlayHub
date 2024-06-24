@@ -18,6 +18,8 @@ import 'package:playhub/features/profile/ui/widgets/tennis.dart';
 import 'package:playhub/features/profile/ui/widgets/volleyball.dart';
 import 'package:playhub/features/profile/ui/widgets/workout.dart';
 
+import '../../../../common/data/local/local_storage.dart';
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -107,7 +109,7 @@ class ProfileScreen extends StatelessWidget {
                                     ),
                                   ),
                                   onTap: () {
-                                    cubit.logout().then((_) {
+                                    cubit.logout().then((_) async {
                                       if (cubit.state
                                           is UserLogoutSuccessState) {
                                         Navigator.pushReplacement(
@@ -115,6 +117,8 @@ class ProfileScreen extends StatelessWidget {
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     const LoginScreen()));
+                                        await LocalStorage().saveUserData(null);
+
                                       }
                                     });
                                   },

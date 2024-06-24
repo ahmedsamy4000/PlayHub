@@ -11,19 +11,24 @@ import '../../cubits/rooms_cubit.dart';
 
 class ListRoomItem extends StatelessWidget {
   const ListRoomItem({
-    super.key, required this.room, required this.roomOwner, required this.roomsPlayers,
+    super.key, required this.room, required this.roomOwner, required this.roomId,
   });
   final RoomModel room;
   final UserModel roomOwner;
-  final List<UserModel> roomsPlayers;
+  final String roomId;
   @override
   Widget build(BuildContext context) {
-    var cubit =context.read<RoomsCubit>();
+    var cubit=context.read<RoomsCubit>();
     return InkWell(
       onTap: (){
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => RoomDetailsScreen(room: room,roomOwner: roomOwner,roomPlayers: roomsPlayers,)));
-      },
+        cubit.getRoomPlayers(roomPlayers: room.players).then((_){
+          //if(roomOwner==){}
+          Navigator.push(context,
+              MaterialPageRoute(builder: (con) => BlocProvider.value(
+                value: context.read<RoomsCubit>(),
+                  child: RoomDetailsScreen(room: room,roomOwner: roomOwner,roomId:roomId))));
+        });
+        },
       child: Container(
         margin: 10.padVertical,
         padding: 10.padAll,

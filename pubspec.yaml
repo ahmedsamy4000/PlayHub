@@ -50,7 +50,7 @@ dependencies:
   searchfield: ^1.0.5
   fl_chart: ^0.68.0
   dropdown_button2: ^2.3.9
-
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_test:

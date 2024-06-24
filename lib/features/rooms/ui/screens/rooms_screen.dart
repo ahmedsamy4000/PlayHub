@@ -12,8 +12,8 @@ import '../widgets/custom_list_room_item.dart';
 class RoomsScreen extends StatelessWidget {
   RoomsScreen({super.key});
   List<RoomModel> rooms=[];
+  List<String> roomsIds=[];
   List<UserModel> roomOwners=[];
-  List<List<UserModel>> roomsPlayers=[];
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -23,7 +23,7 @@ class RoomsScreen extends StatelessWidget {
             if(state is GetRoomsDataState){
               rooms=state.rooms;
               roomOwners=state.roomOwners;
-              roomsPlayers=state.roomsPlayers;
+              roomsIds=state.roomsIds;
             }
             return DefaultTabController(
               initialIndex: 0,
@@ -55,9 +55,9 @@ class RoomsScreen extends StatelessWidget {
                   children: <Widget>[
                     ListView.separated(
                       itemCount: rooms.length,
-                      itemBuilder: (context, index) {
+                      itemBuilder: (cont, index) {
                         return ListTile(
-                          title: ListRoomItem(room:rooms[index],roomOwner:roomOwners[index],roomsPlayers: roomsPlayers[index],),
+                          title: ListRoomItem(room:rooms[index],roomOwner:roomOwners[index],roomId:roomsIds[index]),
                         );
                       },
                       separatorBuilder: (context, index) {

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:playhub/common/data/local/local_storage.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/features/authentication/cubits/auth_states.dart';
@@ -95,6 +96,28 @@ class AuthCubit extends Cubit<AuthStates> {
     }
   }
 
+  late UserModel userData;
+  late String currentUserDocId;
+  Future<void> getCurrentUserData() async {
+    try {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      User? user = auth.currentUser;
+      if (user != null) {
+        final snapshot =
+        await FirebaseFirestore.instance.collection('Users').get();
+
+        for (var doc in snapshot.docs) {
+          if (user.uid == doc.data()['Id']) {
+            userData = UserModel.fromJson(doc.data());
+            currentUserDocId=doc.id;
+          }
+        }
+
+      }
+    } catch (e) {
+    }
+  }
+
   Future<void> login({required BuildContext context}) async {
     if(email!=null&&password!=null){
       try {
@@ -111,7 +134,16 @@ class AuthCubit extends Cubit<AuthStates> {
           backgroundColor: AppColors.green,
           textColor: AppColors.white,
         );
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Main()));
+        getCurrentUserData().then((_)  {
+          LocalStorage().saveUserData(userData).then((_){
+            log("AppUser: ${LocalStorage().userData?.toJson()}");
+            LocalStorage().currentId=currentUserDocId;
+            log("AppUser: ${LocalStorage().currentId}");
+          });
+          log("AppUser: $userData");
+
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Main()));
+        });
 
       } on FirebaseAuthException catch (e) {
         Fluttertoast.showToast(
