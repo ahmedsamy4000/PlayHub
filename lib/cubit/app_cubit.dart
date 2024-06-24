@@ -578,7 +578,6 @@ class AppCubit extends Cubit<AppStates> {
     final snapshot =
         await FirebaseFirestore.instance.collection('Categories').get();
     await getCurrentUserData();
-    log('$city $region $category $name');
     var id;
     for (var doc in snapshot.docs) {
       if (category == doc.data()['Name']) 
