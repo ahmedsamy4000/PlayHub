@@ -71,3 +71,10 @@ class AddNewOrderLoadingState extends AppStates {}
 class AddNewOrderSuccessState extends AppStates {}
 
 class AddNewOrderErrorState extends AppStates {}
+
+class GetStatisticsSuccessState extends AppStates {}
+
+class GetStatisticsErrorState extends AppStates {}
+
+class ChangeMonthSuccessState extends AppStates {}
+

@@ -19,6 +19,7 @@ class CategoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cubit = BlocProvider.of<AppCubit>(context);
+    cubit.Pola('06');
     cubit.getCategoryPlaygrounds(categoryId);
     return BlocBuilder<AppCubit, AppStates>(
         builder: (context, state) => state is GetPlaygroundDataLoadingState
@@ -46,12 +47,12 @@ class CategoryScreen extends StatelessWidget {
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: cubit.categoryPlaygrounds.length,
                         itemBuilder: (context, index) {
+                          log('hiiii $favorites');
                           final playground = cubit.categoryPlaygrounds[index];
                           final name = playground['Name'];
                           final city = playground['City'];
                           final imageUrl = playground['Image'];
                           final playgroundId = cubit.playgroundsId[index];
-                          var isFav = false;
 
                           return GestureDetector(
                             onTap: () {
@@ -59,7 +60,7 @@ class CategoryScreen extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => PlayGroundScreen(
-                                          name, city, imageUrl, playgroundId)));
+                                          name, city, imageUrl, playgroundId),),);
                             },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
@@ -108,7 +109,12 @@ class CategoryScreen extends StatelessWidget {
                                         size: 30,
                                       ),
                                       onPressed: () {
-                                        cubit.addPlaygroundToFavorites(playgroundId);
+                                        cubit.addPlaygroundToFavorites(playgroundId).then((_){
+                                          if(cubit.state is AddPlaygroundToFavoritesSuccessState)
+                                          {
+                                            cubit.getFavoritesPlaygrounds();
+                                          }
+                                        });
                                       },
                                     ) : IconButton(
                                       icon: const Icon(
@@ -117,7 +123,12 @@ class CategoryScreen extends StatelessWidget {
                                         size: 30,
                                       ),
                                       onPressed: () {
-                                        cubit.deletePlaygroundFromFavorites(playgroundId);
+                                        cubit.deletePlaygroundFromFavorites(playgroundId).then((_){
+                                          if(cubit.state is DeletePlaygroundFromFavoritesSuccessState)
+                                          {
+                                            cubit.getFavoritesPlaygrounds();
+                                          }
+                                        });
                                       },
                                     ),
                                     ],

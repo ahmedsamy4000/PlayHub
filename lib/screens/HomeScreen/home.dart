@@ -44,7 +44,7 @@ class Home extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Welcome Reem Hatem'),
+              // Text('Welcome Reem Hatem'),
               const SizedBox(height: 16),
               Text(
                 'Categories',
@@ -92,7 +92,7 @@ class Home extends StatelessWidget {
                                   builder: (context) => CategoryScreen(
                                     categoryId: categoryId,
                                     name: name,
-                                    favorites: cubit.favoritesId
+                                    favorites: cubit.favoritesId,
                                   ),
                                 ),
                               );

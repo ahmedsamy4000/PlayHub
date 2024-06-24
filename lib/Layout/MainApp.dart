@@ -18,16 +18,17 @@ class Main extends StatelessWidget {
               .pages[AppCubit.get(context).currentScreenIdx],
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              AppCubit.get(context).searchFunction().then((_){
-                if(AppCubit.get(context).state is AppChangeSearchFunction){
-                  Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Search()));
+              AppCubit.get(context).searchFunction().then((_) {
+                if (AppCubit.get(context).state is AppChangeSearchFunction) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Search()));
                 }
-                
               });
-              
             },
-            child: Icon(Icons.search, color: AppColors.white,),
+            child: Icon(
+              Icons.search,
+              color: AppColors.white,
+            ),
             backgroundColor: AppColors.darkGreen,
             // label: Text('Browse all courts'),
           ),
@@ -49,6 +50,14 @@ class Main extends StatelessWidget {
               BottomNavigationBarItem(
                 icon: Icon(Icons.groups),
                 label: "Rooms",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.sports_baseball_rounded),
+                label: 'Playgrounds',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.sports_baseball_rounded),
+                label: "Statistics",
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.sports_soccer),

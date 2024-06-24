@@ -311,7 +311,7 @@ class ProfileScreen extends StatelessWidget {
                     const SizedBox(
                       height: 32,
                     ),
-                    const TabBar(
+                    cubit.userData['Type'] == 'Player' ? const TabBar(
                       isScrollable: true,
                       tabAlignment: TabAlignment.start,
                       tabs: [
@@ -363,8 +363,8 @@ class ProfileScreen extends StatelessWidget {
                       ],
                       labelColor: Colors.black,
                       indicatorColor: AppColors.darkGreen,
-                    ),
-                    const Expanded(
+                    ) : Container(),
+                    cubit.userData['Type'] == 'Player' ? const Expanded(
                       child: TabBarView(
                         children: [
                           FootballTab(),
@@ -374,7 +374,7 @@ class ProfileScreen extends StatelessWidget {
                           WorkoutTab(),
                         ],
                       ),
-                    ),
+                    ) : Container(),
                   ],
                 ),
               ),

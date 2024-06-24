@@ -111,7 +111,7 @@ class AuthCubit extends Cubit<AuthStates> {
           backgroundColor: AppColors.green,
           textColor: AppColors.white,
         );
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RoomsScreen()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Main()));
 
       } on FirebaseAuthException catch (e) {
         Fluttertoast.showToast(

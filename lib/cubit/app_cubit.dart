@@ -13,11 +13,13 @@ import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/features/authentication/data/user_model.dart';
+import 'package:playhub/features/playgrounds/ui/screens/playgrounds_screen.dart';
 import 'package:playhub/features/profile/ui/screens/profile_screen.dart';
 import 'package:playhub/features/rooms/ui/screens/rooms_screen.dart';
 import 'package:playhub/models/ordermodel.dart';
 import 'package:playhub/models/playgroundmodel.dart';
 import 'package:playhub/screens/HomeScreen/home.dart';
+import 'package:playhub/screens/Statistics/statistics_screen.dart';
 import 'package:toastification/toastification.dart';
 
 class AppCubit extends Cubit<AppStates> {
@@ -27,7 +29,9 @@ class AppCubit extends Cubit<AppStates> {
   int currentScreenIdx = 0;
   List<Widget> pages = [
     const Home(),
-    const RoomsScreen(),
+    RoomsScreen(),
+    const PlaygroundsScreen(),
+    StatisticsScreen(),
     const Home(),
     const ProfileScreen(),
   ];
@@ -460,7 +464,7 @@ class AppCubit extends Cubit<AppStates> {
             .collection('PFavorites')
             .add(favPlayground);
       }
-      getFavoritesPlaygrounds();
+      // getFavoritesPlaygrounds();
       emit(AddPlaygroundToFavoritesSuccessState());
     } catch (e) {
       log('$e');
@@ -499,15 +503,10 @@ class AppCubit extends Cubit<AppStates> {
 
   Future<void> getFavoritesPlaygrounds() async {
     favoritesPlaygrounds = [];
+    favoritesId = [];
     emit(GetFavoritesPlaygroundsLoadingState());
     try {
-      late var uid;
-      getCurrentUserData();
-      final snapshot =
-          await FirebaseFirestore.instance.collection('Users').get();
-      for (var doc in snapshot.docs) {
-        if (userData['Id'] == doc.data()['Id']) uid = doc.id;
-      }
+      var uid = await getUserDocID();
       List<String> ids = [];
       var playgrounds = await FirebaseFirestore.instance
           .collection('Users')
@@ -520,12 +519,58 @@ class AppCubit extends Cubit<AppStates> {
       favoritesPlaygrounds = playgrounds.docs.map((doc) => doc.data()).toList();
       favoritesId = ids;
       log('Favorites: $favoritesId');
-
-      log('$favoritesPlaygrounds');
       emit(GetFavoritesPlaygroundsSuccessState());
     } catch (e) {
       log('$e');
       emit(GetFavoritesPlaygroundsErrorState());
     }
+  }
+
+  List<Map<String, int>> playgroundStatistics = [];
+  late int sum = 0;
+
+  Future<void> Pola(String month) async {
+    sum = 0;
+    playgroundStatistics = [];
+    try {
+      List<Map<String, int>> filtered = [];
+      final snapshot =
+          await FirebaseFirestore.instance.collection('PlayGrounds').get();
+      for (var doc in snapshot.docs) {
+        final orders = await FirebaseFirestore.instance
+            .collection('PlayGrounds')
+            .doc(doc.id)
+            .collection('Orders')
+            .get();
+        int count = 0;
+        for (var order in orders.docs) {
+          if (order.data()['Date'][3] + order.data()['Date'][4] == month)
+            count++;
+        }
+        if (count > 0) {
+          sum += count;
+          filtered.add({doc.data()['Name']: count});
+        }
+      }
+      filtered.sort((a, b) => b.values.first.compareTo(a.values.first));
+
+      if (filtered.length >= 5) {
+        playgroundStatistics = filtered.sublist(0, 5);
+      } else {
+        playgroundStatistics = filtered;
+      }
+      log('Polaaaaaaa: $playgroundStatistics');
+      emit(GetStatisticsSuccessState());
+    } catch (e) {
+      log('$e');
+      emit(GetStatisticsErrorState());
+    }
+  }
+
+  String? month;
+  void changeMonth(String? value) {
+    month = value;
+    if (month != null) Pola(month!);
+    emit(ChangeMonthSuccessState());
   }
 }
