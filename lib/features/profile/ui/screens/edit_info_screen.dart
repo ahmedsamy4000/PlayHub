@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:playhub/common/data/local/local_storage.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/padding.dart';
 import 'package:playhub/core/validator.dart';
@@ -20,17 +21,17 @@ class EditInformationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     var cubit = BlocProvider.of<AppCubit>(context);
-    cubit.getCurrentUserData();
+    var userData = LocalStorage().userData;
     TextEditingController nameController = TextEditingController();
-    nameController.text = cubit.userData['Name'] ?? '';
+    nameController.text = userData?.fullName ?? '';
     TextEditingController emailController = TextEditingController();
-    emailController.text = cubit.userData['Email'] ?? '';
+    emailController.text = userData?.email ?? '';
     TextEditingController phoneController = TextEditingController();
-    phoneController.text = cubit.userData['PhoneNumber'] ?? '';
+    phoneController.text = userData?.phoneNumber ?? '';
     TextEditingController cityController = TextEditingController();
-    cityController.text = cubit.userData['City'] ?? '';
+    cityController.text = userData?.city ?? '';
     TextEditingController regionController = TextEditingController();
-    regionController.text = cubit.userData['Region'] ?? '';
+    regionController.text = userData?.region ?? '';
     return Scaffold(
         backgroundColor: AppColors.white,
         appBar: AppBar(
@@ -105,7 +106,6 @@ class EditInformationScreen extends StatelessWidget {
                                           .then((_) {
                                         if (cubit.state
                                             is UpdateUserInfoSuccessState) {
-                                          cubit.getCurrentUserData();
                                           Navigator.pop(context);
                                         }
                                       });

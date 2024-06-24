@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:playhub/core/app_colors.dart';
+import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/features/authentication/ui/screens/login_screen.dart';
@@ -26,7 +27,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cubit = BlocProvider.of<AppCubit>(context);
-    cubit.getCurrentUserData();
+    var userData = LocalStorage().userData;
     return BlocBuilder<AppCubit, AppStates>(
       builder: (context, state) => state is GetCurrentUserLoadingState ||
               state is ChangeProfilePhotoLoadingState
@@ -137,14 +138,14 @@ class ProfileScreen extends StatelessWidget {
                           Stack(
                             alignment: Alignment.bottomRight,
                             children: [
-                              cubit.userData['Image'] == null
+                              userData?.image == null
                                   ? CircleAvatar(
                                       backgroundColor: AppColors.darkGreen,
                                       radius: 50,
                                       child: Text(
-                                        cubit.userData == null
+                                        userData == null
                                             ? ''
-                                            : '${cubit.userData['Name'][0]}',
+                                            : '${userData.fullName?[0]}',
                                         style: const TextStyle(
                                             fontSize: 40,
                                             color: AppColors.white),
@@ -153,7 +154,7 @@ class ProfileScreen extends StatelessWidget {
                                   : CircleAvatar(
                                       backgroundColor: AppColors.darkGreen,
                                       backgroundImage:
-                                          NetworkImage(cubit.userData['Image']),
+                                          NetworkImage(userData!.image!),
                                       radius: 50,
                                     ),
                               Container(
@@ -198,11 +199,7 @@ class ProfileScreen extends StatelessWidget {
                                                   ),
                                                   onTap: () {
                                                     cubit
-                                                        .pickImageFromGallery()
-                                                        .then((_) {
-                                                      cubit
-                                                          .getCurrentUserData();
-                                                    });
+                                                        .pickImageFromGallery();
                                                     Navigator.pop(context);
                                                   },
                                                 ),
@@ -221,11 +218,7 @@ class ProfileScreen extends StatelessWidget {
                                                   ),
                                                   onTap: () {
                                                     cubit
-                                                        .pickImageFromCamera()
-                                                        .then((_) {
-                                                      cubit
-                                                          .getCurrentUserData();
-                                                    });
+                                                        .pickImageFromCamera();
                                                     Navigator.pop(context);
                                                   },
                                                 ),
@@ -249,9 +242,9 @@ class ProfileScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                cubit.userData == null
+                                userData == null
                                     ? ''
-                                    : '${cubit.userData['Name']}',
+                                    : '${userData.fullName}',
                                 style: const TextStyle(
                                     fontSize: 20,
                                     fontFamily: 'Open Sans',
@@ -268,23 +261,23 @@ class ProfileScreen extends StatelessWidget {
                                 child: Row(
                                   children: [
                                     Text(
-                                      cubit.userData == null
+                                      userData == null
                                           ? 'Player'
-                                          : '${cubit.userData['Type']}',
+                                          : '${userData.type}',
                                       style: const TextStyle(
                                           color: AppColors.darkGray,
                                           fontSize: 15,
                                           fontFamily: 'Open Sans',
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    cubit.userData['City'] != null &&
-                                            cubit.userData['City'] != ''
+                                   userData?.city != null &&
+                                            userData?.city != ''
                                         ? const SizedBox(
                                             width: 10,
                                           )
                                         : Container(),
-                                    cubit.userData['City'] != null &&
-                                            cubit.userData['City'] != ''
+                                    userData?.city != null &&
+                                            userData?.city != ''
                                         ? Padding(
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 5.0),
@@ -296,16 +289,16 @@ class ProfileScreen extends StatelessWidget {
                                             ),
                                           )
                                         : Container(),
-                                    cubit.userData['City'] != null &&
-                                            cubit.userData['City'] != ''
+                                   userData?.city != null &&
+                                            userData?.city != ''
                                         ? const SizedBox(
                                             width: 10,
                                           )
                                         : Container(),
-                                    cubit.userData['City'] != null &&
-                                            cubit.userData['City'] != ''
+                                    userData?.city != null &&
+                                            userData?.city != ''
                                         ? Text(
-                                            '${cubit.userData['City']}',
+                                            '${userData?.city}',
                                             style: const TextStyle(
                                                 color: AppColors.darkGray,
                                                 fontSize: 15,
@@ -324,7 +317,7 @@ class ProfileScreen extends StatelessWidget {
                     const SizedBox(
                       height: 32,
                     ),
-                    cubit.userData['Type'] == 'Player'
+                    userData?.type == UserType.player
                         ? const TabBar(
                             isScrollable: true,
                             tabAlignment: TabAlignment.start,
@@ -379,7 +372,7 @@ class ProfileScreen extends StatelessWidget {
                             indicatorColor: AppColors.darkGreen,
                           )
                         : Container(),
-                    cubit.userData['Type'] == 'Player'
+                    userData?.type == UserType.player
                         ? const Expanded(
                             child: TabBarView(
                               children: [
@@ -392,7 +385,7 @@ class ProfileScreen extends StatelessWidget {
                             ),
                           )
                         : Container(),
-                    cubit.userData['Type'] == 'Trainer'
+                    userData?.type == UserType.trainer
                         ? Expanded(
                           child: state is GetTrainerPackagesLoadingState
                               ? const Center(child: CircularProgressIndicator())
@@ -410,7 +403,7 @@ class ProfileScreen extends StatelessWidget {
                         : Container(),
                   ],
                 ),
-                floatingActionButton: cubit.userData['Type'] == 'Trainer'
+                floatingActionButton: userData?.type == UserType.trainer
                     ? FloatingActionButton(
                         onPressed: () {
                           AppCubit.get(context).searchFunction().then((_) {
@@ -420,7 +413,7 @@ class ProfileScreen extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => AddPackage(
-                                            trainerId: cubit.userData['Id'],
+                                            trainerId: userData!.id!,
                                           )));
                             }
                           });
@@ -433,7 +426,7 @@ class ProfileScreen extends StatelessWidget {
                       )
                     : null,
                 floatingActionButtonLocation:
-                    cubit.userData['Type'] == 'Trainer'
+                    userData?.type == UserType.trainer
                         ? FloatingActionButtonLocation.endFloat
                         : null,
               ),

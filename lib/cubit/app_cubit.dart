@@ -9,8 +9,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:playhub/common/data/local/local_storage.dart';
 import 'package:playhub/core/app_colors.dart';
-import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/features/authentication/data/user_model.dart';
 import 'package:playhub/features/playgrounds/ui/screens/playgrounds_screen.dart';
@@ -22,7 +22,6 @@ import 'package:playhub/models/ordermodel.dart';
 import 'package:playhub/models/playgroundmodel.dart';
 import 'package:playhub/screens/HomeScreen/home.dart';
 import 'package:playhub/screens/Statistics/statistics_screen.dart';
-import 'package:toastification/toastification.dart';
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(InitialState());
@@ -82,15 +81,15 @@ class AppCubit extends Cubit<AppStates> {
     final snapshot =
         await FirebaseFirestore.instance.collection('PlayGrounds').get();
     var newItems = [];
-    var Names = [];
+    var names = [];
     for (var doc in snapshot.docs) {
-      var itemData = doc.data() as Map<String, dynamic>;
+      var itemData = doc.data();
       if (itemData['Name']
               .toString()
               .toLowerCase()
               .contains(searchQuery.toLowerCase()) ||
           searchQuery.isEmpty) {
-        Names.add(itemData);
+        names.add(itemData);
       }
       if (itemData['City'] == selectedCity || selectedCity == "All") {
         newItems.add(itemData);
@@ -101,12 +100,12 @@ class AppCubit extends Cubit<AppStates> {
       // log("$selectedCity");
       // items = matchesCity
     }
-    if (Names.length == 0) {
+    if (names.isEmpty) {
       items = newItems;
-    } else if (newItems.length == 0) {
-      items = Names;
+    } else if (newItems.isEmpty) {
+      items = names;
     } else {
-      items = getCommonElements(newItems, Names);
+      items = getCommonElements(newItems, names);
     }
 
     log("$items");
@@ -126,7 +125,7 @@ class AppCubit extends Cubit<AppStates> {
     );
     CollectionReference ref = FirebaseFirestore.instance
         .collection('Users')
-        .doc(userId)
+        .doc(LocalStorage().currentId)
         .collection('Package');
     ref.add(newPackage.toJson());
 
@@ -148,43 +147,6 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  late var userData;
-
-  Future<void> getCurrentUserData() async {
-    emit(GetCurrentUserLoadingState());
-    try {
-      FirebaseAuth auth = FirebaseAuth.instance;
-      User? user = auth.currentUser;
-      if (user != null) {
-        final snapshot =
-            await FirebaseFirestore.instance.collection('Users').get();
-        print(user.uid);
-        for (var doc in snapshot.docs) {
-          if (user.uid == doc.data()['Id']) {
-            userId = doc.id;
-            userData = doc.data();
-          }
-        }
-        log('$userData');
-        if (userData != null) emit(GetCurrentUserSuccessState());
-      }
-    } catch (e) {
-      emit(GetCurrentUserErrorState());
-    }
-  }
-
-  Future<String> getUserDocID() async {
-    await getCurrentUserData();
-    late var id;
-    final snapshot = await FirebaseFirestore.instance.collection('Users').get();
-    if (userData != null) {
-      for (var doc in snapshot.docs) {
-        if (userData['Id'] == doc.data()['Id']) id = doc.id;
-      }
-    }
-    return id;
-  }
-
   Future updateUserInfo(
       {required String name,
       required String phone,
@@ -193,32 +155,20 @@ class AppCubit extends Cubit<AppStates> {
       String? region}) async {
     emit(UpdateUserInfoLoadingState());
     try {
-      await getCurrentUserData();
-      late var id;
       var newUser = UserModel(
-          id: userData['Id'],
+          id: LocalStorage().userData?.id,
           fullName: name,
           email: email,
           phoneNumber: phone,
-          type: userData['Type'] == 'Player'
-              ? UserType.player
-              : userData['Type'] == 'Trainer'
-                  ? UserType.trainer
-                  : UserType.playgroundOwner,
-          city: city ?? userData['City'],
-          image: userData['Image'],
-          region: region ?? userData['Region']);
-      final snapshot =
-          await FirebaseFirestore.instance.collection('Users').get();
-      for (var doc in snapshot.docs) {
-        if (userData['Id'] == doc.data()['Id']) id = doc.id;
-      }
-      if (id != null) {
-        await FirebaseFirestore.instance
-            .collection('Users')
-            .doc(id)
-            .update(newUser.toJson());
-      }
+          type: LocalStorage().userData?.type,
+          city: city ?? LocalStorage().userData?.city,
+          image: LocalStorage().userData?.image,
+          region: region ?? LocalStorage().userData?.region);
+      LocalStorage().saveUserData(newUser);
+      await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(LocalStorage().currentId)
+          .update(newUser.toJson());
       emit(UpdateUserInfoSuccessState());
     } catch (e) {
       emit(UpdateUserInfoErrorState());
@@ -226,32 +176,20 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   Future<void> updateUserImage(String image) async {
-    await getCurrentUserData();
-
-    late var id;
+    var userData = LocalStorage().userData;
     var newUser = UserModel(
-        id: userData['Id'],
-        fullName: userData['Name'],
-        email: userData['Email'],
-        phoneNumber: userData['PhoneNumber'],
-        type: userData['Type'] == 'Player'
-            ? UserType.player
-            : userData['Type'] == 'Trainer'
-                ? UserType.trainer
-                : UserType.playgroundOwner,
-        city: userData['City'],
+        id: userData?.id,
+        fullName: userData?.fullName,
+        email: userData?.email,
+        phoneNumber: userData?.phoneNumber,
+        type: userData?.type,
+        city: userData?.city,
         image: image,
-        region: userData['Region']);
-    final snapshot = await FirebaseFirestore.instance.collection('Users').get();
-    for (var doc in snapshot.docs) {
-      if (userData['Id'] == doc.data()['Id']) id = doc.id;
-    }
-    if (id != null) {
-      await FirebaseFirestore.instance
-          .collection('Users')
-          .doc(id)
-          .update(newUser.toJson());
-    }
+        region: userData?.region);
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(LocalStorage().currentId)
+        .update(newUser.toJson());
   }
 
   Future pickImageFromGallery() async {
@@ -275,7 +213,17 @@ class AppCubit extends Cubit<AppStates> {
           await user.updatePhotoURL(downloadURL);
 
           await updateUserImage(downloadURL);
-
+          var userData = LocalStorage().userData;
+          var newUser = UserModel(
+              id: userData?.id,
+              fullName: userData?.fullName,
+              email: userData?.email,
+              phoneNumber: userData?.phoneNumber,
+              type: userData?.type,
+              city: userData?.city,
+              image: downloadURL,
+              region: userData?.region);
+          LocalStorage().saveUserData(newUser);
           emit(ChangeProfilePhotoSuccessState());
         }
       }
@@ -305,6 +253,17 @@ class AppCubit extends Cubit<AppStates> {
           await user.updatePhotoURL(downloadURL);
 
           await updateUserImage(downloadURL);
+          var userData = LocalStorage().userData;
+          var newUser = UserModel(
+              id: userData?.id,
+              fullName: userData?.fullName,
+              email: userData?.email,
+              phoneNumber: userData?.phoneNumber,
+              type: userData?.type,
+              city: userData?.city,
+              image: downloadURL,
+              region: userData?.region);
+          LocalStorage().saveUserData(newUser);
 
           emit(ChangeProfilePhotoSuccessState());
         }
@@ -361,23 +320,13 @@ class AppCubit extends Cubit<AppStates> {
 
   Future<void> deleteUser() async {
     User? user = FirebaseAuth.instance.currentUser;
-    getCurrentUserData();
-    late var uid;
-
     if (user != null) {
       try {
-        if (userData != null) {
-          final snapshot =
-              await FirebaseFirestore.instance.collection('Users').get();
-          for (var doc in snapshot.docs) {
-            if (userData['Id'] == doc.data()['Id']) uid = doc.id;
-          }
-          await FirebaseFirestore.instance
-              .collection('Users')
-              .doc(uid)
-              .delete();
-          await user.delete();
-        }
+        await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(LocalStorage().currentId)
+            .delete();
+        await user.delete();
         emit(DeleteUserSuccessState());
       } catch (e) {
         emit(DeleteUserErrorState());
@@ -437,24 +386,17 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
-  String? userId;
   Future<void> addNewOrder(
       String? playGroundId, int? time, String? date, bool? booked) async {
     emit(AddNewOrderLoadingState());
-    if (userData != null) {
-      final snapshot =
-          await FirebaseFirestore.instance.collection('Users').get();
-      for (var doc in snapshot.docs) {
-        if (userData['Id'] == doc.data()['Id']) userId = doc.id;
-      }
-    }
+    var userData = LocalStorage().userData;
     Ordermodel newModel = Ordermodel(
-        userName: userData["Name"], booked: booked, date: date, time: time);
+        userName: userData?.fullName, booked: booked, date: date, time: time);
 
     BookingModel bookModel = BookingModel(
         categoryId: playground!.categoryId,
         playGroundName: playground!.name,
-        userName: userData["Name"],
+        userName: userData?.fullName,
         booked: booked,
         date: date,
         time: time);
@@ -464,7 +406,7 @@ class AppCubit extends Cubit<AppStates> {
         .collection('Orders');
     CollectionReference profileRef = FirebaseFirestore.instance
         .collection('Users')
-        .doc(userId)
+        .doc(LocalStorage().currentId)
         .collection('Booking');
     try {
       await ref.add(newModel.toJson());
@@ -500,7 +442,7 @@ class AppCubit extends Cubit<AppStates> {
     try {
       CollectionReference bookRef = await FirebaseFirestore.instance
           .collection('Users')
-          .doc(userId)
+          .doc(LocalStorage().currentId)
           .collection('Booking');
 
       QuerySnapshot snapshot = await bookRef.get();
@@ -532,23 +474,16 @@ class AppCubit extends Cubit<AppStates> {
 
   Future<void> addPlaygroundToFavorites(String id) async {
     try {
-      late var uid;
-      getCurrentUserData();
       final fPlayground = await FirebaseFirestore.instance
           .collection('PlayGrounds')
           .doc(id)
           .get();
-      final snapshot =
-          await FirebaseFirestore.instance.collection('Users').get();
-      for (var doc in snapshot.docs) {
-        if (userData['Id'] == doc.data()['Id']) uid = doc.id;
-      }
       if (fPlayground.exists) {
         Map<String, dynamic> favPlayground = fPlayground.data()!;
         favPlayground.addAll({"Id": id});
         await FirebaseFirestore.instance
             .collection('Users')
-            .doc(uid)
+            .doc(LocalStorage().currentId)
             .collection('PFavorites')
             .add(favPlayground);
       }
@@ -562,11 +497,10 @@ class AppCubit extends Cubit<AppStates> {
 
   Future<void> deletePlaygroundFromFavorites(String id) async {
     try {
-      var uid = await getUserDocID();
       late var pid;
       final snapshot = await FirebaseFirestore.instance
           .collection('Users')
-          .doc(uid)
+          .doc(LocalStorage().currentId)
           .collection('PFavorites')
           .get();
       for (var doc in snapshot.docs) {
@@ -574,7 +508,7 @@ class AppCubit extends Cubit<AppStates> {
       }
       await FirebaseFirestore.instance
           .collection('Users')
-          .doc(uid)
+          .doc(LocalStorage().currentId)
           .collection('PFavorites')
           .doc(pid)
           .delete();
@@ -591,14 +525,12 @@ class AppCubit extends Cubit<AppStates> {
 
   Future<void> getFavoritesPlaygrounds() async {
     favoritesPlaygrounds = [];
-    favoritesId = [];
     emit(GetFavoritesPlaygroundsLoadingState());
     try {
-      var uid = await getUserDocID();
       List<String> ids = [];
       var playgrounds = await FirebaseFirestore.instance
           .collection('Users')
-          .doc(uid)
+          .doc(LocalStorage().currentId)
           .collection('PFavorites')
           .get();
       for (var doc in playgrounds.docs) {
@@ -640,7 +572,7 @@ class AppCubit extends Cubit<AppStates> {
         User? user = FirebaseAuth.instance.currentUser;
         if (user != null) {
           Reference ref =
-              storage.ref().child('profile_images').child('${user.uid}.jpg');
+              storage.ref().child('playground_images').child('${user.uid}.jpg');
           UploadTask uploadTask = ref.putFile(selectedImage);
 
           await uploadTask;
@@ -662,10 +594,8 @@ class AppCubit extends Cubit<AppStates> {
       required city,
       required region,
       required image}) async {
-    String c = city;
     final snapshot =
         await FirebaseFirestore.instance.collection('Categories').get();
-    await getCurrentUserData();
     var id;
     for (var doc in snapshot.docs) {
       if (category == doc.data()['Name']) {
@@ -673,16 +603,14 @@ class AppCubit extends Cubit<AppStates> {
         log('${doc.data()['Id']}');
       }
     }
-    if (userData != null) {
-      await FirebaseFirestore.instance.collection('PlayGrounds').add({
-        'CategoryId': id,
-        'City': city,
-        'Image': image,
-        'Name': name,
-        'Owner_id': userData['Id'],
-        'Region': region,
-      });
-    }
+    await FirebaseFirestore.instance.collection('PlayGrounds').add({
+      'CategoryId': id,
+      'City': city,
+      'Image': image,
+      'Name': name,
+      'Owner_id': LocalStorage().userData?.id,
+      'Region': region,
+    });
   }
 
   List<Map<String, int>> playgroundStatistics = [];

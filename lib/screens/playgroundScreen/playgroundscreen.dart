@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:playhub/common/data/local/local_storage.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
@@ -37,6 +38,7 @@ class _PlayGroundScreenState extends State<PlayGroundScreen> {
   @override
   Widget build(BuildContext context) {
     var cubit = BlocProvider.of<AppCubit>(context);
+    var userData = LocalStorage().userData;
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -95,7 +97,7 @@ class _PlayGroundScreenState extends State<PlayGroundScreen> {
                                       context,
                                       widget.id,
                                       widget.name!,
-                                      cubit.userData["Name"],
+                                      userData?.fullName,
                                       cubit.playground!.orders[index].time
                                           .toString(),
                                       date,

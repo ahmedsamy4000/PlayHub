@@ -102,7 +102,7 @@ class CategoryScreen extends StatelessWidget {
                                         ],
                                       ),
                                       const Spacer(),
-                                      !favorites.contains(playgroundId) ? IconButton(
+                                      !cubit.favoritesId.contains(playgroundId) ? IconButton(
                                       icon: const Icon(
                                         Icons.favorite_border_rounded,
                                         color: AppColors.darkGreen,

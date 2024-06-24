@@ -82,8 +82,16 @@ class AuthCubit extends Cubit<AuthStates> {
       //     backgroundColor: AppColors.green,
       //     textColor: AppColors.white,
       //   );
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  Main()));
+       getCurrentUserData().then((_)  {
+          LocalStorage().saveUserData(userData).then((_){
+            log("AppUser: ${LocalStorage().userData?.toJson()}");
+            LocalStorage().currentId=currentUserDocId;
+            log("AppUser: ${LocalStorage().currentId}");
+          });
+          log("AppUser: $userData");
 
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Main()));
+        });
     } on FirebaseAuthException catch (e) {
       log(e.message!);
       Fluttertoast.showToast(
