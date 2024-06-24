@@ -526,6 +526,78 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
+  List<String> categoriesNames = [];
+
+  Future<void> getCategories() async {
+    categoriesNames = [];
+    List<String> names = [];
+    final snapshot =
+        await FirebaseFirestore.instance.collection('Categories').get();
+    for (var doc in snapshot.docs) {
+      names.add(doc.data()['Name']);
+    }
+    categoriesNames = names;
+    emit(GetCategoriesSuccessState());
+  }
+
+  String? playgroundImage;
+  Future pickPlaygroundImageFromGallery() async {
+    emit(ChangeProfilePhotoLoadingState());
+    final FirebaseStorage storage = FirebaseStorage.instance;
+    try {
+      final returnedImage =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (returnedImage != null) {
+        File selectedImage = File(returnedImage.path);
+        User? user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          Reference ref =
+              storage.ref().child('profile_images').child('${user.uid}.jpg');
+          UploadTask uploadTask = ref.putFile(selectedImage);
+
+          await uploadTask;
+
+          playgroundImage = await ref.getDownloadURL();
+          log('$playgroundImage');
+
+          emit(ChangeProfilePhotoSuccessState());
+        }
+      }
+    } catch (e) {
+      emit(ChangeProfilePhotoErrorState());
+    }
+  }
+
+  Future<void> addNewPlayground(
+      {required name,
+      required category,
+      required city,
+      required region,
+      required image}) async {
+        String c = city;
+    final snapshot =
+        await FirebaseFirestore.instance.collection('Categories').get();
+    await getCurrentUserData();
+    log('$city $region $category $name');
+    var id;
+    for (var doc in snapshot.docs) {
+      if (category == doc.data()['Name']) 
+      {id = doc.data()['Id'];
+      log('${doc.data()['Id']}');
+      }
+    }
+    if (userData != null) {
+      await FirebaseFirestore.instance.collection('PlayGrounds').add({
+        'CategoryId': id,
+        'City': city,
+        'Image': image,
+        'Name': name,
+        'Owner_id': userData['Id'],
+        'Region': region,
+      });
+    }
+  }
+
   List<Map<String, int>> playgroundStatistics = [];
   late int sum = 0;
 

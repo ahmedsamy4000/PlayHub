@@ -78,3 +78,5 @@ class GetStatisticsErrorState extends AppStates {}
 
 class ChangeMonthSuccessState extends AppStates {}
 
+class GetCategoriesSuccessState extends AppStates {}
+
