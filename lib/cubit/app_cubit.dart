@@ -623,7 +623,7 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
-   Future<void> updatePlayground(
+  Future<void> updatePlayground(
       {required pid,
       required name,
       required category,
@@ -665,23 +665,26 @@ class AppCubit extends Cubit<AppStates> {
           .collection('PlayGrounds')
           .doc(id)
           .delete();
-          getOwnerPlaygrounds();
+      getOwnerPlaygrounds();
       emit(DeletePlaygroundSuccessState());
     } catch (e) {
       emit(DeletePlaygroundErrorState());
     }
   }
 
-List<Map<String, dynamic>> ownerReservations = [];
+  List<Map<String, dynamic>> ownerReservations = [];
   Future<void> getOwnerReservations() async {
-List<Map<String, dynamic>> reservations = [];
-    final snapshot = await FirebaseFirestore.instance.collection('PlayGrounds').get();
-    for(var doc in snapshot.docs)
-    {
-      if(doc.data()['Owner_Id'] == LocalStorage().currentId)
-      {
-        final orders = await FirebaseFirestore.instance.collection('PlayGrounds').doc(doc.id).collection('Orders').get();
-        reservations.addAll(orders.docs.map((d)=> d.data()));
+    List<Map<String, dynamic>> reservations = [];
+    final snapshot =
+        await FirebaseFirestore.instance.collection('PlayGrounds').get();
+    for (var doc in snapshot.docs) {
+      if (doc.data()['Owner_Id'] == LocalStorage().currentId) {
+        final orders = await FirebaseFirestore.instance
+            .collection('PlayGrounds')
+            .doc(doc.id)
+            .collection('Orders')
+            .get();
+        reservations.addAll(orders.docs.map((d) => d.data()));
       }
     }
   }
@@ -755,5 +758,18 @@ List<Map<String, dynamic>> reservations = [];
     month = value;
     if (month != null) Pola(month!);
     emit(ChangeMonthSuccessState());
+  }
+
+  Future<void> addFeedback(String userName, String feedback) async {
+    emit(AddFeedBackLoadingState());
+    CollectionReference feedbackRef =
+        FirebaseFirestore.instance.collection('Feedbacks');
+    try {
+      await feedbackRef.add({"UserName": userName, "Feedback": feedback});
+      emit(AddFeedBackSuccessState());
+    } catch (error) {
+      print(error);
+      emit(AddFeedBackErrorState());
+    }
   }
 }

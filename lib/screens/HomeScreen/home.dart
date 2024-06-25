@@ -8,6 +8,7 @@ import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/features/categories/ui/screens/category_screen.dart';
 import 'package:playhub/features/favorites/ui/screens/favorites_playgrounds_screen.dart';
+import 'package:playhub/screens/FeedbackScreen/feedbackscreen.dart';
 import 'package:playhub/screens/HomeScreen/CategoryCard.dart';
 import 'package:playhub/screens/HomeScreen/floatingactionmenu.dart';
 import 'package:playhub/screens/playgroundScreen/playgroundscreen.dart';
@@ -27,6 +28,20 @@ class Home extends StatelessWidget {
           textAlign: TextAlign.left,
         ),
         actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FeedBackScreen(),
+                ),
+              );
+            },
+            icon: const Icon(
+              Icons.feedback_outlined,
+              color: AppColors.darkGreen,
+            ),
+          ),
           IconButton(
             onPressed: () {
               Navigator.push(

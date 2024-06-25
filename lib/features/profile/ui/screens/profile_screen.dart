@@ -133,466 +133,459 @@ class ProfileScreen extends StatelessWidget {
                     )
                   ],
                 ),
-                body: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          children: [
-                            Stack(
-                              alignment: Alignment.bottomRight,
-                              children: [
-                                userData?.image == null
-                                    ? CircleAvatar(
-                                        backgroundColor: AppColors.darkGreen,
-                                        radius: 50,
-                                        child: Text(
-                                          userData == null
-                                              ? ''
-                                              : '${userData.fullName?[0]}',
-                                          style: const TextStyle(
-                                              fontSize: 40,
-                                              color: AppColors.white),
-                                        ),
-                                      )
-                                    : CircleAvatar(
-                                        backgroundColor: AppColors.darkGreen,
-                                        backgroundImage:
-                                            NetworkImage(userData!.image!),
-                                        radius: 50,
-                                      ),
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.3),
-                                        spreadRadius: 5,
-                                        blurRadius: 7,
-                                        offset: const Offset(0, 3),
-                                      ),
-                                    ],
-                                  ),
-                                  child: CircleAvatar(
-                                    backgroundColor: AppColors.darkGreen,
-                                    radius: 20,
-                                    child: IconButton(
-                                      onPressed: () {
-                                        showModalBottomSheet(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return Container(
-                                              height: 120,
-                                              color: AppColors.white,
-                                              child: Column(
-                                                children: [
-                                                  ListTile(
-                                                    leading: const Icon(
-                                                      Icons.photo_library,
-                                                      color: Colors.grey,
-                                                    ),
-                                                    title: const Text(
-                                                      'Photo Library',
-                                                      style: TextStyle(
-                                                        fontFamily: 'Open Sans',
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                    onTap: () {
-                                                      cubit
-                                                          .pickImageFromGallery();
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),
-                                                  ListTile(
-                                                    leading: const Icon(
-                                                      Icons.camera_alt,
-                                                      color: Colors.grey,
-                                                    ),
-                                                    title: const Text(
-                                                      'Camera',
-                                                      style: TextStyle(
-                                                        fontFamily: 'Open Sans',
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                    onTap: () {
-                                                      cubit
-                                                          .pickImageFromCamera();
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      },
-                                      icon: const Icon(
-                                        Icons.camera_alt,
-                                        color: AppColors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(width: 20),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  userData == null
-                                      ? ''
-                                      : '${userData.fullName}',
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      fontFamily: 'Open Sans',
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 5),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.green3,
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        userData == null
-                                            ? 'Player'
-                                            : userData.type == UserType.player
-                                                ? 'Player'
-                                                : userData.type ==
-                                                        UserType.trainer
-                                                    ? 'Trainer'
-                                                    : 'Owner',
-                                        style: const TextStyle(
-                                            color: AppColors.darkGray,
-                                            fontSize: 15,
-                                            fontFamily: 'Open Sans',
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      userData?.city != null &&
-                                              userData?.city != ''
-                                          ? const SizedBox(
-                                              width: 10,
-                                            )
-                                          : Container(),
-                                      userData?.city != null &&
-                                              userData?.city != ''
-                                          ? Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 5.0),
-                                              child: Container(
-                                                color: AppColors.darkGray
-                                                    .withOpacity(.4),
-                                                width: 1,
-                                                height: 20,
-                                              ),
-                                            )
-                                          : Container(),
-                                      userData?.city != null &&
-                                              userData?.city != ''
-                                          ? const SizedBox(
-                                              width: 10,
-                                            )
-                                          : Container(),
-                                      userData?.city != null &&
-                                              userData?.city != ''
-                                          ? Text(
-                                              '${userData?.city}',
-                                              style: const TextStyle(
-                                                  color: AppColors.darkGray,
-                                                  fontSize: 15,
-                                                  fontFamily: 'Open Sans',
-                                                  fontWeight: FontWeight.bold),
-                                            )
-                                          : Container(),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 32,
-                      ),
-                      userData?.type == UserType.player
-                          ? const TabBar(
-                              isScrollable: true,
-                              tabAlignment: TabAlignment.start,
-                              tabs: [
-                                Tab(
-                                  child: Text(
-                                    'Football',
-                                    style: TextStyle(
-                                        fontFamily: 'Open Sans',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
-                                  ),
-                                ),
-                                Tab(
-                                  child: Text(
-                                    'Volleyball',
-                                    style: TextStyle(
-                                        fontFamily: 'Open Sans',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
-                                  ),
-                                ),
-                                Tab(
-                                  child: Text(
-                                    'Basketball',
-                                    style: TextStyle(
-                                        fontFamily: 'Open Sans',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
-                                  ),
-                                ),
-                                Tab(
-                                  child: Text(
-                                    'Tennis',
-                                    style: TextStyle(
-                                        fontFamily: 'Open Sans',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
-                                  ),
-                                ),
-                                Tab(
-                                  child: Text(
-                                    'Workout',
-                                    style: TextStyle(
-                                        fontFamily: 'Open Sans',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
-                                  ),
-                                ),
-                              ],
-                              labelColor: Colors.black,
-                              indicatorColor: AppColors.darkGreen,
-                            )
-                          : userData?.type == UserType.playgroundOwner
-                              ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.all(8.0),
+                body: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        children: [
+                          Stack(
+                            alignment: Alignment.bottomRight,
+                            children: [
+                              userData?.image == null
+                                  ? CircleAvatar(
+                                      backgroundColor: AppColors.darkGreen,
+                                      radius: 50,
                                       child: Text(
-                                        'Your Playgrounds',
-                                        style: TextStyle(
-                                            fontFamily: 'Open Sans',
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
+                                        userData == null
+                                            ? ''
+                                            : '${userData.fullName?[0]}',
+                                        style: const TextStyle(
+                                            fontSize: 40,
+                                            color: AppColors.white),
                                       ),
+                                    )
+                                  : CircleAvatar(
+                                      backgroundColor: AppColors.darkGreen,
+                                      backgroundImage:
+                                          NetworkImage(userData!.image!),
+                                      radius: 50,
                                     ),
-                                    cubit.ownerPlaygrounds.isEmpty
-                                        ? const Padding(
+                              Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.3),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: CircleAvatar(
+                                  backgroundColor: AppColors.darkGreen,
+                                  radius: 20,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return Container(
+                                            height: 120,
+                                            color: AppColors.white,
+                                            child: Column(
+                                              children: [
+                                                ListTile(
+                                                  leading: const Icon(
+                                                    Icons.photo_library,
+                                                    color: Colors.grey,
+                                                  ),
+                                                  title: const Text(
+                                                    'Photo Library',
+                                                    style: TextStyle(
+                                                      fontFamily: 'Open Sans',
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  onTap: () {
+                                                    cubit
+                                                        .pickImageFromGallery();
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                                ListTile(
+                                                  leading: const Icon(
+                                                    Icons.camera_alt,
+                                                    color: Colors.grey,
+                                                  ),
+                                                  title: const Text(
+                                                    'Camera',
+                                                    style: TextStyle(
+                                                      fontFamily: 'Open Sans',
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  onTap: () {
+                                                    cubit.pickImageFromCamera();
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    icon: const Icon(
+                                      Icons.camera_alt,
+                                      color: AppColors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(width: 20),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                userData == null ? '' : '${userData.fullName}',
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: 'Open Sans',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 5),
+                              Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                decoration: BoxDecoration(
+                                  color: AppColors.green3,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      userData == null
+                                          ? 'Player'
+                                          : userData.type == UserType.player
+                                              ? 'Player'
+                                              : userData.type ==
+                                                      UserType.trainer
+                                                  ? 'Trainer'
+                                                  : 'Owner',
+                                      style: const TextStyle(
+                                          color: AppColors.darkGray,
+                                          fontSize: 15,
+                                          fontFamily: 'Open Sans',
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    userData?.city != null &&
+                                            userData?.city != ''
+                                        ? const SizedBox(
+                                            width: 10,
+                                          )
+                                        : Container(),
+                                    userData?.city != null &&
+                                            userData?.city != ''
+                                        ? Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 5.0),
+                                            child: Container(
+                                              color: AppColors.darkGray
+                                                  .withOpacity(.4),
+                                              width: 1,
+                                              height: 20,
+                                            ),
+                                          )
+                                        : Container(),
+                                    userData?.city != null &&
+                                            userData?.city != ''
+                                        ? const SizedBox(
+                                            width: 10,
+                                          )
+                                        : Container(),
+                                    userData?.city != null &&
+                                            userData?.city != ''
+                                        ? Text(
+                                            '${userData?.city}',
+                                            style: const TextStyle(
+                                                color: AppColors.darkGray,
+                                                fontSize: 15,
+                                                fontFamily: 'Open Sans',
+                                                fontWeight: FontWeight.bold),
+                                          )
+                                        : Container(),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 32,
+                    ),
+                    userData?.type == UserType.player
+                        ? const TabBar(
+                            isScrollable: true,
+                            tabAlignment: TabAlignment.start,
+                            tabs: [
+                              Tab(
+                                child: Text(
+                                  'Football',
+                                  style: TextStyle(
+                                      fontFamily: 'Open Sans',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                              ),
+                              Tab(
+                                child: Text(
+                                  'Volleyball',
+                                  style: TextStyle(
+                                      fontFamily: 'Open Sans',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                              ),
+                              Tab(
+                                child: Text(
+                                  'Basketball',
+                                  style: TextStyle(
+                                      fontFamily: 'Open Sans',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                              ),
+                              Tab(
+                                child: Text(
+                                  'Tennis',
+                                  style: TextStyle(
+                                      fontFamily: 'Open Sans',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                              ),
+                              Tab(
+                                child: Text(
+                                  'Workout',
+                                  style: TextStyle(
+                                      fontFamily: 'Open Sans',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                              ),
+                            ],
+                            labelColor: Colors.black,
+                            indicatorColor: AppColors.darkGreen,
+                          )
+                        : userData?.type == UserType.playgroundOwner
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Text(
+                                      'Your Playgrounds',
+                                      style: TextStyle(
+                                          fontFamily: 'Open Sans',
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  cubit.ownerPlaygrounds.isEmpty
+                                      ? const Padding(
                                           padding: EdgeInsets.only(top: 200),
                                           child: Center(
-                                              child: Text(
-                                                'You have no playgrounds yet.',
-                                                style: TextStyle(
-                                                    fontFamily: 'Open Sans',
-                                                    fontSize: 16),
-                                              ),
+                                            child: Text(
+                                              'You have no playgrounds yet.',
+                                              style: TextStyle(
+                                                  fontFamily: 'Open Sans',
+                                                  fontSize: 16),
                                             ),
+                                          ),
                                         )
-                                        : ListView.builder(
-                                            shrinkWrap: true,
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            itemCount:
-                                                cubit.ownerPlaygrounds.length,
-                                            itemBuilder: (context, index) {
-                                              final playground =
-                                                  cubit.ownerPlaygrounds[index];
-                                              final name = playground.name;
-                                              final city = playground.city;
-                                              final imageUrl = playground.image;
-                                              final playgroundId = cubit
-                                                  .ownerPlaygroundsIds[index];
+                                      : ListView.builder(
+                                          shrinkWrap: true,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          itemCount:
+                                              cubit.ownerPlaygrounds.length,
+                                          itemBuilder: (context, index) {
+                                            final playground =
+                                                cubit.ownerPlaygrounds[index];
+                                            final name = playground.name;
+                                            final city = playground.city;
+                                            final imageUrl = playground.image;
+                                            final playgroundId = cubit
+                                                .ownerPlaygroundsIds[index];
 
-                                              return GestureDetector(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          PlayGroundScreen(
+                                            return GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        PlayGroundScreen(
+                                                            name,
+                                                            city,
+                                                            imageUrl,
+                                                            playgroundId),
+                                                  ),
+                                                );
+                                              },
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 16.0,
+                                                        vertical: 8),
+                                                child: FadeInSlide(
+                                                  duration: 0.5 + (index / 10),
+                                                  child: Card(
+                                                    color: AppColors.white,
+                                                    child: Row(
+                                                      children: [
+                                                        imageUrl != ''
+                                                            ? Image.network(
+                                                                imageUrl,
+                                                                width: 120,
+                                                                height: 100,
+                                                                fit: BoxFit
+                                                                    .cover)
+                                                            : const Icon(
+                                                                Icons.image,
+                                                                size: 100),
+                                                        10.horizontalSpace,
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
                                                               name,
-                                                              city,
-                                                              imageUrl,
-                                                              playgroundId),
-                                                    ),
-                                                  );
-                                                },
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 16.0,
-                                                      vertical: 8),
-                                                  child: FadeInSlide(
-                                                    duration:
-                                                        0.5 + (index / 10),
-                                                    child: Card(
-                                                      color: AppColors.white,
-                                                      child: Row(
-                                                        children: [
-                                                          imageUrl != ''
-                                                              ? Image.network(
-                                                                  imageUrl,
-                                                                  width: 120,
-                                                                  height: 100,
-                                                                  fit: BoxFit
-                                                                      .cover)
-                                                              : const Icon(
-                                                                  Icons.image,
-                                                                  size: 100),
-                                                          10.horizontalSpace,
-                                                          Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Text(
-                                                                name,
-                                                                style:
-                                                                    const TextStyle(
-                                                                  fontFamily:
-                                                                      'Open Sans',
-                                                                  fontSize: 18,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                ),
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontFamily:
+                                                                    'Open Sans',
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
                                                               ),
-                                                              Text(
-                                                                "${playground.region}, $city",
-                                                                style:
-                                                                    const TextStyle(
-                                                                  fontFamily:
-                                                                      'Open Sans',
-                                                                  fontSize: 15,
-                                                                  color:
-                                                                      AppColors
-                                                                          .grey,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                ),
+                                                            ),
+                                                            Text(
+                                                              "${playground.region}, $city",
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontFamily:
+                                                                    'Open Sans',
+                                                                fontSize: 15,
+                                                                color: AppColors
+                                                                    .grey,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
                                                               ),
-                                                              Row(
-                                                                children: [
-                                                                  TextButton(
-                                                                    onPressed:
-                                                                        () {
-                                                                      cubit
-                                                                          .getCategories()
-                                                                          .then(
-                                                                              (_) {
-                                                                        if (cubit.state
-                                                                            is GetCategoriesSuccessState) {
-                                                                          Navigator.push(
-                                                                              context,
-                                                                              MaterialPageRoute(builder: (context) => UpdatePlaygroundScreen(playground: playground, categories: cubit.categoriesNames, id: playgroundId)));
-                                                                        }
-                                                                      });
-                                                                    },
-                                                                    child:
-                                                                        const Text(
-                                                                      'UPDATE',
-                                                                      style: TextStyle(
-                                                                          color: AppColors
-                                                                              .darkGreen,
-                                                                          fontFamily:
-                                                                              'Open Sans',
-                                                                          fontSize:
-                                                                              18,
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                    ),
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                TextButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    cubit
+                                                                        .getCategories()
+                                                                        .then(
+                                                                            (_) {
+                                                                      if (cubit
+                                                                              .state
+                                                                          is GetCategoriesSuccessState) {
+                                                                        Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(builder: (context) => UpdatePlaygroundScreen(playground: playground, categories: cubit.categoriesNames, id: playgroundId)));
+                                                                      }
+                                                                    });
+                                                                  },
+                                                                  child:
+                                                                      const Text(
+                                                                    'UPDATE',
+                                                                    style: TextStyle(
+                                                                        color: AppColors
+                                                                            .darkGreen,
+                                                                        fontFamily:
+                                                                            'Open Sans',
+                                                                        fontSize:
+                                                                            18,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
                                                                   ),
-                                                                  30.horizontalSpace,
-                                                                  TextButton(
-                                                                    onPressed:
-                                                                        () {
-                                                                      cubit.deletePlayground(
-                                                                          playgroundId);
-                                                                    },
-                                                                    child:
-                                                                        const Text(
-                                                                      'DELETE',
-                                                                      style: TextStyle(
-                                                                          color: AppColors
-                                                                              .red,
-                                                                          fontFamily:
-                                                                              'Open Sans',
-                                                                          fontSize:
-                                                                              18,
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                    ),
+                                                                ),
+                                                                30.horizontalSpace,
+                                                                TextButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    cubit.deletePlayground(
+                                                                        playgroundId);
+                                                                  },
+                                                                  child:
+                                                                      const Text(
+                                                                    'DELETE',
+                                                                    style: TextStyle(
+                                                                        color: AppColors
+                                                                            .red,
+                                                                        fontFamily:
+                                                                            'Open Sans',
+                                                                        fontSize:
+                                                                            18,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
                                                                   ),
-                                                                ],
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                 ),
-                                              );
-                                            },
-                                          )
-                                  ],
-                                )
-                              : Container(),
-                      userData?.type == UserType.player
-                          ? const Expanded(
-                              child: TabBarView(
-                                children: [
-                                  FootballTab(),
-                                  VolleyballTab(),
-                                  BasketballTab(),
-                                  TennisTab(),
-                                  WorkoutTab(),
+                                              ),
+                                            );
+                                          },
+                                        )
                                 ],
-                              ),
-                            )
-                          : Container(),
-                      userData?.type == UserType.trainer
-                          ? Expanded(
-                              child: state is GetTrainerPackagesLoadingState
-                                  ? const Center(
-                                      child: CircularProgressIndicator())
-                                  : ListView.builder(
-                                      itemCount: cubit.packages.length,
-                                      itemBuilder: (context, index) {
-                                        final package = cubit.packages[index];
-                                        return ListTile(
-                                          title: Text(package.description),
-                                          subtitle: Text(
-                                              'Price: \$${package.price}, Duration: ${package.duration} days'),
-                                        );
-                                      },
-                                    ),
-                            )
-                          : Container(),
-                    ],
-                  ),
+                              )
+                            : Container(),
+                    userData?.type == UserType.player
+                        ? const Expanded(
+                            child: TabBarView(
+                              children: [
+                                FootballTab(),
+                                VolleyballTab(),
+                                BasketballTab(),
+                                TennisTab(),
+                                WorkoutTab(),
+                              ],
+                            ),
+                          )
+                        : Container(),
+                    userData?.type == UserType.trainer
+                        ? Expanded(
+                            child: state is GetTrainerPackagesLoadingState
+                                ? const Center(
+                                    child: CircularProgressIndicator())
+                                : ListView.builder(
+                                    itemCount: cubit.packages.length,
+                                    itemBuilder: (context, index) {
+                                      final package = cubit.packages[index];
+                                      return ListTile(
+                                        title: Text(package.description),
+                                        subtitle: Text(
+                                            'Price: \$${package.price}, Duration: ${package.duration} days'),
+                                      );
+                                    },
+                                  ),
+                          )
+                        : Container(),
+                  ],
                 ),
                 floatingActionButton: userData?.type == UserType.trainer ||
                         userData?.type == UserType.playgroundOwner
