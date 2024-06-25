@@ -39,6 +39,10 @@ class Main extends StatelessWidget {
                 label: "Statistics",
               ),
               BottomNavigationBarItem(
+                icon: Icon(Icons.sports_baseball_rounded),
+                label: "Feedbacks",
+              ),
+              BottomNavigationBarItem(
                 icon: Icon(Icons.sports_soccer),
                 label: "Booking",
               ),

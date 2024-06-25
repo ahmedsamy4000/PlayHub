@@ -22,6 +22,7 @@ import 'package:playhub/models/ordermodel.dart';
 import 'package:playhub/models/playgroundmodel.dart';
 import 'package:playhub/screens/HomeScreen/home.dart';
 import 'package:playhub/screens/Statistics/statistics_screen.dart';
+import 'package:playhub/screens/feedbacks_screen.dart';
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(InitialState());
@@ -32,6 +33,7 @@ class AppCubit extends Cubit<AppStates> {
     const Home(),
     RoomsScreen(),
     StatisticsScreen(),
+    const FeedbacksScreen(),
     const Home(),
     const ProfileScreen(),
   ];
@@ -561,6 +563,7 @@ class AppCubit extends Cubit<AppStates> {
 
   String? playgroundImage;
   Future pickPlaygroundImageFromGallery() async {
+    playgroundImage = null;
     emit(PickPlaygroundImageLoadingState());
     final FirebaseStorage storage = FirebaseStorage.instance;
     try {
@@ -620,6 +623,15 @@ class AppCubit extends Cubit<AppStates> {
       emit(AddNewPlaygroundSuccessState());
     } catch (e) {
       emit(AddNewPlaygroundErrorState());
+    }
+  }
+
+String? categoryName;
+  Future<void> getCategoryById(String id) async {
+    final snapshot = await FirebaseFirestore.instance.collection('Categories').get();
+    for(var doc in snapshot.docs)
+    {
+      if(doc.data()['Id'] == id) categoryName = doc.data()['Name'];
     }
   }
 
@@ -765,11 +777,30 @@ class AppCubit extends Cubit<AppStates> {
     CollectionReference feedbackRef =
         FirebaseFirestore.instance.collection('Feedbacks');
     try {
-      await feedbackRef.add({"UserName": userName, "Feedback": feedback});
+      await feedbackRef.add({
+        "UserName": userName,
+        "Feedback": feedback,
+        "UserEmail": LocalStorage().userData?.email
+      });
       emit(AddFeedBackSuccessState());
     } catch (error) {
       print(error);
       emit(AddFeedBackErrorState());
+    }
+  }
+
+  List<Map<String, dynamic>> feedbacks = [];
+  Future<void> getFeedbacks() async {
+    List<Map<String, dynamic>> feedback = [];
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance.collection("Feedbacks").get();
+      feedback.addAll(snapshot.docs.map((doc) => doc.data()));
+      feedbacks = feedback;
+      log('$feedbacks');
+      emit(GetFeedbacksSuccessState());
+    } catch (e) {
+      emit(GetFeedbacksErrorState());
     }
   }
 }

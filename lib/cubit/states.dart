@@ -136,3 +136,8 @@ class AddFeedBackLoadingState extends AppStates {}
 class AddFeedBackSuccessState extends AppStates {}
 
 class AddFeedBackErrorState extends AppStates {}
+
+class GetFeedbacksSuccessState extends AppStates {}
+
+class GetFeedbacksErrorState extends AppStates {}
+

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/padding.dart';
 import 'package:playhub/core/validator.dart';
@@ -29,7 +30,7 @@ class UpdatePlaygroundScreen extends StatelessWidget {
     TextEditingController nameController = TextEditingController();
     nameController.text = playground.name;
     TextEditingController categoryController = TextEditingController();
-    categoryController.text = playground.name;
+    categoryController.text = cubit.categoryName ?? '';
     TextEditingController cityController = TextEditingController();
     cityController.text = playground.city;
     TextEditingController regionController = TextEditingController();
@@ -150,7 +151,8 @@ class UpdatePlaygroundScreen extends StatelessWidget {
                                 padding: 23.padHorizontal,
                                 child: LoginButton(
                                   onTap: () {
-                                    if (formKey.currentState!.validate()) {
+                                    if (formKey.currentState!.validate() &&
+                                        cubit.playgroundImage != null) {
                                       cubit
                                           .updatePlayground(
                                               name: nameController.text,
@@ -167,6 +169,14 @@ class UpdatePlaygroundScreen extends StatelessWidget {
                                           cubit.playgroundImage = null;
                                         }
                                       });
+                                    } else {
+                                      Fluttertoast.showToast(
+                                        msg: 'You must enter all of the data',
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        backgroundColor: AppColors.red,
+                                        textColor: AppColors.white,
+                                      );
                                     }
                                   },
                                   gradiantColor:

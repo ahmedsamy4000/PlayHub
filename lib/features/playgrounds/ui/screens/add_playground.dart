@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/padding.dart';
 import 'package:playhub/core/validator.dart';
@@ -25,6 +26,7 @@ class AddPlaygroundScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cubit = BlocProvider.of<AppCubit>(context);
+    cubit.playgroundImage = null;
     return BlocBuilder<AppCubit, AppStates>(
       builder: (context, state) {
         return Scaffold(
@@ -53,9 +55,9 @@ class AddPlaygroundScreen extends StatelessWidget {
                               child: Column(
                                 children: [
                                   CustomTextFormField(
+                                    validator: Validator.notEmpty,
                                     controller: nameController,
                                     label: 'Playground Name',
-                                    validator: Validator.validateName,
                                     keyboardType: TextInputType.text,
                                   ),
                                   30.verticalSpace,
@@ -68,12 +70,14 @@ class AddPlaygroundScreen extends StatelessWidget {
                                   ),
                                   30.verticalSpace,
                                   CustomTextFormField(
+                                    validator: Validator.notEmpty,
                                     controller: cityController,
                                     label: 'City',
                                     keyboardType: TextInputType.text,
                                   ),
                                   30.verticalSpace,
                                   CustomTextFormField(
+                                    validator: Validator.notEmpty,
                                     controller: regionController,
                                     label: 'Region',
                                     keyboardType: TextInputType.text,
@@ -146,7 +150,8 @@ class AddPlaygroundScreen extends StatelessWidget {
                                     padding: 23.padHorizontal,
                                     child: LoginButton(
                                       onTap: () {
-                                        if (formKey.currentState!.validate()) {
+                                        if (formKey.currentState!.validate() &&
+                                            cubit.playgroundImage != null) {
                                           cubit
                                               .addNewPlayground(
                                                   name: nameController.text,
@@ -163,6 +168,15 @@ class AddPlaygroundScreen extends StatelessWidget {
                                               cubit.playgroundImage = null;
                                             }
                                           });
+                                        } else {
+                                          Fluttertoast.showToast(
+                                            msg:
+                                                'You must enter all of the data',
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.BOTTOM,
+                                            backgroundColor: AppColors.red,
+                                            textColor: AppColors.white,
+                                          );
                                         }
                                       },
                                       gradiantColor:

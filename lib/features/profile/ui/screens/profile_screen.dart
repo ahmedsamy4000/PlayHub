@@ -492,16 +492,21 @@ class ProfileScreen extends StatelessWidget {
                                                                   onPressed:
                                                                       () {
                                                                     cubit
-                                                                        .getCategories()
+                                                                        .getCategoryById(playground
+                                                                            .categoryId)
                                                                         .then(
                                                                             (_) {
-                                                                      if (cubit
-                                                                              .state
-                                                                          is GetCategoriesSuccessState) {
-                                                                        Navigator.push(
-                                                                            context,
-                                                                            MaterialPageRoute(builder: (context) => UpdatePlaygroundScreen(playground: playground, categories: cubit.categoriesNames, id: playgroundId)));
-                                                                      }
+                                                                      cubit
+                                                                          .getCategories()
+                                                                          .then(
+                                                                              (_) {
+                                                                        if (cubit.state
+                                                                            is GetCategoriesSuccessState) {
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(builder: (context) => UpdatePlaygroundScreen(playground: playground, categories: cubit.categoriesNames, id: playgroundId)));
+                                                                        }
+                                                                      });
                                                                     });
                                                                   },
                                                                   child:
