@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
@@ -11,10 +12,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:playhub/common/data/local/local_storage.dart';
 import 'package:playhub/core/app_colors.dart';
+import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/features/authentication/data/user_model.dart';
 import 'package:playhub/features/profile/data/trainer_package_model.dart';
 import 'package:playhub/features/profile/ui/screens/profile_screen.dart';
+import 'package:playhub/features/reservations/booking_screen.dart';
 import 'package:playhub/features/rooms/data/playground_model.dart';
 import 'package:playhub/features/rooms/ui/screens/rooms_screen.dart';
 import 'package:playhub/models/bookingmodel.dart';
@@ -31,10 +34,14 @@ class AppCubit extends Cubit<AppStates> {
   int currentScreenIdx = 0;
   List<Widget> pages = [
     const Home(),
-    RoomsScreen(),
-    StatisticsScreen(),
-    const FeedbacksScreen(),
-    const Home(),
+    if (LocalStorage().userData!.type == UserType.player) RoomsScreen(),
+    if (LocalStorage().userData!.type == UserType.admin) StatisticsScreen(),
+    if (LocalStorage().userData!.type == UserType.admin)
+      const FeedbacksScreen(),
+    if (LocalStorage().userData!.type == UserType.player ||
+        LocalStorage().userData!.type == UserType.trainer ||
+        LocalStorage().userData!.type == UserType.playgroundOwner)
+      const BookingScreen(),
     const ProfileScreen(),
   ];
 
@@ -133,6 +140,27 @@ class AppCubit extends Cubit<AppStates> {
     emit(PackageAdded(newPackage));
   }
 
+  Future<void> getCurrentUserData() async {
+    emit(GetCurrentUserLoadingState());
+    try {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      User? user = auth.currentUser;
+      if (user != null) {
+        final snapshot =
+            await FirebaseFirestore.instance.collection('Users').get();
+
+        for (var doc in snapshot.docs) {
+          if (user.uid == doc.data()['Id']) {
+            LocalStorage().saveUserData(UserModel.fromJson(doc.data()));
+          }
+        }
+        emit(GetCurrentUserSuccessState());
+      }
+    } catch (e) {
+      emit(GetCurrentUserErrorState());
+    }
+  }
+
   void getTrainerPackages(String trainerId) {
     emit(GetTrainerPackagesLoadingState());
     FirebaseFirestore.instance
@@ -148,6 +176,14 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
+  Future<void> saveUserData(UserModel user) async {
+    log('ddd: ${user.fullName}');
+    await LocalStorage().saveUserData(user);
+    log('dddddd: ${user.fullName}');
+    emit(SaveUserDataSuccessState());
+  }
+
+  UserModel? userData = LocalStorage().userData;
   Future updateUserInfo(
       {required String name,
       required String phone,
@@ -165,11 +201,13 @@ class AppCubit extends Cubit<AppStates> {
           city: city ?? LocalStorage().userData?.city,
           image: LocalStorage().userData?.image,
           region: region ?? LocalStorage().userData?.region);
-      LocalStorage().saveUserData(newUser);
+      userData = newUser;
       await FirebaseFirestore.instance
           .collection('Users')
           .doc(LocalStorage().currentId)
           .update(newUser.toJson());
+      log('hellllloooooooooo: ${userData?.fullName}');
+      saveUserData(newUser);
       emit(UpdateUserInfoSuccessState());
     } catch (e) {
       emit(UpdateUserInfoErrorState());
@@ -626,12 +664,12 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
-String? categoryName;
+  String? categoryName;
   Future<void> getCategoryById(String id) async {
-    final snapshot = await FirebaseFirestore.instance.collection('Categories').get();
-    for(var doc in snapshot.docs)
-    {
-      if(doc.data()['Id'] == id) categoryName = doc.data()['Name'];
+    final snapshot =
+        await FirebaseFirestore.instance.collection('Categories').get();
+    for (var doc in snapshot.docs) {
+      if (doc.data()['Id'] == id) categoryName = doc.data()['Name'];
     }
   }
 
@@ -684,20 +722,21 @@ String? categoryName;
     }
   }
 
-  List<Map<String, dynamic>> ownerReservations = [];
-  Future<void> getOwnerReservations() async {
+  List<Map<String, dynamic>> playgroundReservations = [];
+  Future<void> getPlaygroundReservations(String id) async {
     List<Map<String, dynamic>> reservations = [];
-    final snapshot =
-        await FirebaseFirestore.instance.collection('PlayGrounds').get();
-    for (var doc in snapshot.docs) {
-      if (doc.data()['Owner_Id'] == LocalStorage().currentId) {
-        final orders = await FirebaseFirestore.instance
-            .collection('PlayGrounds')
-            .doc(doc.id)
-            .collection('Orders')
-            .get();
-        reservations.addAll(orders.docs.map((d) => d.data()));
-      }
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('PlayGrounds')
+          .doc(id)
+          .collection('Orders')
+          .get();
+      reservations.addAll(snapshot.docs.map((d) => d.data()));
+      playgroundReservations = reservations;
+      log('$playgroundReservations');
+      emit(GetPlaygroundReservationsSuccessState());
+    } catch (e) {
+      emit(GetPlaygroundReservationsErrorState());
     }
   }
 

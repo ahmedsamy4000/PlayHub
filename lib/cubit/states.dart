@@ -141,3 +141,9 @@ class GetFeedbacksSuccessState extends AppStates {}
 
 class GetFeedbacksErrorState extends AppStates {}
 
+class GetPlaygroundReservationsSuccessState extends AppStates {}
+
+class GetPlaygroundReservationsErrorState extends AppStates {}
+
+class SaveUserDataSuccessState extends AppStates {}
+

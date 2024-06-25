@@ -94,7 +94,7 @@ class EditInformationScreen extends StatelessWidget {
                               Padding(
                                 padding: 23.padHorizontal,
                                 child: LoginButton(
-                                  onTap: () {
+                                  onTap: () async {
                                     if (formKey.currentState!.validate()) {
                                       cubit
                                           .updateUserInfo(
@@ -106,6 +106,9 @@ class EditInformationScreen extends StatelessWidget {
                                           .then((_) {
                                         if (cubit.state
                                             is UpdateUserInfoSuccessState) {
+                                          // cubit.getCurrentUserData();
+                                          // cubit.saveUserData();
+
                                           Navigator.pop(context);
                                         }
                                       });

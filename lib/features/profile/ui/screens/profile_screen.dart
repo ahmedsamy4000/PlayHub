@@ -32,11 +32,11 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cubit = BlocProvider.of<AppCubit>(context);
-    var userData = LocalStorage().userData;
+    var userData = cubit.userData;
     cubit.getOwnerPlaygrounds();
     return BlocBuilder<AppCubit, AppStates>(
       builder: (context, state) => state is DeletePlaygroundLoadingState ||
-              state is ChangeProfilePhotoLoadingState
+              state is ChangeProfilePhotoLoadingState || state is UpdateUserInfoLoadingState
           ? const Scaffold(
               backgroundColor: AppColors.white,
               body: Center(child: CircularProgressIndicator()))

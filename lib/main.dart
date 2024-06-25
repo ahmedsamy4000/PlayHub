@@ -4,16 +4,16 @@ import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:paymob_payment/paymob_payment.dart';
 import 'package:playhub/Layout/MainApp.dart';
 import 'package:playhub/common/data/local/local_storage.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/features/authentication/ui/screens/login_screen.dart';
-import 'package:playhub/features/authentication/ui/screens/type_screen.dart';
-import 'package:playhub/features/rooms/ui/screens/rooms_screen.dart';
 import 'package:playhub/firebase_options.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:playhub/generated/l10n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
@@ -43,6 +43,14 @@ class MyApp extends StatelessWidget {
             builder: (_, child) {
               log("userDataInMain: ${LocalStorage().userData}");
               return MaterialApp(
+                locale: const Locale('en'),
+                localizationsDelegates: const [
+                  S.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                supportedLocales: S.delegate.supportedLocales,
                 debugShowCheckedModeBanner: false,
                 title: 'Flutter Demo',
                 theme: ThemeData(
@@ -50,7 +58,7 @@ class MyApp extends StatelessWidget {
                       ColorScheme.fromSeed(seedColor: Colors.deepPurple),
                   useMaterial3: true,
                 ),
-                home: LocalStorage().userData != null ? Main() : LoginScreen(),
+                home: LocalStorage().userData != null ? Main() : const LoginScreen(),
               );
             }));
   }

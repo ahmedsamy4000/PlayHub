@@ -30,7 +30,13 @@ class UserModel {
       fullName: json["Name"],
       email: json["Email"],
       phoneNumber: json["PhoneNumber"],
-      type: json["Type"]=="Trainer"?UserType.trainer:json["Type"]=="Player"?UserType.player:UserType.playgroundOwner,
+      type: json["Type"] == "Trainer"
+          ? UserType.trainer
+          : json["Type"] == "Player"
+              ? UserType.player
+              : json["Type"] == "Owner"
+                  ? UserType.playgroundOwner
+                  : UserType.admin,
       city: json["City"],
       region: json["Region"],
       image: json["Image"]);
@@ -44,7 +50,9 @@ class UserModel {
             ? "Trainer"
             : type == UserType.player
                 ? "Player"
-                : "Owner",
+                : type == UserType.playgroundOwner
+                    ? "Owner"
+                    : "Admin",
         "City": city,
         "Region": region,
         "Image": image,
