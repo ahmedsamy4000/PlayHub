@@ -46,7 +46,7 @@ class Search extends StatelessWidget {
                         return CityFilterDialog(
                           onCitySelected: (city) {
                             AppCubit.get(context).changeSelectedCity(city);
-                            log("الحمار المتهور ضحي${AppCubit.get(context).items}");
+                            // log("الحمار المتهور ضحي${AppCubit.get(context).items}");
                           },
                         );
                       },
@@ -73,21 +73,48 @@ class Search extends StatelessWidget {
                         },
                       ),
                       CategoryButton(
-                        text: "Category one",
+                        text: "WorkOut",
                         isSelected: AppCubit.get(context).selectedCategory ==
-                            "Category one",
+                            "4",
                         onTap: () {
                           AppCubit.get(context)
-                              .changeSelectedCategory("Category one");
+                              .changeSelectedCategory("4");
                         },
                       ),
                       CategoryButton(
-                        text: "Category two",
+                        text: "Football",
                         isSelected: AppCubit.get(context).selectedCategory ==
-                            "Category two",
+                            "2",
                         onTap: () {
                           AppCubit.get(context)
-                              .changeSelectedCategory("Category two");
+                              .changeSelectedCategory("2");
+                        },
+                      ),
+                      CategoryButton(
+                        text: "VolleyBall",
+                        isSelected: AppCubit.get(context).selectedCategory ==
+                            "3",
+                        onTap: () {
+                          AppCubit.get(context)
+                              .changeSelectedCategory("3");
+                        },
+                      ),
+                      CategoryButton(
+                        text: "BasketBall",
+                        isSelected: AppCubit.get(context).selectedCategory ==
+                            "5",
+                        onTap: () {
+                          AppCubit.get(context)
+                              .changeSelectedCategory("5");
+                        },
+                      ),
+                      CategoryButton(
+                        text: "Tennis",
+                        isSelected: AppCubit.get(context).selectedCategory ==
+                            "1",
+                        onTap: () {
+                          AppCubit.get(context)
+                              .changeSelectedCategory("1");
                         },
                       ),
                       // Add more categories as needed
