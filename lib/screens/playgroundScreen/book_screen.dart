@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:paymob_payment/paymob_payment.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
 
@@ -116,17 +117,33 @@ class BookScreen extends StatelessWidget {
                                       ),
                                       minimumSize: const Size(200, 50)),
                                   onPressed: () async {
-                                    BlocProvider.of<AppCubit>(context)
-                                        .addNewOrder(
-                                            playGroundId,
-                                            int.parse(time.toString()),
-                                            date,
-                                            true)
+                                    PaymobResponse? response;
+                                    PaymobPayment.instance
+                                        .pay(
+                                            context: context,
+                                            currency: "EGP",
+                                            amountInCents: "20000",
+                                            onPayment: (responsee) {
+                                              response = responsee;
+                                            })
                                         .then((_) {
-                                      Navigator.pop(context);
-                                      BlocProvider.of<AppCubit>(context)
-                                          .getPlaygroundById(
-                                              playGroundId!, date!);
+                                      if (response != null) {
+                                        print(response!.success);
+                                        if (response!.success != false) {
+                                          BlocProvider.of<AppCubit>(context)
+                                              .addNewOrder(
+                                                  playGroundId,
+                                                  int.parse(time.toString()),
+                                                  date,
+                                                  true)
+                                              .then((_) {
+                                            Navigator.pop(context);
+                                            BlocProvider.of<AppCubit>(context)
+                                                .getPlaygroundById(
+                                                    playGroundId!, date!);
+                                          });
+                                        }
+                                      }
                                     });
                                   },
                                   child: const Text(

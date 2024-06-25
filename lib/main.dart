@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:paymob_payment/paymob_payment.dart';
 import 'package:playhub/Layout/MainApp.dart';
 import 'package:playhub/common/data/local/local_storage.dart';
 import 'package:playhub/cubit/app_cubit.dart';
@@ -19,6 +20,11 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPreferences.getInstance();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  PaymobPayment.instance.initialize(
+      apiKey:
+          "ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmpiR0Z6Y3lJNklrMWxjbU5vWVc1MElpd2ljSEp2Wm1sc1pWOXdheUk2T1RjMU5UazJMQ0p1WVcxbElqb2lhVzVwZEdsaGJDSjkuUXBJbHZLc1ppaFNocDVpZXhUWTJBckdKMnlObC1aYWdoT2d6d3AwNkd1TlFJeVpFeHJ1NGpNWFUyX0VYU2p6ejB2elBIV05WcDVpaWJ0SXZHM01mYlE=",
+      iFrameID: 845256,
+      integrationID: 4572113);
   initializeDateFormatting().then((_) => runApp(const MyApp()));
 }
 
@@ -41,10 +47,10 @@ class MyApp extends StatelessWidget {
                 title: 'Flutter Demo',
                 theme: ThemeData(
                   colorScheme:
-                  ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+                      ColorScheme.fromSeed(seedColor: Colors.deepPurple),
                   useMaterial3: true,
                 ),
-                home: LocalStorage().userData!=null?Main():LoginScreen(),
+                home: LocalStorage().userData != null ? Main() : LoginScreen(),
               );
             }));
   }

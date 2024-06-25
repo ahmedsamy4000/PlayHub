@@ -52,6 +52,7 @@ dependencies:
   dropdown_button2: ^2.3.9
   shared_preferences: ^2.2.3
   ikchatbot: ^1.0.5
+  paymob_payment: ^0.0.1+1
 
 dev_dependencies:
   flutter_test:
