@@ -147,3 +147,14 @@ class GetPlaygroundReservationsErrorState extends AppStates {}
 
 class SaveUserDataSuccessState extends AppStates {}
 
+class UpdatePackageLoadingState extends AppStates {}
+class UpdatePackageSuccessState extends AppStates {
+  final TrainingPackage updatedPackage;
+  UpdatePackageSuccessState(this.updatedPackage);
+}
+class UpdatePackageErrorState extends AppStates {}
+
+class DeletePackageLoadingState extends AppStates {}
+class DeletePackageSuccessState extends AppStates {}
+class DeletePackageErrorState extends AppStates {}
+

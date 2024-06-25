@@ -122,6 +122,7 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   List<TrainingPackage> packages = [];
+  List<String> packagesId = [];
 
   void addPackage(
       String description, double price, int duration, String trainerId) {
@@ -136,8 +137,83 @@ class AppCubit extends Cubit<AppStates> {
         .doc(LocalStorage().currentId)
         .collection('Package');
     ref.add(newPackage.toJson());
-
+    getTrainerPackages();
     emit(PackageAdded(newPackage));
+  }
+
+  void getTrainerPackages() async {
+    emit(GetTrainerPackagesLoadingState());
+    List<TrainingPackage> trainerPackages = [];
+    List<String> newPackagesId = [];
+
+    // var trainerId = LocalStorage().userData?.id;
+
+    if (LocalStorage().currentId != null) {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(LocalStorage().currentId)
+          .collection('Package')
+          .get();
+      trainerPackages
+          .addAll(snapshot.docs.map((e) => TrainingPackage.fromJson(e.data())));
+      newPackagesId.addAll(snapshot.docs.map((e) => e.id));
+      packages = trainerPackages;
+      packagesId = newPackagesId;
+      log("الحمار المتهور ضحي${packages}");
+
+      emit(GetTrainerPackagesSuccessState());
+    } else {
+      emit(GetTrainerPackagesErrorState(
+          'Trainer ID not found in local storage'));
+    }
+  }
+
+  Future<void> updatePackage({
+    required String packageId,
+    required String description,
+    required double price,
+    required int duration,
+  }) async {
+    emit(UpdatePackageLoadingState());
+    try {
+      var updatedPackage = TrainingPackage(
+        description: description,
+        price: price,
+        duration: duration,
+        trainerId: LocalStorage().userData!.id!,
+      );
+
+      await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(LocalStorage().currentId)
+          .collection('Package')
+          .doc(packageId)
+          .update(updatedPackage.toJson());
+
+      getTrainerPackages();
+      emit(UpdatePackageSuccessState(updatedPackage));
+    } catch (e) {
+      log('$e');
+      emit(UpdatePackageErrorState());
+    }
+  }
+
+  Future<void> deletePackage(String packageId) async {
+    emit(DeletePackageLoadingState());
+    try {
+      await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(LocalStorage().currentId)
+          .collection('Package')
+          .doc(packageId)
+          .delete();
+
+      getTrainerPackages();
+      emit(DeletePackageSuccessState());
+    } catch (e) {
+      log('$e');
+      emit(DeletePackageErrorState());
+    }
   }
 
   Future<void> getCurrentUserData() async {
@@ -159,21 +235,6 @@ class AppCubit extends Cubit<AppStates> {
     } catch (e) {
       emit(GetCurrentUserErrorState());
     }
-  }
-
-  void getTrainerPackages(String trainerId) {
-    emit(GetTrainerPackagesLoadingState());
-    FirebaseFirestore.instance
-        .collection('packages')
-        .where('trainerId', isEqualTo: trainerId)
-        .get()
-        .then((value) {
-      packages =
-          value.docs.map((e) => TrainingPackage.fromJson(e.data())).toList();
-      emit(GetTrainerPackagesSuccessState());
-    }).catchError((error) {
-      emit(GetTrainerPackagesErrorState(error.toString()));
-    });
   }
 
   Future<void> saveUserData(UserModel user) async {

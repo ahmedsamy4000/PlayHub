@@ -19,6 +19,7 @@ import 'package:playhub/features/profile/ui/screens/edit_info_screen.dart';
 import 'package:playhub/features/profile/ui/screens/trainer_add_package.dart';
 import 'package:playhub/features/profile/ui/widgets/basketball.dart';
 import 'package:playhub/features/profile/ui/widgets/football.dart';
+import 'package:playhub/features/profile/ui/widgets/package_card.dart';
 import 'package:playhub/features/profile/ui/widgets/tennis.dart';
 import 'package:playhub/features/profile/ui/widgets/volleyball.dart';
 import 'package:playhub/features/profile/ui/widgets/workout.dart';
@@ -33,6 +34,12 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var cubit = BlocProvider.of<AppCubit>(context);
     var userData = cubit.userData;
+    if(userData?.type == UserType.trainer){
+      cubit.getTrainerPackages();
+    }
+    if(userData?.type == UserType.playgroundOwner){
+      cubit.getOwnerPlaygrounds();
+    }
     cubit.getOwnerPlaygrounds();
     return BlocBuilder<AppCubit, AppStates>(
       builder: (context, state) => state is DeletePlaygroundLoadingState ||
@@ -573,22 +580,7 @@ class ProfileScreen extends StatelessWidget {
                           )
                         : Container(),
                     userData?.type == UserType.trainer
-                        ? Expanded(
-                            child: state is GetTrainerPackagesLoadingState
-                                ? const Center(
-                                    child: CircularProgressIndicator())
-                                : ListView.builder(
-                                    itemCount: cubit.packages.length,
-                                    itemBuilder: (context, index) {
-                                      final package = cubit.packages[index];
-                                      return ListTile(
-                                        title: Text(package.description),
-                                        subtitle: Text(
-                                            'Price: \$${package.price}, Duration: ${package.duration} days'),
-                                      );
-                                    },
-                                  ),
-                          )
+                        ? PackageWidget(cubit: cubit)
                         : Container(),
                   ],
                 ),
