@@ -51,6 +51,7 @@ dependencies:
   fl_chart: ^0.68.0
   dropdown_button2: ^2.3.9
   shared_preferences: ^2.2.3
+  ikchatbot: ^1.0.5
 
 dev_dependencies:
   flutter_test:

@@ -4,6 +4,7 @@ import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/screens/SearchScreen/search.dart';
+import 'package:playhub/screens/userchatbotscreen/userchatbotscreen.dart';
 
 class FloatingActionMenu extends StatelessWidget {
   const FloatingActionMenu({super.key});
@@ -23,7 +24,10 @@ class FloatingActionMenu extends StatelessWidget {
         FloatingActionButton(
           heroTag: null,
           backgroundColor: AppColors.darkGreen,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => UserChatBotScreen()));
+          },
           child: const Icon(
             Icons.chat,
             color: Colors.white,
