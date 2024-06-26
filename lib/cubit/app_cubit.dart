@@ -54,6 +54,10 @@ class AppCubit extends Cubit<AppStates> {
   String searchQuery = "";
   String selectedCategory = "All";
   String selectedCity = "All";
+  List trainers = [];
+  List filteredTrainers = [];
+  List items = [];
+  int currentSearchTabIndex = 0;
 
   void changeSearchQuery(String val) {
     searchQuery = val;
@@ -71,8 +75,7 @@ class AppCubit extends Cubit<AppStates> {
     searchFunction();
     emit(AppChangeSelectedCity());
   }
-
-  var items = [];
+  
   List<T> getCommonElements<T>(List<T> list1, List<T> list2) {
     // Convert lists to sets
     Set<T> set1 = list1.toSet();
@@ -119,6 +122,47 @@ class AppCubit extends Cubit<AppStates> {
     log("$items");
 
     emit(AppChangeSearchFunction());
+  }
+
+  Future<void> trainerSearchFunction() async {
+    await getTrainers();
+    var newItems = [];
+    var names = [];
+    if (trainers != null) {
+      for (var itemData in trainers) {
+        if (itemData['Name']
+                .toString()
+                .toLowerCase()
+                .contains(searchQuery.toLowerCase()) ||
+            searchQuery.isEmpty) {
+          names.add(itemData);
+        }
+        if (itemData['City'] == selectedCity || selectedCity == "All") {
+          newItems.add(itemData);
+        }
+      }
+      if (names.isEmpty) {
+        filteredTrainers = newItems;
+      } else if (newItems.isEmpty) {
+        filteredTrainers = names;
+      } else {
+        filteredTrainers = getCommonElements(newItems, names);
+      }
+    }
+
+    log("//////////////////////////////");
+    log('$trainers');
+
+    emit(AppChangeSearchFunction());
+  }
+
+  void changeTabIndex(int index) async {
+    currentSearchTabIndex = index;
+    if (currentSearchTabIndex == 0) {
+      await searchFunction();
+    } else {
+      await trainerSearchFunction();
+    }
   }
 
   List<TrainingPackage> packages = [];
@@ -235,6 +279,28 @@ class AppCubit extends Cubit<AppStates> {
       }
     } catch (e) {
       emit(GetCurrentUserErrorState());
+    }
+  }
+
+  Future<void> getTrainers() async {
+    emit(GetTrainersLoadingState());
+    try {
+      List newTrainers = [];
+      final snapshot =
+          await FirebaseFirestore.instance.collection('Users').get();
+
+      for (var doc in snapshot.docs) {
+        if (doc.data()["Type"] == "Trainer") {
+          newTrainers.add(UserModel.fromJson(doc.data()));
+        }
+      }
+      trainers = newTrainers;
+
+      log("-------------------------------------");
+      log('$trainers');
+      emit(GetTrainersSuccessState());
+    } catch (e) {
+      emit(GetTrainersErrorState());
     }
   }
 

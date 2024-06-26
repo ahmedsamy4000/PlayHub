@@ -158,3 +158,8 @@ class DeletePackageLoadingState extends AppStates {}
 class DeletePackageSuccessState extends AppStates {}
 class DeletePackageErrorState extends AppStates {}
 
+class GetTrainersLoadingState extends AppStates {}
+
+class GetTrainersSuccessState extends AppStates {}
+
+class GetTrainersErrorState extends AppStates {}
