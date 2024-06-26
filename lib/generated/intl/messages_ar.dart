@@ -21,5 +21,21 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ar';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{};
+  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "Basketball": MessageLookupByLibrary.simpleMessage("كرة السلة"),
+        "Cairo": MessageLookupByLibrary.simpleMessage("القاهرة"),
+        "Camera": MessageLookupByLibrary.simpleMessage("كاميرا"),
+        "Football": MessageLookupByLibrary.simpleMessage("كرة القدم"),
+        "Gallery": MessageLookupByLibrary.simpleMessage("معرض الصور"),
+        "Owner": MessageLookupByLibrary.simpleMessage("مالك ملعب"),
+        "Player": MessageLookupByLibrary.simpleMessage("لاعب"),
+        "Tennis": MessageLookupByLibrary.simpleMessage("التنس"),
+        "Trainer": MessageLookupByLibrary.simpleMessage("مدرب"),
+        "Volleyball": MessageLookupByLibrary.simpleMessage("كرة الطائرة"),
+        "Workout": MessageLookupByLibrary.simpleMessage("تمرين"),
+        "pop1": MessageLookupByLibrary.simpleMessage("تعديل البيانات"),
+        "pop2": MessageLookupByLibrary.simpleMessage("تغيير كلمة السر"),
+        "pop3": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
+        "pop4": MessageLookupByLibrary.simpleMessage("حذف الحساب")
+      };
 }

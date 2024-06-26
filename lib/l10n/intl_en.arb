@@ -1,1 +1,18 @@
-{}
+{
+    "Player": "Player",
+    "Trainer": "Trainer",
+    "Owner": "Owner",
+    "pop1": "Edit Information",
+    "pop2": "Change Password",
+    "pop3": "Logout",
+    "pop4": "Delete Account",
+    "Football": "Football",
+    "Volleyball": "Volleyball",
+    "Basketball": "Basketball",
+    "Tennis": "Tennis",
+    "Workout": "Workout",
+    "Cairo": "Cairo",
+    "Gallery": "Photo Library",
+    "Camera": "Camera"
+}
+

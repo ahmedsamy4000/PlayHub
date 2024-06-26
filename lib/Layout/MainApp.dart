@@ -12,9 +12,7 @@ import 'package:playhub/screens/SearchScreen/search.dart';
 class Main extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    
-    return BlocConsumer<AppCubit, AppStates>(
-      listener: (BuildContext context, AppStates state) {},
+    return BlocBuilder<AppCubit, AppStates>(
       builder: (BuildContext context, AppStates state) {
         return Scaffold(
           body: AppCubit.get(context)
@@ -33,22 +31,22 @@ class Main extends StatelessWidget {
                 icon: Icon(Icons.home),
                 label: "Home",
               ),
-              if (LocalStorage().userData!.type == UserType.player)
+              if (LocalStorage().userData?.type == UserType.player)
               const BottomNavigationBarItem(
                 icon: Icon(Icons.groups),
                 label: "Rooms",
               ),
-              if (LocalStorage().userData!.type == UserType.admin)
+              if (LocalStorage().userData?.type == UserType.admin)
               const BottomNavigationBarItem(
                 icon: Icon(Icons.sports_baseball_rounded),
                 label: "Statistics",
               ),
-              if (LocalStorage().userData!.type == UserType.admin)
+              if (LocalStorage().userData?.type == UserType.admin)
               const BottomNavigationBarItem(
                 icon: Icon(Icons.sports_baseball_rounded),
                 label: "Feedbacks",
               ),
-              if (LocalStorage().userData!.type == UserType.player || LocalStorage().userData!.type == UserType.trainer || LocalStorage().userData!.type == UserType.playgroundOwner)
+              if (LocalStorage().userData?.type == UserType.player || LocalStorage().userData?.type == UserType.trainer || LocalStorage().userData?.type == UserType.playgroundOwner)
               const BottomNavigationBarItem(
                 icon: Icon(Icons.sports_soccer),
                 label: "Booking",

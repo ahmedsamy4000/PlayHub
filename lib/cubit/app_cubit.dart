@@ -34,13 +34,13 @@ class AppCubit extends Cubit<AppStates> {
   int currentScreenIdx = 0;
   List<Widget> pages = [
     const Home(),
-    if (LocalStorage().userData!.type == UserType.player) RoomsScreen(),
-    if (LocalStorage().userData!.type == UserType.admin) StatisticsScreen(),
-    if (LocalStorage().userData!.type == UserType.admin)
+    if (LocalStorage().userData?.type == UserType.player) RoomsScreen(),
+    if (LocalStorage().userData?.type == UserType.admin) StatisticsScreen(),
+    if (LocalStorage().userData?.type == UserType.admin)
       const FeedbacksScreen(),
-    if (LocalStorage().userData!.type == UserType.player ||
-        LocalStorage().userData!.type == UserType.trainer ||
-        LocalStorage().userData!.type == UserType.playgroundOwner)
+    if (LocalStorage().userData?.type == UserType.player ||
+        LocalStorage().userData?.type == UserType.trainer ||
+        LocalStorage().userData?.type == UserType.playgroundOwner)
       const BookingScreen(),
     const ProfileScreen(),
   ];
@@ -216,6 +216,7 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
+  UserModel? userData;
   Future<void> getCurrentUserData() async {
     emit(GetCurrentUserLoadingState());
     try {
@@ -227,7 +228,7 @@ class AppCubit extends Cubit<AppStates> {
 
         for (var doc in snapshot.docs) {
           if (user.uid == doc.data()['Id']) {
-            LocalStorage().saveUserData(UserModel.fromJson(doc.data()));
+            userData = UserModel.fromJson(doc.data());
           }
         }
         emit(GetCurrentUserSuccessState());
@@ -237,14 +238,6 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
-  Future<void> saveUserData(UserModel user) async {
-    log('ddd: ${user.fullName}');
-    await LocalStorage().saveUserData(user);
-    log('dddddd: ${user.fullName}');
-    emit(SaveUserDataSuccessState());
-  }
-
-  UserModel? userData = LocalStorage().userData;
   Future updateUserInfo(
       {required String name,
       required String phone,
@@ -267,8 +260,7 @@ class AppCubit extends Cubit<AppStates> {
           .collection('Users')
           .doc(LocalStorage().currentId)
           .update(newUser.toJson());
-      log('hellllloooooooooo: ${userData?.fullName}');
-      saveUserData(newUser);
+      await LocalStorage().saveUserData(newUser);
       emit(UpdateUserInfoSuccessState());
     } catch (e) {
       emit(UpdateUserInfoErrorState());
@@ -323,7 +315,7 @@ class AppCubit extends Cubit<AppStates> {
               city: userData?.city,
               image: downloadURL,
               region: userData?.region);
-          LocalStorage().saveUserData(newUser);
+          await LocalStorage().saveUserData(newUser);
           emit(ChangeProfilePhotoSuccessState());
         }
       }
@@ -411,6 +403,7 @@ class AppCubit extends Cubit<AppStates> {
     if (user != null) {
       try {
         await FirebaseAuth.instance.signOut();
+        await LocalStorage().saveUserData(null);
         emit(UserLogoutSuccessState());
       } catch (e) {
         emit(UserLogoutErrorState());

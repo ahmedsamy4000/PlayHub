@@ -23,6 +23,7 @@ import 'package:playhub/features/profile/ui/widgets/package_card.dart';
 import 'package:playhub/features/profile/ui/widgets/tennis.dart';
 import 'package:playhub/features/profile/ui/widgets/volleyball.dart';
 import 'package:playhub/features/profile/ui/widgets/workout.dart';
+import 'package:playhub/generated/l10n.dart';
 import 'package:playhub/screens/playgroundScreen/playgroundscreen.dart';
 
 import '../../../../common/data/local/local_storage.dart';
@@ -33,7 +34,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cubit = BlocProvider.of<AppCubit>(context);
-    var userData = cubit.userData;
+    var userData = LocalStorage().userData;
     if(userData?.type == UserType.trainer){
       cubit.getTrainerPackages();
     }
@@ -67,9 +68,9 @@ class ProfileScreen extends StatelessWidget {
                                             builder: (context) =>
                                                 const EditInformationScreen()));
                                   },
-                                  child: const Text(
-                                    'Edit Information',
-                                    style: TextStyle(
+                                  child: Text(
+                                  S.of(context).pop1,
+                                    style: const TextStyle(
                                       fontFamily: 'Open Sans',
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
@@ -84,19 +85,45 @@ class ProfileScreen extends StatelessWidget {
                                             builder: (context) =>
                                                 const ChangePasswordScreen()));
                                   },
-                                  child: const Text(
-                                    'Change Password',
-                                    style: TextStyle(
+                                  child: Text(
+                                    S.of(context).pop2,
+                                    style: const TextStyle(
                                       fontFamily: 'Open Sans',
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
                                     ),
                                   ),
                                 ),
+                               
                                 PopupMenuItem(
-                                  child: const Text(
-                                    'Delete Account',
-                                    style: TextStyle(
+                                  child: Text(
+                                    S.of(context).pop3,
+                                    style: const TextStyle(
+                                      color: Color.fromRGBO(239, 83, 80, 1),
+                                      fontFamily: 'Open Sans',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    cubit.logout().then((_) async {
+                                      if (cubit.state
+                                          is UserLogoutSuccessState) {
+                                            cubit.changeScreenIdx(0);
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const LoginScreen()));
+                                        await LocalStorage().saveUserData(null);
+                                      }
+                                    });
+                                  },
+                                ),
+                                 PopupMenuItem(
+                                  child:  Text(
+                                    S.of(context).pop4,
+                                    style: const TextStyle(
                                       color: Color.fromRGBO(239, 83, 80, 1),
                                       fontFamily: 'Open Sans',
                                       fontWeight: FontWeight.bold,
@@ -110,30 +137,6 @@ class ProfileScreen extends StatelessWidget {
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 const TypeScreen()));
-                                  },
-                                ),
-                                PopupMenuItem(
-                                  child: const Text(
-                                    'Logout',
-                                    style: TextStyle(
-                                      color: Color.fromRGBO(239, 83, 80, 1),
-                                      fontFamily: 'Open Sans',
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    cubit.logout().then((_) async {
-                                      if (cubit.state
-                                          is UserLogoutSuccessState) {
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const LoginScreen()));
-                                        await LocalStorage().saveUserData(null);
-                                      }
-                                    });
                                   },
                                 ),
                               ]),
@@ -201,8 +204,8 @@ class ProfileScreen extends StatelessWidget {
                                                     Icons.photo_library,
                                                     color: Colors.grey,
                                                   ),
-                                                  title: const Text(
-                                                    'Photo Library',
+                                                  title: Text(
+                                                    S.of(context).Gallery,
                                                     style: TextStyle(
                                                       fontFamily: 'Open Sans',
                                                       fontWeight:
@@ -220,8 +223,8 @@ class ProfileScreen extends StatelessWidget {
                                                     Icons.camera_alt,
                                                     color: Colors.grey,
                                                   ),
-                                                  title: const Text(
-                                                    'Camera',
+                                                  title:  Text(
+                                                    S.of(context).Camera,
                                                     style: TextStyle(
                                                       fontFamily: 'Open Sans',
                                                       fontWeight:
@@ -271,13 +274,13 @@ class ProfileScreen extends StatelessWidget {
                                   children: [
                                     Text(
                                       userData == null
-                                          ? 'Player'
+                                          ? ''
                                           : userData.type == UserType.player
-                                              ? 'Player'
+                                              ? S.of(context).Player
                                               : userData.type ==
                                                       UserType.trainer
-                                                  ? 'Trainer'
-                                                  : 'Owner',
+                                                  ? S.of(context).Trainer
+                                                  : S.of(context).Owner,
                                       style: const TextStyle(
                                           color: AppColors.darkGray,
                                           fontSize: 15,
@@ -312,7 +315,7 @@ class ProfileScreen extends StatelessWidget {
                                     userData?.city != null &&
                                             userData?.city != ''
                                         ? Text(
-                                            '${userData?.city}',
+                                            S.of(context).Cairo,
                                             style: const TextStyle(
                                                 color: AppColors.darkGray,
                                                 fontSize: 15,
@@ -332,13 +335,13 @@ class ProfileScreen extends StatelessWidget {
                       height: 32,
                     ),
                     userData?.type == UserType.player
-                        ? const TabBar(
+                        ? TabBar(
                             isScrollable: true,
                             tabAlignment: TabAlignment.start,
                             tabs: [
                               Tab(
                                 child: Text(
-                                  'Football',
+                                  S.of(context).Football,
                                   style: TextStyle(
                                       fontFamily: 'Open Sans',
                                       fontWeight: FontWeight.bold,
@@ -347,7 +350,7 @@ class ProfileScreen extends StatelessWidget {
                               ),
                               Tab(
                                 child: Text(
-                                  'Volleyball',
+                                  S.of(context).Volleyball,
                                   style: TextStyle(
                                       fontFamily: 'Open Sans',
                                       fontWeight: FontWeight.bold,
@@ -356,7 +359,7 @@ class ProfileScreen extends StatelessWidget {
                               ),
                               Tab(
                                 child: Text(
-                                  'Basketball',
+                                  S.of(context).Basketball,
                                   style: TextStyle(
                                       fontFamily: 'Open Sans',
                                       fontWeight: FontWeight.bold,
@@ -365,7 +368,7 @@ class ProfileScreen extends StatelessWidget {
                               ),
                               Tab(
                                 child: Text(
-                                  'Tennis',
+                                  S.of(context).Tennis,
                                   style: TextStyle(
                                       fontFamily: 'Open Sans',
                                       fontWeight: FontWeight.bold,
@@ -374,7 +377,7 @@ class ProfileScreen extends StatelessWidget {
                               ),
                               Tab(
                                 child: Text(
-                                  'Workout',
+                                  S.of(context).Workout,
                                   style: TextStyle(
                                       fontFamily: 'Open Sans',
                                       fontWeight: FontWeight.bold,

@@ -21,6 +21,7 @@ class EditInformationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     var cubit = BlocProvider.of<AppCubit>(context);
+    cubit.getCurrentUserData();
     var userData = LocalStorage().userData;
     TextEditingController nameController = TextEditingController();
     nameController.text = userData?.fullName ?? '';
@@ -106,9 +107,6 @@ class EditInformationScreen extends StatelessWidget {
                                           .then((_) {
                                         if (cubit.state
                                             is UpdateUserInfoSuccessState) {
-                                          // cubit.getCurrentUserData();
-                                          // cubit.saveUserData();
-
                                           Navigator.pop(context);
                                         }
                                       });
