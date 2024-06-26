@@ -54,14 +54,18 @@ class AppCubit extends Cubit<AppStates> {
   String searchQuery = "";
   String selectedCategory = "All";
   String selectedCity = "All";
-  List trainers = [];
-  List filteredTrainers = [];
-  List items = [];
+  List trainers=[];
+  List filteredTrainers=[];
+  List items=[];
   int currentSearchTabIndex = 0;
 
-  void changeSearchQuery(String val) {
+  Future<void> changeSearchQuery(String val) async {
     searchQuery = val;
-    searchFunction();
+    if (currentSearchTabIndex == 0) {
+      await searchFunction();
+    } else {
+      await trainerSearchFunction();
+    }
     emit(AppChangeSearchQuery());
   }
 
@@ -128,19 +132,26 @@ class AppCubit extends Cubit<AppStates> {
     await getTrainers();
     var newItems = [];
     var names = [];
+    log("meraaaaaaaaaaaaaaaa");
+    log(searchQuery);
     if (trainers != null) {
       for (var itemData in trainers) {
-        if (itemData['Name']
-                .toString()
+        if (itemData.fullName
                 .toLowerCase()
                 .contains(searchQuery.toLowerCase()) ||
             searchQuery.isEmpty) {
           names.add(itemData);
+          log("full:${itemData.fullName}");
+          if (itemData.city == selectedCity || selectedCity == "All") {
+            newItems.add(itemData);
+            log("filter:${itemData.fullName}");
+          }
         }
-        if (itemData['City'] == selectedCity || selectedCity == "All") {
-          newItems.add(itemData);
-        }
+
       }
+      log("meraaaaaaaaaaaaaaaa");
+
+      log("${newItems}");
       if (names.isEmpty) {
         filteredTrainers = newItems;
       } else if (newItems.isEmpty) {
@@ -148,8 +159,9 @@ class AppCubit extends Cubit<AppStates> {
       } else {
         filteredTrainers = getCommonElements(newItems, names);
       }
-    }
 
+    }
+    log("filter:${filteredTrainers[0].fullName}");
     log("//////////////////////////////");
     log('$trainers');
 
@@ -158,6 +170,7 @@ class AppCubit extends Cubit<AppStates> {
 
   void changeTabIndex(int index) async {
     currentSearchTabIndex = index;
+
     if (currentSearchTabIndex == 0) {
       await searchFunction();
     } else {
@@ -295,6 +308,7 @@ class AppCubit extends Cubit<AppStates> {
         }
       }
       trainers = newTrainers;
+      filteredTrainers= newTrainers;
 
       log("-------------------------------------");
       log('$trainers');

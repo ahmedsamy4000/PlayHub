@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -210,18 +212,20 @@ class Search extends StatelessWidget {
     );
   }
 
-  Widget _buildTrainerTab(BuildContext context) {
+  Widget _buildTrainerTab(BuildContext cont) {
 
     return BlocBuilder<AppCubit, AppStates>(
       builder: (context, state) {
         if (state is GetTrainersLoadingState) {
           return Center(child: CircularProgressIndicator());
-        } else if (state is GetTrainersSuccessState) {
+        }  else if (state is GetTrainersErrorState) {
+          return Center(child: Text('Failed to load trainers'));
+        } else {
           return ListView.builder(
             physics: BouncingScrollPhysics(),
-            itemCount: AppCubit.get(context).trainers.length,
-            itemBuilder: (context, index) {
-              final trainer = AppCubit.get(context).trainers[index];
+            itemCount: AppCubit.get(context).filteredTrainers.length,
+            itemBuilder: (con, index) {
+              final trainer = AppCubit.get(context).filteredTrainers[index];
               return Container(
                 width: 200.w,
                 margin: const EdgeInsets.all(6),
@@ -240,21 +244,21 @@ class Search extends StatelessWidget {
                   children: [
                     trainer.image != null
                         ? Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20.0),
-                              child: Image.network(
-                                trainer.image!,
-                                width: 70,
-                                height: 70,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          )
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20.0),
+                        child: Image.network(
+                          trainer.image!,
+                          width: 70,
+                          height: 70,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    )
                         : Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(Icons.image, size: 70),
-                          ),
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(Icons.image, size: 70),
+                    ),
                     const SizedBox(width: 10.0),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -282,10 +286,6 @@ class Search extends StatelessWidget {
               );
             },
           );
-        } else if (state is GetTrainersErrorState) {
-          return Center(child: Text('Failed to load trainers'));
-        } else {
-          return Container();
         }
       },
     );

@@ -23,9 +23,9 @@ class Main extends StatelessWidget {
             onTap: (index) {
               AppCubit.get(context).changeScreenIdx(index);
             },
-            backgroundColor: AppColors.green3,
+            backgroundColor: AppColors.darkGreen,
             selectedItemColor: AppColors.white,
-            unselectedItemColor: AppColors.darkGray,
+            unselectedItemColor: AppColors.grey,
             items: [
               const BottomNavigationBarItem(
                 icon: Icon(Icons.home),
