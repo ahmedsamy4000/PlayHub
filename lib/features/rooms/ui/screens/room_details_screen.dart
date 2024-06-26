@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:playhub/Layout/MainApp.dart';
 import 'package:playhub/core/padding.dart';
 import 'package:playhub/features/authentication/data/user_model.dart';
 import 'package:playhub/features/authentication/ui/widgets/custom_login_button.dart';
@@ -10,6 +11,7 @@ import 'package:playhub/features/rooms/data/room_model.dart';
 import 'package:playhub/features/rooms/ui/screens/rooms_screen.dart';
 
 import '../../../../core/app_colors.dart';
+import '../../../../cubit/app_cubit.dart';
 import '../widgets/players_list_item.dart';
 
 class RoomDetailsScreen extends StatelessWidget {
@@ -154,7 +156,10 @@ class RoomDetailsScreen extends StatelessWidget {
                             ? LoginButton(
                           onTap: () {
                             cubit.playerJoinRoom(id: roomId, room: room).then((_) {
-                              Navigator.pop(context);                            });
+                              //Navigator.pop(context);
+                              Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=> Main()) );
+                              BlocProvider.of<AppCubit>(context).changeScreenIdx(1);
+                            });
                           },
                           text: "Join",
                           gradiantColor: AppColors.loginGradiantColorButton,
@@ -164,7 +169,9 @@ class RoomDetailsScreen extends StatelessWidget {
                             ? LoginButton(
                           onTap: () {
                             cubit.playerUnJoinRoom(id: roomId, room: room).then((_) {
-                              Navigator.pop(context);
+                              //Navigator.pop(context);
+                              Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=> Main()) );
+                              BlocProvider.of<AppCubit>(context).changeScreenIdx(1);
                             });
                           },
                           text: "Cancel",

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:playhub/Layout/MainApp.dart';
 import 'package:playhub/common/data/local/local_storage.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/padding.dart';
@@ -107,7 +108,8 @@ class EditInformationScreen extends StatelessWidget {
                                           .then((_) {
                                         if (cubit.state
                                             is UpdateUserInfoSuccessState) {
-                                          Navigator.pop(context);
+                                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Main()));
+                                          cubit.changeScreenIdx(3);
                                         }
                                       });
                                     }

@@ -9,6 +9,8 @@ import 'package:playhub/core/validator.dart';
 import 'package:playhub/features/rooms/cubits/rooms_cubit.dart';
 import 'package:playhub/features/rooms/cubits/rooms_states.dart';
 
+import '../../../../Layout/MainApp.dart';
+import '../../../../cubit/app_cubit.dart';
 import '../../../authentication/ui/widgets/custom_login_button.dart';
 import '../../../authentication/ui/widgets/login_custom_textfield.dart';
 import '../widgets/Custom_dropdown.dart';
@@ -185,7 +187,11 @@ class AddRoomScreen extends StatelessWidget {
                                 level: levelSearchController.text,
                                 category:categoryController.text
                             ).then((_){
-                              if(context.read<RoomsCubit>().state is createRoomSuccessfully) Navigator.pop(context);
+                              if(context.read<RoomsCubit>().state is createRoomSuccessfully) {
+                                Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=> Main()) );
+                                BlocProvider.of<AppCubit>(context).changeScreenIdx(1);
+                              }
+                              //Navigator.pop(context);
                             });
                           }
                         },
