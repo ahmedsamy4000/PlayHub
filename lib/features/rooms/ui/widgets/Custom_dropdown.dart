@@ -56,6 +56,7 @@ class CustomDropdown extends StatelessWidget {
               valueListenable: isVisible,
               builder: (context, isVisiblee, child) {
                 return SearchField(
+
                   onSearchTextChanged: (query) {
                     final filter = items
                         .where((element) =>
@@ -67,6 +68,7 @@ class CustomDropdown extends StatelessWidget {
                         .toList();
                   },
                   controller: searchController,
+
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   hint: hint,
                   itemHeight: 50.h,
@@ -94,10 +96,12 @@ class CustomDropdown extends StatelessWidget {
                     ),
                   ),
                   searchInputDecoration: InputDecoration(
+                    suffixIcon: Icon(Icons.arrow_drop_down),
                     hintStyle: TextStyle(fontSize: 18, color: Colors.grey),
                     border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 20,
+                    contentPadding:  EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                      vertical: 18.h
                     ),
                   ),
                   suggestionsDecoration: SuggestionDecoration(

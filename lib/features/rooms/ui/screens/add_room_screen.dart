@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -29,7 +31,7 @@ class AddRoomScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => RoomsCubit()..getPlaygrounds(),
+      create: (context) => RoomsCubit()..getPlaygrounds()..getAllCategory(),
       child: BlocBuilder<RoomsCubit, RoomsStates>(
           builder: (context, state) {
         if (state is DateChangeState) {
@@ -46,9 +48,14 @@ class AddRoomScreen extends StatelessWidget {
         }
         var cubit=context.read<RoomsCubit>();
         return Scaffold(
-          appBar: AppBar(),
-          body: Padding(
+          appBar: AppBar(
+            title: Text(
+              "Room Details"
+            ),
+          ),
+          body: Container(
             padding: 10.padAll,
+            margin: 10.padTop,
             child: SingleChildScrollView(
               child: Form(
                 key: creationFormKey,
@@ -56,6 +63,10 @@ class AddRoomScreen extends StatelessWidget {
                   children: [
                     CustomTextFormField(
                       hint: "Date",
+                      prefixIcon: Padding(
+                        padding: 10.padRight,
+                        child: Icon(Icons.date_range_outlined,color: AppColors.darkGreen,),
+                      ),
                       controller: dateController,
                       validator: Validator.notEmpty,
                       onTap: () async {
@@ -75,6 +86,10 @@ class AddRoomScreen extends StatelessWidget {
                     20.verticalSpace,
                     CustomTextFormField(
                       hint: "Time",
+                      prefixIcon: Padding(
+                        padding: 10.padRight,
+                        child: Icon(Icons.timer,color: AppColors.darkGreen,),
+                      ),
                       validator: Validator.notEmpty,
                       controller: timeController,
                       onTap: () async {
@@ -92,7 +107,7 @@ class AddRoomScreen extends StatelessWidget {
                     20.verticalSpace,
                     CustomDropdown(
                       items: playgrounds,
-                      hint: "Enter playground",
+                      hint: "Playground",
                       colors: AppColors.loginGradiantColorButton,
                       searchController: playgroundSearchController,
                       isError: isError,
@@ -100,7 +115,7 @@ class AddRoomScreen extends StatelessWidget {
                     20.verticalSpace,
                     CustomDropdown(
                       items: hours,
-                      hint: "Enter time of match",
+                      hint: "Time of match",
                       colors: AppColors.loginGradiantColorButton,
                       searchController: hoursSearchController,
                       isError: isError,
@@ -108,19 +123,19 @@ class AddRoomScreen extends StatelessWidget {
                     20.verticalSpace,
                     CustomDropdown(
                       items: levels,
-                      hint: "Enter match's level",
+                      hint: "Match level",
                       colors: AppColors.loginGradiantColorButton,
                       searchController: levelSearchController,
                       isError: isError,
                     ),
                     20.verticalSpace,
-                    CustomTextFormField(
+                    CustomDropdown(
+                      items: cubit.categories,
                       hint: "Category",
-                      keyboardType: TextInputType.text,
-                      onChanged: cubit.setCategory,
-                      validator: Validator.notEmpty,
-                      controller: categoryController,
+                      colors: AppColors.loginGradiantColorButton,
+                      searchController: categoryController,
                       isError: isError,
+
                     ),
                     20.verticalSpace,
                     CustomTextFormField(
@@ -149,27 +164,35 @@ class AddRoomScreen extends StatelessWidget {
 
                     ),
                     20.verticalSpace,
-                    LoginButton(
-                      onTap: (){
-                        if(cubit.checkValidation(
-                            playground: playgroundSearchController.text,
-                            date: dateController.text,
-                            time: timeController.text,
-                            period: hoursSearchController.text,
-                            level: levelSearchController.text
-                        )){
-                          context.read<RoomsCubit>().createRoom(
+                    Padding(
+                      padding: 16.padHorizontal,
+                      child: LoginButton(
+                        onTap: (){
+                          if(cubit.checkValidation(
                               playground: playgroundSearchController.text,
                               date: dateController.text,
                               time: timeController.text,
                               period: hoursSearchController.text,
-                              level: levelSearchController.text
-                          );
-                        }
-                      },
-                      text: "Create Room",
-                      tapedGradiantColor: AppColors.loginGradiantColorButtonTaped,
-                      gradiantColor: AppColors.loginGradiantColorButton,
+                              level: levelSearchController.text,
+                            category:categoryController.text
+                          )){
+                            log("validaate");
+                            context.read<RoomsCubit>().createRoom(
+                                playground: playgroundSearchController.text,
+                                date: dateController.text,
+                                time: timeController.text,
+                                period: hoursSearchController.text,
+                                level: levelSearchController.text,
+                                category:categoryController.text
+                            ).then((_){
+                              if(context.read<RoomsCubit>().state is createRoomSuccessfully) Navigator.pop(context);
+                            });
+                          }
+                        },
+                        text: "Create Room",
+                        tapedGradiantColor: AppColors.loginGradiantColorButtonTaped,
+                        gradiantColor: AppColors.loginGradiantColorButton,
+                      ),
                     )
                   ],
                 ),

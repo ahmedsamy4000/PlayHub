@@ -5,7 +5,7 @@ import 'package:playhub/core/padding.dart';
 
 class CustomTextFormField extends StatelessWidget {
   CustomTextFormField({
-    super.key, this.hint, this.label, this.value,  this.validator, this.keyboardType, this.inputFormatter, this.onChanged, this.isPassword=false, this.controller, this.onTap, this.isError=false,
+    super.key, this.hint, this.label, this.value,  this.validator, this.keyboardType, this.inputFormatter, this.onChanged, this.isPassword=false, this.controller, this.onTap, this.isError=false, this.prefixIcon,
   });
   final String? hint;
   final String? label;
@@ -20,6 +20,7 @@ class CustomTextFormField extends StatelessWidget {
   final ValueNotifier<String?> errorText = ValueNotifier<String?>(null);
   final TextEditingController? controller;
   final bool isError;
+  final Widget? prefixIcon;
   @override
   Widget build(BuildContext context) {
     if(isError){
@@ -68,6 +69,7 @@ class CustomTextFormField extends StatelessWidget {
                   decoration: InputDecoration(
                     hintText:hint,
                     labelText: label,
+                    prefixIcon: prefixIcon,
                     suffixIcon: (isPassword!=null&&isPassword==true)?IconButton(
                       onPressed: (){
                         isVisible.value=!isVisiblee;

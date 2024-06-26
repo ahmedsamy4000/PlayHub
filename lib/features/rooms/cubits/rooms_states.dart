@@ -46,6 +46,5 @@ class GetRoomPlayers extends RoomsStates{
 
 }
 
-class GetAllCategoryState extends RoomsStates{
-
-}
+class GetAllCategoryState extends RoomsStates{}
+class createRoomSuccessfully extends RoomsStates{}

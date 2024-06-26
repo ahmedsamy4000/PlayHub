@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:playhub/common/data/local/local_storage.dart';
 import 'package:playhub/features/authentication/data/user_model.dart';
@@ -11,6 +12,8 @@ import 'package:playhub/features/rooms/cubits/rooms_states.dart';
 import 'package:playhub/features/rooms/data/category_model.dart';
 import 'package:playhub/features/rooms/data/playground_model.dart';
 import 'package:playhub/features/rooms/data/room_model.dart';
+
+import '../../../core/app_colors.dart';
 
 
 class RoomsCubit extends Cubit<RoomsStates> {
@@ -42,11 +45,6 @@ class RoomsCubit extends Cubit<RoomsStates> {
     }
   }
 
-  String? category;
-  void setCategory(String? value){
-    category=value;
-  }
-
   String? playersNum;
   void setPlayersNum(String? value){
     playersNum=value;
@@ -62,7 +60,16 @@ class RoomsCubit extends Cubit<RoomsStates> {
     comment=value;
   }
 
-  bool checkValidation({required String? date,required String? time,required String? playground, required String? period, required String? level}){
+  bool checkValidation({required String? date,required String? time,required String? playground, required String? period, required String? level,required String? category}){
+    log(category!);
+    log(city!);
+    log(date!);
+    log(time!);
+    log(playersNum!);
+    log(playground!);
+    log(period!);
+    log(level!);
+
     if(category==null||city==null||date==null||time==null||playersNum==null||playground==null||period==null||level==null)
     {
       emit(CreateRoomsErrorState());
@@ -74,13 +81,9 @@ class RoomsCubit extends Cubit<RoomsStates> {
     UserModel? user;
     try {
         final snapshot = await FirebaseFirestore.instance.collection('Users').get();
-        log('$snapshot');
         for (var doc in snapshot.docs) {
-          log('message1');
           if (id == doc.data()['Id']){
-            log('${doc.data()}');
             user = UserModel.fromJson(doc.data());
-            log('message3');
           }
 
         }
@@ -91,43 +94,55 @@ class RoomsCubit extends Cubit<RoomsStates> {
       //emit(GetCurrentUserErrorState());
     }
   }
-  void createRoom({required String? playground,required String date,required String time,required String? period,required String? level})async{
+  Future<void> createRoom({required String? playground,required String date,required String time,required String? period,required String? level,required String? category})async{
 
     RoomModel room =RoomModel(playground: playground!, category: category!, city: city!, date: date, time: time, period: period!, playersNum: playersNum!, comment: comment,level: level!, authUserId: LocalStorage().userData!.id!,players: []);
 
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('Rooms')
         .add(room.toJson())
-        .then((DocumentReference docRef) {
-      //log('DocumentSnapshot added with ID: ${docRef.id}');
+        .then((DocumentReference docRef) async {
+      await getAllRooms();
+      Fluttertoast.showToast(
+        msg: "Added Successfully!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: AppColors.green,
+        textColor: AppColors.white,
+      );
+      emit (createRoomSuccessfully());
     }).catchError((error) {
-      //log('Error adding document: $error');
+      Fluttertoast.showToast(
+        msg: "Enter Valid Data!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: AppColors.red,
+        textColor: AppColors.white,
+      );
     });
   }
 
-  void getAllRooms()async{
+  Future<void> getAllRooms()async{
     try {
       var data = await FirebaseFirestore.instance.collection('Rooms').get();
       List<RoomModel> rooms = [];
       List<UserModel> roomOwners=[];
 
       List<String> roomsId=[];
+      log("enter getkkkk");
       for (var document in data.docs) {
         RoomModel room = RoomModel.fromJson(document.data());
         rooms.add(room);
-        log('${room}');
         UserModel? user=await getUserById(id:room.authUserId);
-        log('${user}');
         roomOwners.add(user!);
         roomsId.add(document.id);
       }
-
       emit(GetRoomsDataState(rooms: rooms,roomOwners:roomOwners,roomsIds:roomsId));
     } catch (e) {
       print('Error retrieving playgrounds: $e');
     }
   }
-  List<CategoryModel> categories = [];
+  List<String> categories = [];
 
   void getAllCategory()async{
     try {
@@ -135,7 +150,7 @@ class RoomsCubit extends Cubit<RoomsStates> {
 
       for (var document in data.docs) {
         CategoryModel category = CategoryModel.fromJson(document.data());
-        categories.add(category);
+        categories.add(category.name);
       }
       emit(GetAllCategoryState());
     } catch (e) {

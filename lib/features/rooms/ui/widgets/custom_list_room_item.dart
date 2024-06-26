@@ -39,9 +39,10 @@ class ListRoomItem extends StatelessWidget {
         },
       child: Container(
         margin: 10.padVertical,
-        padding: 10.padAll,
+        padding: 15.padAll,
         decoration: BoxDecoration(
           color: Colors.white,
+          borderRadius: BorderRadius.circular(10.0.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.2),
@@ -69,7 +70,9 @@ class ListRoomItem extends StatelessWidget {
                         : '${roomOwner.fullName![0]}',
                     style: const TextStyle(
                         fontSize: 30,
-                        color: AppColors.white),
+                        color: AppColors.white,
+                      fontFamily: "Open Sans",
+                    ),
                   ),
                 )
                     : CircleAvatar(
@@ -83,18 +86,35 @@ class ListRoomItem extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(roomOwner.fullName??""),
-                      Text(room.playground),
+                      Text(roomOwner.fullName??"",
+                        style: TextStyle(
+                          fontFamily: 'Open Sans',
+                            fontWeight: FontWeight.bold
+                        ),),
+                      Text("${room.playground}@${room.city}",
+                        style: TextStyle(
+                          fontFamily: 'Open Sans',
+                        ),
+                      ),
                       Row(
                         mainAxisAlignment:
                         MainAxisAlignment.spaceBetween,
                         children:  [
-                          Text(room.date),
-                          Text(room.time),
+                          Text(room.date,
+                            style: TextStyle(
+                              fontFamily: 'Open Sans',
+                            ),),
+                          Text(room.time,
+                            style: TextStyle(
+                              fontFamily: 'Open Sans',
+                            ),),
                         ],
                       ),
                       room.comment!=null?
-                       Text(room.comment!):SizedBox.shrink(),
+                       Text(room.comment!,
+                         style: TextStyle(
+                           fontFamily: 'Open Sans',
+                         ),):SizedBox.shrink(),
                     ],
                   ),
                 ),
@@ -103,9 +123,51 @@ class ListRoomItem extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("${room.level} Level"),
-                Text("${room.period}"),
-                Text("${room.players.length+1}/${room.playersNum}"),
+                RichText(text: TextSpan(
+                    children: [
+                      WidgetSpan(
+                        child: Image.asset("assets/images/level.png",width: 20.w,height: 19.h,),
+                      ),
+                      TextSpan(
+                        text:"${room.level} Level",
+                          style: TextStyle(
+                              fontFamily: 'Open Sans',
+                              fontWeight: FontWeight.bold,
+                            color: AppColors.black
+                          )
+                      ),
+
+                    ])),
+                RichText(text: TextSpan(
+                    children: [
+                      WidgetSpan(
+                        child: Image.asset("assets/images/time.png",width: 20.w,height: 19.h,),
+                      ),
+                      TextSpan(
+                          text:"${room.period}",
+                          style: TextStyle(
+                              fontFamily: 'Open Sans',
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.black
+                          )
+                      ),
+
+                    ])),
+                RichText(text: TextSpan(
+                    children: [
+                      WidgetSpan(
+                        child: Image.asset("assets/images/people.png",width: 20.w,height: 19.h,),
+                      ),
+                      TextSpan(
+                          text:"${room.players.length+1}/${room.playersNum}",
+                          style: TextStyle(
+                              fontFamily: 'Open Sans',
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.black
+                          )
+                      ),
+
+                    ])),
               ],
             ),
           ],
