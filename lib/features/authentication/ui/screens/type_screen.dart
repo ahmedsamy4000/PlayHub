@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/features/authentication/ui/screens/register_screen.dart';
+import 'package:playhub/generated/l10n.dart';
 
 import '../../../../common/fade_in_slide.dart';
 import '../../../../core/app_colors.dart';
@@ -46,7 +47,7 @@ class TypeScreen extends StatelessWidget {
                       FadeInSlide(
                         duration: 1.1,
                         child: CustomCardUser(
-                          text: "Player",
+                          text: S.of(context).Player,
                           img: "assets/images/football.png",
                           backgroundColor: AppColors.green1,
                           onTap: (){
@@ -57,7 +58,7 @@ class TypeScreen extends StatelessWidget {
                       FadeInSlide(
                         duration: 1.2,
                         child: CustomCardUser(
-                          text: "Trainer",
+                          text: S.of(context).Trainer,
                           img: "assets/images/coach.png",
                           backgroundColor: AppColors.green2,
                           onTap: (){
@@ -72,7 +73,7 @@ class TypeScreen extends StatelessWidget {
                   FadeInSlide(
                     duration: 1.3,
                     child: CustomCardUser(
-                      text: "Playground Owner",
+                      text: S.of(context).Owner,
                       img: "assets/images/playground.png",
                       backgroundColor: AppColors.green3,
                       onTap: (){
@@ -86,10 +87,10 @@ class TypeScreen extends StatelessWidget {
                       text: TextSpan(
                         style: const TextStyle(color: AppColors.black),
                     children: [
-                      const TextSpan(text:"Do you already have an account? ",
+                       TextSpan(text:S.of(context).LoginQuestion,
                       ),
                       TextSpan(
-                          text: "Login",
+                          text: S.of(context).Login,
                           style: const TextStyle(color: AppColors.green),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {

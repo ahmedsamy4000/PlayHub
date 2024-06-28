@@ -32,18 +32,33 @@ class AppCubit extends Cubit<AppStates> {
   static AppCubit get(context) => BlocProvider.of(context);
 
   int currentScreenIdx = 0;
-  List<Widget> pages = [
+    List<Widget> pages = [
     const Home(),
-    if (LocalStorage().userData?.type == UserType.player) RoomsScreen(),
-    if (LocalStorage().userData?.type == UserType.admin) StatisticsScreen(),
-    if (LocalStorage().userData?.type == UserType.admin)
+    if (LocalStorage().userData!.type == UserType.player) RoomsScreen(),
+    if (LocalStorage().userData!.type == UserType.admin) StatisticsScreen(),
+    if (LocalStorage().userData!.type == UserType.admin)
       const FeedbacksScreen(),
-    if (LocalStorage().userData?.type == UserType.player ||
-        LocalStorage().userData?.type == UserType.trainer ||
-        LocalStorage().userData?.type == UserType.playgroundOwner)
+    if (LocalStorage().userData!.type == UserType.player ||
+        LocalStorage().userData!.type == UserType.trainer ||
+        LocalStorage().userData!.type == UserType.playgroundOwner)
       const BookingScreen(),
     const ProfileScreen(),
   ];
+
+  void createPages(){
+    pages = [
+       const Home(),
+    if (LocalStorage().userData!.type == UserType.player) RoomsScreen(),
+    if (LocalStorage().userData!.type == UserType.admin) StatisticsScreen(),
+    if (LocalStorage().userData!.type == UserType.admin)
+      const FeedbacksScreen(),
+    if (LocalStorage().userData!.type == UserType.player ||
+        LocalStorage().userData!.type == UserType.trainer ||
+        LocalStorage().userData!.type == UserType.playgroundOwner)
+      const BookingScreen(),
+    const ProfileScreen(),
+    ];
+  }
 
   void changeScreenIdx(int idx) {
     currentScreenIdx = idx;

@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:playhub/common/data/local/local_storage.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/enums/type_enum.dart';
+import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/features/authentication/cubits/auth_states.dart';
 import 'package:playhub/features/authentication/data/user_model.dart';
 import 'package:playhub/features/authentication/ui/screens/login_screen.dart';
@@ -49,7 +50,8 @@ class AuthCubit extends Cubit<AuthStates> {
     return auth.currentUser;
   }
 
-  Future<void> registeration({required UserType type,required BuildContext context}) async {
+  Future<void> registeration(
+      {required UserType type, required BuildContext context}) async {
     try {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
@@ -82,16 +84,17 @@ class AuthCubit extends Cubit<AuthStates> {
       //     backgroundColor: AppColors.green,
       //     textColor: AppColors.white,
       //   );
-       getCurrentUserData().then((_)  {
-          LocalStorage().saveUserData(userData).then((_){
-            log("AppUser: ${LocalStorage().userData?.toJson()}");
-            LocalStorage().currentId=currentUserDocId;
-            log("AppUser: ${LocalStorage().currentId}");
-          });
-          log("AppUser: $userData");
-
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Main()));
+      getCurrentUserData().then((_) {
+        LocalStorage().saveUserData(userData).then((_) {
+          log("AppUser: ${LocalStorage().userData?.toJson()}");
+          LocalStorage().currentId = currentUserDocId;
+          log("AppUser: ${LocalStorage().currentId}");
         });
+        log("AppUser: $userData");
+
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => Main()));
+      });
     } on FirebaseAuthException catch (e) {
       log(e.message!);
       Fluttertoast.showToast(
@@ -112,25 +115,23 @@ class AuthCubit extends Cubit<AuthStates> {
       User? user = auth.currentUser;
       if (user != null) {
         final snapshot =
-        await FirebaseFirestore.instance.collection('Users').get();
+            await FirebaseFirestore.instance.collection('Users').get();
 
         for (var doc in snapshot.docs) {
           if (user.uid == doc.data()['Id']) {
             userData = UserModel.fromJson(doc.data());
-            currentUserDocId=doc.id;
+            currentUserDocId = doc.id;
           }
         }
-
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> login({required BuildContext context}) async {
-    if(email!=null&&password!=null){
+    if (email != null && password != null) {
       try {
         UserCredential userCredential =
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email!,
           password: password!,
         );
@@ -142,17 +143,19 @@ class AuthCubit extends Cubit<AuthStates> {
           backgroundColor: AppColors.green,
           textColor: AppColors.white,
         );
-        getCurrentUserData().then((_)  {
-          LocalStorage().saveUserData(userData).then((_){
+        getCurrentUserData().then((_) {
+          LocalStorage().saveUserData(userData).then((_) {
             log("AppUser: ${LocalStorage().userData?.toJson()}");
-            LocalStorage().currentId=currentUserDocId;
+            LocalStorage().currentId = currentUserDocId;
             log("AppUser: ${LocalStorage().currentId}");
+            BlocProvider.of<AppCubit>(context).createPages();
           });
           log("AppUser: $userData");
 
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Main()));
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => Main()));
+          BlocProvider.of<AppCubit>(context).changeScreenIdx(0);
         });
-
       } on FirebaseAuthException catch (e) {
         Fluttertoast.showToast(
           msg: e.code,
@@ -161,7 +164,8 @@ class AuthCubit extends Cubit<AuthStates> {
           backgroundColor: AppColors.red,
           textColor: AppColors.white,
         );
-      }}else{
+      }
+    } else {
       emit(AuthErrorState());
     }
   }

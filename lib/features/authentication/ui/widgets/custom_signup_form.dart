@@ -8,6 +8,7 @@ import 'package:playhub/core/padding.dart';
 import 'package:playhub/core/validator.dart';
 import 'package:playhub/features/authentication/cubits/auth_cubit.dart';
 import 'package:playhub/features/profile/ui/screens/profile_screen.dart';
+import 'package:playhub/generated/l10n.dart';
 
 import '../../../../core/app_colors.dart';
 import 'custom_login_button.dart';
@@ -47,7 +48,7 @@ class SignupForm extends StatelessWidget {
                 FadeInSlide(
                   duration: 0.4,
                   child: Text(
-                    "Registeration",
+                    S.of(context).Register,
                     style:
                     TextStyle(color: AppColors.darkGray, fontSize: 30.sp),
                   ),
@@ -59,7 +60,7 @@ class SignupForm extends StatelessWidget {
                 FadeInSlide(
                   duration: 0.6,
                   child: CustomTextFormField(
-                    hint: "Enter your full name",
+                    hint: S.of(context).Name,
                     validator: Validator.validateName,
                     keyboardType: TextInputType.text,
                     onChanged: (value){
@@ -71,7 +72,7 @@ class SignupForm extends StatelessWidget {
                 FadeInSlide(
                   duration: 0.7,
                   child: CustomTextFormField(
-                    hint: "Enter your email",
+                    hint: S.of(context).Email,
                     validator: Validator.validateEmail,
                     keyboardType: TextInputType.emailAddress,
                     onChanged: (value){
@@ -83,7 +84,7 @@ class SignupForm extends StatelessWidget {
                 FadeInSlide(
                   duration: 0.8,
                   child: CustomTextFormField(
-                    hint: "Enter your phone",
+                    hint: S.of(context).Phone,
                     validator: Validator.validatePhoneNumber,
                     inputFormatter: FilteringTextInputFormatter.digitsOnly,
                     keyboardType: TextInputType.phone,
@@ -96,7 +97,7 @@ class SignupForm extends StatelessWidget {
                 FadeInSlide(
                   duration: 0.9,
                   child: CustomTextFormField(
-                    hint: "Enter your password",
+                    hint: S.of(context).Password,
                     validator: Validator.validatePassword,
                     keyboardType: TextInputType.text,
                     onChanged: (value){
@@ -109,7 +110,7 @@ class SignupForm extends StatelessWidget {
                 FadeInSlide(
                   duration: 1.0,
                   child: CustomTextFormField(
-                      hint: "confirm password",
+                      hint: S.of(context).CPassword,
                       validator: Validator.validatePassword,
                     keyboardType: TextInputType.text,
                     onChanged: (value){
@@ -132,7 +133,7 @@ class SignupForm extends StatelessWidget {
                       },
                       gradiantColor: AppColors.loginGradiantColorButton ,
                       tapedGradiantColor: AppColors.loginGradiantColorButtonTaped ,
-                      text: "Register",
+                      text: S.of(context).Register,
                     ),
                   ),
                 ),

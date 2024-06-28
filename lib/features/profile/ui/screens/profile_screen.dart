@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:playhub/Layout/MainApp.dart';
 import 'package:playhub/common/fade_in_slide.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/enums/type_enum.dart';
@@ -35,16 +36,17 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var cubit = BlocProvider.of<AppCubit>(context);
     var userData = LocalStorage().userData;
-    if(userData?.type == UserType.trainer){
+    if (userData?.type == UserType.trainer) {
       cubit.getTrainerPackages();
     }
-    if(userData?.type == UserType.playgroundOwner){
+    if (userData?.type == UserType.playgroundOwner) {
       cubit.getOwnerPlaygrounds();
     }
     cubit.getOwnerPlaygrounds();
     return BlocBuilder<AppCubit, AppStates>(
       builder: (context, state) => state is DeletePlaygroundLoadingState ||
-              state is ChangeProfilePhotoLoadingState || state is UpdateUserInfoLoadingState
+              state is ChangeProfilePhotoLoadingState ||
+              state is UpdateUserInfoLoadingState
           ? const Scaffold(
               backgroundColor: AppColors.white,
               body: Center(child: CircularProgressIndicator()))
@@ -69,7 +71,7 @@ class ProfileScreen extends StatelessWidget {
                                                 const EditInformationScreen()));
                                   },
                                   child: Text(
-                                  S.of(context).pop1,
+                                    S.of(context).pop1,
                                     style: const TextStyle(
                                       fontFamily: 'Open Sans',
                                       fontWeight: FontWeight.bold,
@@ -94,7 +96,6 @@ class ProfileScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                               
                                 PopupMenuItem(
                                   child: Text(
                                     S.of(context).pop3,
@@ -109,19 +110,20 @@ class ProfileScreen extends StatelessWidget {
                                     cubit.logout().then((_) async {
                                       if (cubit.state
                                           is UserLogoutSuccessState) {
-                                            cubit.changeScreenIdx(0);
                                         Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     const LoginScreen()));
                                         await LocalStorage().saveUserData(null);
+                                        cubit.changeScreenIdx(0);
+                                        log('${cubit.currentScreenIdx}');
                                       }
                                     });
                                   },
                                 ),
-                                 PopupMenuItem(
-                                  child:  Text(
+                                PopupMenuItem(
+                                  child: Text(
                                     S.of(context).pop4,
                                     style: const TextStyle(
                                       color: Color.fromRGBO(239, 83, 80, 1),
@@ -215,7 +217,14 @@ class ProfileScreen extends StatelessWidget {
                                                   onTap: () {
                                                     cubit
                                                         .pickImageFromGallery();
-                                                    Navigator.pop(context);
+                                                    Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    Main()));
+                                                    userData?.type == UserType.player || userData?.type == UserType.admin  ?
+                                                    cubit.changeScreenIdx(3) : cubit.changeScreenIdx(2);
                                                   },
                                                 ),
                                                 ListTile(
@@ -223,7 +232,7 @@ class ProfileScreen extends StatelessWidget {
                                                     Icons.camera_alt,
                                                     color: Colors.grey,
                                                   ),
-                                                  title:  Text(
+                                                  title: Text(
                                                     S.of(context).Camera,
                                                     style: TextStyle(
                                                       fontFamily: 'Open Sans',
@@ -233,7 +242,14 @@ class ProfileScreen extends StatelessWidget {
                                                   ),
                                                   onTap: () {
                                                     cubit.pickImageFromCamera();
-                                                    Navigator.pop(context);
+                                                    Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    Main()));
+                                                                  userData?.type == UserType.player || userData?.type == UserType.admin  ?
+                                                    cubit.changeScreenIdx(3) : cubit.changeScreenIdx(2);
                                                   },
                                                 ),
                                               ],

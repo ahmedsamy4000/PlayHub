@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:playhub/Layout/MainApp.dart';
 import 'package:playhub/common/data/local/local_storage.dart';
 import 'package:playhub/core/app_colors.dart';
+import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/core/padding.dart';
 import 'package:playhub/core/validator.dart';
 import 'package:playhub/cubit/app_cubit.dart';
@@ -109,7 +110,8 @@ class EditInformationScreen extends StatelessWidget {
                                         if (cubit.state
                                             is UpdateUserInfoSuccessState) {
                                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Main()));
-                                          cubit.changeScreenIdx(3);
+                                          userData?.type == UserType.player || userData?.type == UserType.admin  ?
+                                                    cubit.changeScreenIdx(3) : cubit.changeScreenIdx(2);
                                         }
                                       });
                                     }

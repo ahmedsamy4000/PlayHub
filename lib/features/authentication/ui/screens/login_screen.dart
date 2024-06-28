@@ -1,8 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/features/authentication/ui/screens/register_screen.dart';
 import 'package:playhub/features/authentication/ui/screens/type_screen.dart';
+import 'package:playhub/generated/l10n.dart';
 import '../../cubits/auth_cubit.dart';
 import '../widgets/background_login.dart';
 import '../widgets/login_form.dart';
@@ -20,8 +24,8 @@ class LoginScreen extends StatelessWidget {
             Positioned.fill(
                 child: CustomBackgroundLogin(
                   flex: 3,
-                  text: "Don't have an account? ",
-                  link: "Register",
+                  text: S.of(context).RegisterQuestion,
+                  link: S.of(context).Register,
                   onTap: (){
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const TypeScreen()));
                   },

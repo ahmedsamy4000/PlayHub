@@ -70,10 +70,10 @@ class S {
     );
   }
 
-  /// `Owner`
+  /// `Playground Owner`
   String get Owner {
     return Intl.message(
-      'Owner',
+      'Playground Owner',
       name: 'Owner',
       desc: '',
       args: [],
@@ -195,6 +195,196 @@ class S {
     return Intl.message(
       'Camera',
       name: 'Camera',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Home`
+  String get Home {
+    return Intl.message(
+      'Home',
+      name: 'Home',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rooms`
+  String get Rooms {
+    return Intl.message(
+      'Rooms',
+      name: 'Rooms',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reservations`
+  String get Reservations {
+    return Intl.message(
+      'Reservations',
+      name: 'Reservations',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile`
+  String get Profile {
+    return Intl.message(
+      'Profile',
+      name: 'Profile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Statistics`
+  String get Statistics {
+    return Intl.message(
+      'Statistics',
+      name: 'Statistics',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Feedbacks`
+  String get Feedbacks {
+    return Intl.message(
+      'Feedbacks',
+      name: 'Feedbacks',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Welcome`
+  String get Welcome {
+    return Intl.message(
+      'Welcome',
+      name: 'Welcome',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email`
+  String get Email {
+    return Intl.message(
+      'Email',
+      name: 'Email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password`
+  String get Password {
+    return Intl.message(
+      'Password',
+      name: 'Password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Login`
+  String get Login {
+    return Intl.message(
+      'Login',
+      name: 'Login',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Don\'t have an account? `
+  String get RegisterQuestion {
+    return Intl.message(
+      'Don\\\'t have an account? ',
+      name: 'RegisterQuestion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Register`
+  String get Register {
+    return Intl.message(
+      'Register',
+      name: 'Register',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Full Name`
+  String get Name {
+    return Intl.message(
+      'Full Name',
+      name: 'Name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Phone Number`
+  String get Phone {
+    return Intl.message(
+      'Phone Number',
+      name: 'Phone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm Password`
+  String get CPassword {
+    return Intl.message(
+      'Confirm Password',
+      name: 'CPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Already have an account? `
+  String get LoginQuestion {
+    return Intl.message(
+      'Already have an account? ',
+      name: 'LoginQuestion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `City`
+  String get City {
+    return Intl.message(
+      'City',
+      name: 'City',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Region`
+  String get Region {
+    return Intl.message(
+      'Region',
+      name: 'Region',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update`
+  String get Update {
+    return Intl.message(
+      'Update',
+      name: 'Update',
       desc: '',
       args: [],
     );

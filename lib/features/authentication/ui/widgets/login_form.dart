@@ -6,6 +6,7 @@ import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/padding.dart';
 import 'package:playhub/features/authentication/cubits/auth_states.dart';
 import 'package:playhub/features/profile/ui/screens/profile_screen.dart';
+import 'package:playhub/generated/l10n.dart';
 
 import '../../../../common/fade_in_slide.dart';
 import '../../../../core/validator.dart';
@@ -53,7 +54,7 @@ class CustomLoginForm extends StatelessWidget {
                   FadeInSlide(
                     duration: 0.5,
                     child: Text(
-                      "Welcome",
+                      S.of(context).Welcome,
                       style:
                       TextStyle(color: AppColors.darkGray, fontSize: 30.sp),
                     ),
@@ -64,7 +65,7 @@ class CustomLoginForm extends StatelessWidget {
                   FadeInSlide(
                     duration: 0.6,
                     child: CustomTextFormField(
-                      hint: "Enter your email",
+                      hint: S.of(context).Email,
                       validator: Validator.validateEmail,
                       keyboardType: TextInputType.emailAddress,
                       onChanged: (value){
@@ -78,7 +79,7 @@ class CustomLoginForm extends StatelessWidget {
                   FadeInSlide(
                     duration: 0.7,
                     child: CustomTextFormField(
-                      hint: "Enter your password",
+                      hint: S.of(context).Password,
                       validator: Validator.validatePassword,
                       keyboardType: TextInputType.text,
                       onChanged: (value){
@@ -103,7 +104,7 @@ class CustomLoginForm extends StatelessWidget {
                         },
                         gradiantColor: AppColors.loginGradiantColorButton ,
                         tapedGradiantColor: AppColors.loginGradiantColorButtonTaped ,
-                        text: "Login",
+                        text: S.of(context).Login,
                       ),
                     ),
                   ),

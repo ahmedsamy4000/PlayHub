@@ -1,7 +1,7 @@
 {
     "Player": "Player",
     "Trainer": "Trainer",
-    "Owner": "Owner",
+    "Owner": "Playground Owner",
     "pop1": "Edit Information",
     "pop2": "Change Password",
     "pop3": "Logout",
@@ -13,6 +13,26 @@
     "Workout": "Workout",
     "Cairo": "Cairo",
     "Gallery": "Photo Library",
-    "Camera": "Camera"
+    "Camera": "Camera",
+    "Home": "Home",
+    "Rooms": "Rooms",
+    "Reservations": "Reservations",
+    "Profile": "Profile",
+    "Statistics": "Statistics",
+    "Feedbacks": "Feedbacks",
+    "Welcome": "Welcome",
+    "Email": "Email",
+    "Password": "Password",
+    "Login": "Login",
+    "RegisterQuestion": "Don\\'t have an account? ",
+    "Register": "Register",
+    "Name": "Full Name",
+    "Phone": "Phone Number",
+    "CPassword": "Confirm Password",
+    "LoginQuestion": "Already have an account? ",
+    "City": "City",
+    "Region": "Region",
+    "Update": "Update"
+
 }
 

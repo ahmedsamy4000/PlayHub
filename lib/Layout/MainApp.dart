@@ -6,6 +6,7 @@ import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/features/favorites/ui/screens/favorites_playgrounds_screen.dart';
+import 'package:playhub/generated/l10n.dart';
 import 'package:playhub/screens/HomeScreen/home.dart';
 import 'package:playhub/screens/SearchScreen/search.dart';
 
@@ -27,33 +28,33 @@ class Main extends StatelessWidget {
             selectedItemColor: AppColors.white,
             unselectedItemColor: AppColors.grey,
             items: [
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: "Home",
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.home),
+                label: S.of(context).Home,
               ),
               if (LocalStorage().userData?.type == UserType.player)
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.groups),
-                label: "Rooms",
+             BottomNavigationBarItem(
+                icon: const Icon(Icons.groups),
+                label: S.of(context).Rooms,
               ),
               if (LocalStorage().userData?.type == UserType.admin)
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.sports_baseball_rounded),
-                label: "Statistics",
+               BottomNavigationBarItem(
+                icon: const Icon(Icons.sports_baseball_rounded),
+                label: S.of(context).Statistics,
               ),
               if (LocalStorage().userData?.type == UserType.admin)
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.sports_baseball_rounded),
-                label: "Feedbacks",
+               BottomNavigationBarItem(
+                icon: const Icon(Icons.sports_baseball_rounded),
+                label: S.of(context).Feedbacks,
               ),
               if (LocalStorage().userData?.type == UserType.player || LocalStorage().userData?.type == UserType.trainer || LocalStorage().userData?.type == UserType.playgroundOwner)
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.sports_soccer),
-                label: "Booking",
+               BottomNavigationBarItem(
+                icon: const Icon(Icons.sports_soccer),
+                label: S.of(context).Reservations,
               ),
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle),
-                label: "Profile",
+               BottomNavigationBarItem(
+                icon: const Icon(Icons.account_circle),
+                label: S.of(context).Profile,
               ),
             ],
           ),

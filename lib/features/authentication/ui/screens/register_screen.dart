@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:playhub/features/authentication/cubits/auth_cubit.dart';
 import 'package:playhub/features/authentication/ui/screens/login_screen.dart';
 import 'package:playhub/features/authentication/ui/widgets/custom_signup_form.dart';
+import 'package:playhub/generated/l10n.dart';
 
 import '../../../../core/enums/type_enum.dart';
 import '../widgets/background_login.dart';
@@ -25,8 +26,8 @@ class RegisterScreen extends StatelessWidget {
                 Positioned.fill(
                   child: CustomBackgroundLogin(
                     flex: 10,
-                    text: "Do you have already an account? ",
-                    link: "Login",
+                    text: S.of(context).LoginQuestion,
+                    link: S.of(context).Login,
                     onTap: (){
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
 

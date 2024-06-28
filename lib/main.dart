@@ -106,7 +106,7 @@ class MyApp extends StatelessWidget {
             builder: (_, child) {
               log("userDataInMain: ${LocalStorage().userData}");
               return MaterialApp(
-                locale: const Locale('en'),
+                locale: const Locale('ar'),
                 localizationsDelegates: const [
                   S.delegate,
                   GlobalMaterialLocalizations.delegate,
