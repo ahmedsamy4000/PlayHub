@@ -15,6 +15,7 @@ import 'package:playhub/cubit/states.dart';
 import 'package:playhub/features/authentication/ui/widgets/custom_login_button.dart';
 import 'package:playhub/features/authentication/ui/widgets/login_custom_textfield.dart';
 import 'package:playhub/features/authentication/ui/widgets/login_divider.dart';
+import 'package:playhub/generated/l10n.dart';
 
 class EditInformationScreen extends StatelessWidget {
   const EditInformationScreen({super.key});
@@ -39,9 +40,9 @@ class EditInformationScreen extends StatelessWidget {
         backgroundColor: AppColors.white,
         appBar: AppBar(
           backgroundColor: AppColors.white,
-          title: const Text(
-            'Edit Information',
-            style: TextStyle(
+          title: Text(
+            S.of(context).pop1,
+            style: const TextStyle(
               fontFamily: 'Open Sans',
               fontWeight: FontWeight.bold,
               fontSize: 20,
@@ -61,21 +62,21 @@ class EditInformationScreen extends StatelessWidget {
                             children: [
                               CustomTextFormField(
                                 controller: nameController,
-                                label: 'Full Name',
+                                label: S.of(context).Name,
                                 validator: Validator.validateName,
                                 keyboardType: TextInputType.text,
                               ),
                               30.verticalSpace,
                               CustomTextFormField(
                                 controller: emailController,
-                                label: 'Email',
+                                label: S.of(context).Email,
                                 validator: Validator.validateEmail,
                                 keyboardType: TextInputType.emailAddress,
                               ),
                               30.verticalSpace,
                               CustomTextFormField(
                                 controller: phoneController,
-                                label: 'Phone',
+                                label: S.of(context).Phone,
                                 validator: Validator.validatePhoneNumber,
                                 inputFormatter:
                                     FilteringTextInputFormatter.digitsOnly,
@@ -84,13 +85,13 @@ class EditInformationScreen extends StatelessWidget {
                               30.verticalSpace,
                               CustomTextFormField(
                                 controller: cityController,
-                                label: 'City',
+                                label: S.of(context).City,
                                 keyboardType: TextInputType.text,
                               ),
                               30.verticalSpace,
                               CustomTextFormField(
                                 controller: regionController,
-                                label: 'Region',
+                                label: S.of(context).Region,
                                 keyboardType: TextInputType.text,
                               ),
                               35.verticalSpace,
@@ -120,7 +121,7 @@ class EditInformationScreen extends StatelessWidget {
                                       AppColors.loginGradiantColorButton,
                                   tapedGradiantColor:
                                       AppColors.loginGradiantColorButtonTaped,
-                                  text: "Update",
+                                  text: S.of(context).Update,
                                 ),
                               ),
                               20.verticalSpace,

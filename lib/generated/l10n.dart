@@ -389,6 +389,86 @@ class S {
       args: [],
     );
   }
+
+  /// `English`
+  String get English {
+    return Intl.message(
+      'English',
+      name: 'English',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Arabic`
+  String get Arabic {
+    return Intl.message(
+      'Arabic',
+      name: 'Arabic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current Password`
+  String get OPassword {
+    return Intl.message(
+      'Current Password',
+      name: 'OPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New Password`
+  String get NPassword {
+    return Intl.message(
+      'New Password',
+      name: 'NPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update Password`
+  String get UPassword {
+    return Intl.message(
+      'Update Password',
+      name: 'UPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Time`
+  String get Time {
+    return Intl.message(
+      'Time',
+      name: 'Time',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Date`
+  String get Date {
+    return Intl.message(
+      'Date',
+      name: 'Date',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PM`
+  String get PM {
+    return Intl.message(
+      'PM',
+      name: 'PM',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

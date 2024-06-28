@@ -22,12 +22,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "Arabic": MessageLookupByLibrary.simpleMessage("Arabic"),
         "Basketball": MessageLookupByLibrary.simpleMessage("Basketball"),
         "CPassword": MessageLookupByLibrary.simpleMessage("Confirm Password"),
         "Cairo": MessageLookupByLibrary.simpleMessage("Cairo"),
         "Camera": MessageLookupByLibrary.simpleMessage("Camera"),
         "City": MessageLookupByLibrary.simpleMessage("City"),
+        "Date": MessageLookupByLibrary.simpleMessage("Date"),
         "Email": MessageLookupByLibrary.simpleMessage("Email"),
+        "English": MessageLookupByLibrary.simpleMessage("English"),
         "Feedbacks": MessageLookupByLibrary.simpleMessage("Feedbacks"),
         "Football": MessageLookupByLibrary.simpleMessage("Football"),
         "Gallery": MessageLookupByLibrary.simpleMessage("Photo Library"),
@@ -35,8 +38,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "Login": MessageLookupByLibrary.simpleMessage("Login"),
         "LoginQuestion":
             MessageLookupByLibrary.simpleMessage("Already have an account? "),
+        "NPassword": MessageLookupByLibrary.simpleMessage("New Password"),
         "Name": MessageLookupByLibrary.simpleMessage("Full Name"),
+        "OPassword": MessageLookupByLibrary.simpleMessage("Current Password"),
         "Owner": MessageLookupByLibrary.simpleMessage("Playground Owner"),
+        "PM": MessageLookupByLibrary.simpleMessage("PM"),
         "Password": MessageLookupByLibrary.simpleMessage("Password"),
         "Phone": MessageLookupByLibrary.simpleMessage("Phone Number"),
         "Player": MessageLookupByLibrary.simpleMessage("Player"),
@@ -49,7 +55,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "Rooms": MessageLookupByLibrary.simpleMessage("Rooms"),
         "Statistics": MessageLookupByLibrary.simpleMessage("Statistics"),
         "Tennis": MessageLookupByLibrary.simpleMessage("Tennis"),
+        "Time": MessageLookupByLibrary.simpleMessage("Time"),
         "Trainer": MessageLookupByLibrary.simpleMessage("Trainer"),
+        "UPassword": MessageLookupByLibrary.simpleMessage("Update Password"),
         "Update": MessageLookupByLibrary.simpleMessage("Update"),
         "Volleyball": MessageLookupByLibrary.simpleMessage("Volleyball"),
         "Welcome": MessageLookupByLibrary.simpleMessage("Welcome"),

@@ -10,8 +10,11 @@ abstract class Preference {
   UserModel? get userData;
   Future<void> saveUserData(UserModel? appUser);
   Future<bool?> clear();
+  String? get language;
+  Future<void> setLanguage(String appLanguage);
 }
-class LocalStorage extends Preference{
+
+class LocalStorage extends Preference {
   static final LocalStorage _instance = LocalStorage._internal();
   SharedPreferences? sharedPreferences;
 
@@ -32,14 +35,17 @@ class LocalStorage extends Preference{
     log("saveUserData: $appUser");
     appUser == null
         ? sharedPreferences?.remove(const PreferencesKeys().appUserKey)
-        :
-    sharedPreferences?.setString(const PreferencesKeys().appUserKey, json.encode(appUser==null?UserModel().toJson():appUser.toJson()));
-  log("saved");
+        : sharedPreferences?.setString(
+            const PreferencesKeys().appUserKey,
+            json.encode(
+                appUser == null ? UserModel().toJson() : appUser.toJson()));
+    log("saved");
   }
 
   @override
   UserModel? get userData {
-    var appUser = sharedPreferences?.getString(const PreferencesKeys().appUserKey);
+    var appUser =
+        sharedPreferences?.getString(const PreferencesKeys().appUserKey);
     log("$appUser");
     return appUser != null ? UserModel.fromJson(json.decode(appUser)) : null;
   }
@@ -51,18 +57,26 @@ class LocalStorage extends Preference{
   @override
   set currentId(String? currentId) => currentId == null
       ? sharedPreferences?.remove(const PreferencesKeys().currentIdKey)
-      : sharedPreferences?.setString(const PreferencesKeys().currentIdKey, currentId);
+      : sharedPreferences?.setString(
+          const PreferencesKeys().currentIdKey, currentId);
 
   @override
   Future<bool> clear() {
     return sharedPreferences?.clear() ?? Future.value(false);
   }
-
-
+  
+   @override
+  Future<void> setLanguage(String appLanguage) async {
+    await sharedPreferences?.setString(const PreferencesKeys().languageKey, appLanguage);
+  }
+  
+  @override
+  String? get language => sharedPreferences?.getString(const PreferencesKeys().languageKey);
 }
 
 class PreferencesKeys {
   const PreferencesKeys();
   String get appUserKey => 'appUser';
   String get currentIdKey => 'currentId';
+  String get languageKey => 'appLanguage';
 }

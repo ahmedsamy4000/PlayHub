@@ -22,21 +22,29 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "Arabic": MessageLookupByLibrary.simpleMessage("العربية"),
         "Basketball": MessageLookupByLibrary.simpleMessage("كرة السلة"),
         "CPassword": MessageLookupByLibrary.simpleMessage("تأكيد كلمة المرور"),
         "Cairo": MessageLookupByLibrary.simpleMessage("القاهرة"),
         "Camera": MessageLookupByLibrary.simpleMessage("كاميرا"),
         "City": MessageLookupByLibrary.simpleMessage("المدينة"),
+        "Date": MessageLookupByLibrary.simpleMessage("التاريخ"),
         "Email": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
+        "English": MessageLookupByLibrary.simpleMessage("الإنجليزية"),
         "Feedbacks": MessageLookupByLibrary.simpleMessage("التقييمات"),
         "Football": MessageLookupByLibrary.simpleMessage("كرة القدم"),
         "Gallery": MessageLookupByLibrary.simpleMessage("معرض الصور"),
         "Home": MessageLookupByLibrary.simpleMessage("الرئيسية"),
         "Login": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
         "LoginQuestion":
-            MessageLookupByLibrary.simpleMessage(" هل لديك حساب بالفعل؟"),
-        "Name": MessageLookupByLibrary.simpleMessage("الاسم الكامل"),
+            MessageLookupByLibrary.simpleMessage(" هل لديك حساب بالفعل؟ "),
+        "NPassword":
+            MessageLookupByLibrary.simpleMessage("كلمة المرور الجديدة"),
+        "Name": MessageLookupByLibrary.simpleMessage("الاسم بالكامل"),
+        "OPassword":
+            MessageLookupByLibrary.simpleMessage("كلمة المرور الحالية"),
         "Owner": MessageLookupByLibrary.simpleMessage("مالك ملعب"),
+        "PM": MessageLookupByLibrary.simpleMessage("مساءا"),
         "Password": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
         "Phone": MessageLookupByLibrary.simpleMessage("رقم الهاتف"),
         "Player": MessageLookupByLibrary.simpleMessage("لاعب"),
@@ -44,12 +52,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "Region": MessageLookupByLibrary.simpleMessage("المنطقة"),
         "Register": MessageLookupByLibrary.simpleMessage("تسجيل"),
         "RegisterQuestion":
-            MessageLookupByLibrary.simpleMessage("ليس لديك حساب؟"),
+            MessageLookupByLibrary.simpleMessage("ليس لديك حساب؟ "),
         "Reservations": MessageLookupByLibrary.simpleMessage("الحجوزات"),
         "Rooms": MessageLookupByLibrary.simpleMessage("الغرف"),
         "Statistics": MessageLookupByLibrary.simpleMessage("الإحصائيات"),
         "Tennis": MessageLookupByLibrary.simpleMessage("التنس"),
+        "Time": MessageLookupByLibrary.simpleMessage("الوقت"),
         "Trainer": MessageLookupByLibrary.simpleMessage("مدرب"),
+        "UPassword": MessageLookupByLibrary.simpleMessage("تحديث كلمة المرور"),
         "Update": MessageLookupByLibrary.simpleMessage("تحديث"),
         "Volleyball": MessageLookupByLibrary.simpleMessage("كرة الطائرة"),
         "Welcome": MessageLookupByLibrary.simpleMessage("مرحبا"),

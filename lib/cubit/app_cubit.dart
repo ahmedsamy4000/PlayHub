@@ -26,37 +26,38 @@ import 'package:playhub/models/playgroundmodel.dart';
 import 'package:playhub/screens/HomeScreen/home.dart';
 import 'package:playhub/screens/Statistics/statistics_screen.dart';
 import 'package:playhub/screens/feedbacks_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(InitialState());
   static AppCubit get(context) => BlocProvider.of(context);
 
   int currentScreenIdx = 0;
-    List<Widget> pages = [
+  List<Widget> pages = [
     const Home(),
-    if (LocalStorage().userData!.type == UserType.player) RoomsScreen(),
-    if (LocalStorage().userData!.type == UserType.admin) StatisticsScreen(),
-    if (LocalStorage().userData!.type == UserType.admin)
+    if (LocalStorage().userData?.type == UserType.player) RoomsScreen(),
+    if (LocalStorage().userData?.type == UserType.admin) StatisticsScreen(),
+    if (LocalStorage().userData?.type == UserType.admin)
       const FeedbacksScreen(),
-    if (LocalStorage().userData!.type == UserType.player ||
-        LocalStorage().userData!.type == UserType.trainer ||
-        LocalStorage().userData!.type == UserType.playgroundOwner)
+    if (LocalStorage().userData?.type == UserType.player ||
+        LocalStorage().userData?.type == UserType.trainer ||
+        LocalStorage().userData?.type == UserType.playgroundOwner)
       const BookingScreen(),
     const ProfileScreen(),
   ];
 
-  void createPages(){
+  void createPages() {
     pages = [
-       const Home(),
-    if (LocalStorage().userData!.type == UserType.player) RoomsScreen(),
-    if (LocalStorage().userData!.type == UserType.admin) StatisticsScreen(),
-    if (LocalStorage().userData!.type == UserType.admin)
-      const FeedbacksScreen(),
-    if (LocalStorage().userData!.type == UserType.player ||
-        LocalStorage().userData!.type == UserType.trainer ||
-        LocalStorage().userData!.type == UserType.playgroundOwner)
-      const BookingScreen(),
-    const ProfileScreen(),
+      const Home(),
+      if (LocalStorage().userData!.type == UserType.player) RoomsScreen(),
+      if (LocalStorage().userData!.type == UserType.admin) StatisticsScreen(),
+      if (LocalStorage().userData!.type == UserType.admin)
+        const FeedbacksScreen(),
+      if (LocalStorage().userData!.type == UserType.player ||
+          LocalStorage().userData!.type == UserType.trainer ||
+          LocalStorage().userData!.type == UserType.playgroundOwner)
+        const BookingScreen(),
+      const ProfileScreen(),
     ];
   }
 
@@ -69,9 +70,9 @@ class AppCubit extends Cubit<AppStates> {
   String searchQuery = "";
   String selectedCategory = "All";
   String selectedCity = "All";
-  List trainers=[];
-  List filteredTrainers=[];
-  List items=[];
+  List trainers = [];
+  List filteredTrainers = [];
+  List items = [];
   int currentSearchTabIndex = 0;
 
   Future<void> changeSearchQuery(String val) async {
@@ -94,7 +95,7 @@ class AppCubit extends Cubit<AppStates> {
     searchFunction();
     emit(AppChangeSelectedCity());
   }
-  
+
   List<T> getCommonElements<T>(List<T> list1, List<T> list2) {
     // Convert lists to sets
     Set<T> set1 = list1.toSet();
@@ -162,7 +163,6 @@ class AppCubit extends Cubit<AppStates> {
             log("filter:${itemData.fullName}");
           }
         }
-
       }
       log("meraaaaaaaaaaaaaaaa");
 
@@ -174,7 +174,6 @@ class AppCubit extends Cubit<AppStates> {
       } else {
         filteredTrainers = getCommonElements(newItems, names);
       }
-
     }
     log("filter:${filteredTrainers[0].fullName}");
     log("//////////////////////////////");
@@ -323,7 +322,7 @@ class AppCubit extends Cubit<AppStates> {
         }
       }
       trainers = newTrainers;
-      filteredTrainers= newTrainers;
+      filteredTrainers = newTrainers;
 
       log("-------------------------------------");
       log('$trainers');
@@ -459,6 +458,24 @@ class AppCubit extends Cubit<AppStates> {
       emit(ChangeProfilePhotoErrorState());
     }
   }
+
+  Future<void> changeLanguage(String language) async {
+    try {
+      await LocalStorage().setLanguage(language);
+      emit(ChangeLanguageSuccessState());
+    } catch (e) {
+      emit(ChangeLanguageErrorState());
+    }
+  }
+
+  void openGoogleMaps() async {
+    try{
+  final Uri url = Uri.parse('https://maps.app.goo.gl/b9CaJBh9qhcuCzg68');
+  await launchUrl(url);
+    } catch(e){
+      log('errrrorrrrrrr: $e');
+    }
+}
 
   Future<void> changePassword(BuildContext context,
       {required String currentPassword, required String newPassword}) async {

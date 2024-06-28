@@ -44,12 +44,16 @@ class Home extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FavoritesPlaygroundsScreen(),
-                ),
-              );
+              cubit.getFavoritesPlaygrounds().then((_) {
+                if (cubit.state is GetFavoritesPlaygroundsSuccessState) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const FavoritesPlaygroundsScreen(),
+                    ),
+                  );
+                }
+              });
             },
             icon: Icon(
               Icons.favorite,
@@ -108,16 +112,23 @@ class Home extends StatelessWidget {
                               cubit.getFavoritesPlaygrounds().then((_) {
                                 if (cubit.state
                                     is GetFavoritesPlaygroundsSuccessState) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => CategoryScreen(
-                                        categoryId: categoryId,
-                                        name: name,
-                                        favorites: cubit.favoritesId,
-                                      ),
-                                    ),
-                                  );
+                                  cubit
+                                      .getCategoryPlaygrounds(categoryId)
+                                      .then((_) {
+                                    if (cubit.state
+                                        is GetCategoryPlaygroundsSuccessState) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => CategoryScreen(
+                                            categoryId: categoryId,
+                                            name: name,
+                                            favorites: cubit.favoritesId,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  });
                                 }
                               });
                             },

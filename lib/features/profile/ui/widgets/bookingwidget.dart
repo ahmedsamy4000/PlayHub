@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
+import 'package:playhub/generated/l10n.dart';
 
 class BookingList extends StatelessWidget {
   final String? categoryId;
@@ -14,7 +15,7 @@ class BookingList extends StatelessWidget {
     cubit.getbookingByCategories(categoryId!);
     return BlocBuilder<AppCubit, AppStates>(builder: (context, state) {
       if (state is GetBookingListLoadingState) {
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(),
         );
       } else {
@@ -34,15 +35,15 @@ class BookingList extends StatelessWidget {
                       children: [
                         Text(
                           cubit.bookings[index].playGroundName.toString(),
-                          style: TextStyle(color: Colors.white, fontSize: 24),
+                          style: const TextStyle(color: Colors.white, fontSize: 24),
                         ),
                         Text(
-                          "Time : ${cubit.bookings[index].time}:00 Pm",
-                          style: TextStyle(color: Colors.white, fontSize: 12),
+                          "${S.of(context).Time} : ${cubit.bookings[index].time}:00 ${S.of(context).PM}",
+                          style: const TextStyle(color: Colors.white, fontSize: 12),
                         ),
                         Text(
-                          "Date : ${cubit.bookings[index].date}",
-                          style: TextStyle(color: Colors.white, fontSize: 12),
+                          "${S.of(context).Date} : ${cubit.bookings[index].date}",
+                          style: const TextStyle(color: Colors.white, fontSize: 12),
                         ),
                       ],
                     ),

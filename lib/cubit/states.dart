@@ -163,3 +163,9 @@ class GetTrainersLoadingState extends AppStates {}
 class GetTrainersSuccessState extends AppStates {}
 
 class GetTrainersErrorState extends AppStates {}
+
+class ChangeLanguageSuccessState extends AppStates {}
+
+class ChangeLanguageErrorState extends AppStates {}
+
+class LoadLanguageSuccessState extends AppStates {}

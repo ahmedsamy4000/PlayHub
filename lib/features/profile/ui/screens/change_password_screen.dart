@@ -10,6 +10,7 @@ import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/features/authentication/ui/widgets/custom_login_button.dart';
 import 'package:playhub/features/authentication/ui/widgets/login_custom_textfield.dart';
+import 'package:playhub/generated/l10n.dart';
 
 class ChangePasswordScreen extends StatelessWidget {
   const ChangePasswordScreen({super.key});
@@ -25,9 +26,9 @@ class ChangePasswordScreen extends StatelessWidget {
       backgroundColor: AppColors.white,
       appBar: AppBar(
         backgroundColor: AppColors.white,
-        title: const Text(
-          'Change password',
-          style: TextStyle(
+        title: Text(
+          S.of(context).pop2,
+          style: const TextStyle(
             fontFamily: 'Open Sans',
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -50,7 +51,7 @@ class ChangePasswordScreen extends StatelessWidget {
                     duration: 0.6,
                     child: CustomTextFormField(
                       controller: oldPassController,
-                      label: "Current Password",
+                      label: S.of(context).OPassword,
                       validator: Validator.validatePassword,
                       keyboardType: TextInputType.text,
                       isPassword: true,
@@ -61,7 +62,7 @@ class ChangePasswordScreen extends StatelessWidget {
                     duration: 0.7,
                     child: CustomTextFormField(
                       controller: newPassController,
-                      label: "New Password",
+                      label: S.of(context).NPassword,
                       validator: Validator.validatePassword,
                       keyboardType: TextInputType.text,
                       isPassword: true,
@@ -72,7 +73,7 @@ class ChangePasswordScreen extends StatelessWidget {
                     duration: 0.8,
                     child: CustomTextFormField(
                       controller: confirmPassController,
-                      label: "Confirm New Password",
+                      label: S.of(context).CPassword,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Password cannot be empty';
@@ -105,7 +106,7 @@ class ChangePasswordScreen extends StatelessWidget {
                         gradiantColor: AppColors.loginGradiantColorButton,
                         tapedGradiantColor:
                             AppColors.loginGradiantColorButtonTaped,
-                        text: "Update Password",
+                        text: S.of(context).UPassword,
                       ),
                     ),
                   ),

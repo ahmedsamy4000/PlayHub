@@ -19,8 +19,6 @@ class CategoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cubit = BlocProvider.of<AppCubit>(context);
-    cubit.Pola('06');
-    cubit.getCategoryPlaygrounds(categoryId);
     return BlocBuilder<AppCubit, AppStates>(
         builder: (context, state) => state is GetPlaygroundDataLoadingState
             ? const Center(child: CircularProgressIndicator())

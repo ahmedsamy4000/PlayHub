@@ -57,8 +57,47 @@ class ProfileScreen extends StatelessWidget {
                 appBar: AppBar(
                   backgroundColor: Colors.white,
                   actions: [
+                    IconButton(
+                        onPressed: () {
+                          showMenu(
+                            color: AppColors.white,
+                            context: context,
+                            position: LocalStorage().language == 'en'
+                                ? const RelativeRect.fromLTRB(200, 70, 50, 00)
+                                : const RelativeRect.fromLTRB(50, 70, 200, 00),
+                            items: [
+                              PopupMenuItem(
+                                onTap: () {
+                                  cubit.changeLanguage('en');
+                                },
+                                child: Text(
+                                  S.of(context).English,
+                                  style: const TextStyle(
+                                    fontFamily: 'Open Sans',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                              PopupMenuItem(
+                                onTap: () {
+                                  cubit.changeLanguage('ar');
+                                },
+                                child: Text(
+                                  S.of(context).Arabic,
+                                  style: const TextStyle(
+                                    fontFamily: 'Open Sans',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                        icon: const Icon(Icons.language)),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.only(right: 16),
                       child: PopupMenuButton(
                           color: Colors.white,
                           itemBuilder: (context) => [
@@ -208,7 +247,7 @@ class ProfileScreen extends StatelessWidget {
                                                   ),
                                                   title: Text(
                                                     S.of(context).Gallery,
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                       fontFamily: 'Open Sans',
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -216,15 +255,30 @@ class ProfileScreen extends StatelessWidget {
                                                   ),
                                                   onTap: () {
                                                     cubit
-                                                        .pickImageFromGallery();
-                                                    Navigator.pushReplacement(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    Main()));
-                                                    userData?.type == UserType.player || userData?.type == UserType.admin  ?
-                                                    cubit.changeScreenIdx(3) : cubit.changeScreenIdx(2);
+                                                        .pickImageFromGallery()
+                                                        .then((_) {
+                                                      if (cubit.state
+                                                          is ChangeProfilePhotoSuccessState) {
+                                                        Navigator.pushReplacement(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        Main()));
+                                                        userData?.type ==
+                                                                    UserType
+                                                                        .player ||
+                                                                userData?.type ==
+                                                                    UserType
+                                                                        .admin
+                                                            ? cubit
+                                                                .changeScreenIdx(
+                                                                    3)
+                                                            : cubit
+                                                                .changeScreenIdx(
+                                                                    2);
+                                                      }
+                                                    });
                                                   },
                                                 ),
                                                 ListTile(
@@ -234,22 +288,38 @@ class ProfileScreen extends StatelessWidget {
                                                   ),
                                                   title: Text(
                                                     S.of(context).Camera,
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                       fontFamily: 'Open Sans',
                                                       fontWeight:
                                                           FontWeight.bold,
                                                     ),
                                                   ),
                                                   onTap: () {
-                                                    cubit.pickImageFromCamera();
-                                                    Navigator.pushReplacement(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    Main()));
-                                                                  userData?.type == UserType.player || userData?.type == UserType.admin  ?
-                                                    cubit.changeScreenIdx(3) : cubit.changeScreenIdx(2);
+                                                    cubit
+                                                        .pickImageFromCamera()
+                                                        .then((_) {
+                                                      if (cubit.state
+                                                          is ChangeProfilePhotoSuccessState) {
+                                                        Navigator.pushReplacement(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        Main()));
+                                                        userData?.type ==
+                                                                    UserType
+                                                                        .player ||
+                                                                userData?.type ==
+                                                                    UserType
+                                                                        .admin
+                                                            ? cubit
+                                                                .changeScreenIdx(
+                                                                    3)
+                                                            : cubit
+                                                                .changeScreenIdx(
+                                                                    2);
+                                                      }
+                                                    });
                                                   },
                                                 ),
                                               ],
@@ -331,7 +401,7 @@ class ProfileScreen extends StatelessWidget {
                                     userData?.city != null &&
                                             userData?.city != ''
                                         ? Text(
-                                            S.of(context).Cairo,
+                                            userData!.city!,
                                             style: const TextStyle(
                                                 color: AppColors.darkGray,
                                                 fontSize: 15,
@@ -358,7 +428,7 @@ class ProfileScreen extends StatelessWidget {
                               Tab(
                                 child: Text(
                                   S.of(context).Football,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontFamily: 'Open Sans',
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16),
@@ -367,7 +437,7 @@ class ProfileScreen extends StatelessWidget {
                               Tab(
                                 child: Text(
                                   S.of(context).Volleyball,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontFamily: 'Open Sans',
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16),
@@ -376,7 +446,7 @@ class ProfileScreen extends StatelessWidget {
                               Tab(
                                 child: Text(
                                   S.of(context).Basketball,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontFamily: 'Open Sans',
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16),
@@ -385,7 +455,7 @@ class ProfileScreen extends StatelessWidget {
                               Tab(
                                 child: Text(
                                   S.of(context).Tennis,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontFamily: 'Open Sans',
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16),
@@ -394,7 +464,7 @@ class ProfileScreen extends StatelessWidget {
                               Tab(
                                 child: Text(
                                   S.of(context).Workout,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontFamily: 'Open Sans',
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16),

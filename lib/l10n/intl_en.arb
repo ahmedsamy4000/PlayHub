@@ -32,7 +32,16 @@
     "LoginQuestion": "Already have an account? ",
     "City": "City",
     "Region": "Region",
-    "Update": "Update"
-
+    "Update": "Update",
+    "English": "English",
+    "Arabic": "Arabic",
+    "OPassword": "Current Password",
+    "NPassword": "New Password",
+    "UPassword": "Update Password", 
+    "Time": "Time",
+    "Date": "Date",
+    "PM": "PM"
 }
+
+
 

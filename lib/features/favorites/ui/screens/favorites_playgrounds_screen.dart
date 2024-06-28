@@ -13,7 +13,6 @@ class FavoritesPlaygroundsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cubit = BlocProvider.of<AppCubit>(context);
-    cubit.getFavoritesPlaygrounds();
     return BlocBuilder<AppCubit, AppStates>(
         builder: (context, state) =>
             state is GetFavoritesPlaygroundsLoadingState

@@ -57,6 +57,7 @@ dependencies:
   paymob_payment: ^0.0.1+1
   firebase_messaging: ^15.0.2
   flutter_local_notifications: ^17.1.2
+  url_launcher: ^6.3.0
 
 dev_dependencies:
   flutter_test:
