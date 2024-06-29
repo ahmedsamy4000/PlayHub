@@ -6,7 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
+import 'package:playhub/screens/SearchScreen/BookTrainer.dart';
 import 'package:playhub/screens/SearchScreen/CityFilterDialog.dart';
+import 'package:playhub/screens/playgroundScreen/playgroundscreen.dart';
 import 'CategoryButton.dart';
 
 class Search extends StatelessWidget {
@@ -60,7 +62,7 @@ class Search extends StatelessWidget {
               bottom: TabBar(
                 labelColor: AppColors.darkGreen,
                 unselectedLabelColor: AppColors.grey,
-                onTap: (index){
+                onTap: (index) {
                   AppCubit.get(context).changeTabIndex(index);
                 },
                 tabs: [
@@ -147,62 +149,72 @@ class Search extends StatelessWidget {
               final name = playground['Name'];
               final city = playground['City'];
               final imageUrl = playground['Image'];
-              return Container(
-                width: 200.w,
-                margin: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: AppColors.green3,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.green2,
-                      blurRadius: 10,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                child: Row(
-                  children: [
-                    imageUrl != null
-                        ? Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20.0),
-                              child: Image.network(
-                                imageUrl,
-                                width: 70,
-                                height: 70,
-                                fit: BoxFit.cover,
+              // final playgroundId = playground['Id'];
+              return GestureDetector(
+                onTap: () {
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => PlayGroundScreen(
+                  //             name, city, imageUrl, playgroundId)));
+                },
+                child: Container(
+                  width: 200.w,
+                  margin: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: AppColors.green3,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.green2,
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Row(
+                    children: [
+                      imageUrl != null
+                          ? Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20.0),
+                                child: Image.network(
+                                  imageUrl,
+                                  width: 70,
+                                  height: 70,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(Icons.image, size: 70),
                             ),
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(Icons.image, size: 70),
+                      const SizedBox(width: 10.0),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            name,
+                            style: TextStyle(
+                              color: AppColors.black.withOpacity(0.7),
+                              fontWeight: FontWeight.w800,
+                            ),
                           ),
-                    const SizedBox(width: 10.0),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          name,
-                          style: TextStyle(
-                            color: AppColors.black.withOpacity(0.7),
-                            fontWeight: FontWeight.w800,
+                          Text(
+                            city,
+                            style: TextStyle(
+                              color: AppColors.black.withOpacity(0.4),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12.0,
+                            ),
                           ),
-                        ),
-                        Text(
-                          city,
-                          style: TextStyle(
-                            color: AppColors.black.withOpacity(0.4),
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12.0,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
@@ -212,76 +224,87 @@ class Search extends StatelessWidget {
     );
   }
 
-  Widget _buildTrainerTab(BuildContext cont) {
-
+  Widget _buildTrainerTab(BuildContext context) {
     return BlocBuilder<AppCubit, AppStates>(
       builder: (context, state) {
         if (state is GetTrainersLoadingState) {
           return Center(child: CircularProgressIndicator());
-        }  else if (state is GetTrainersErrorState) {
+        } else if (state is GetTrainersErrorState) {
           return Center(child: Text('Failed to load trainers'));
         } else {
           return ListView.builder(
             physics: BouncingScrollPhysics(),
             itemCount: AppCubit.get(context).filteredTrainers.length,
-            itemBuilder: (con, index) {
+            itemBuilder: (context, index) {
               final trainer = AppCubit.get(context).filteredTrainers[index];
-              return Container(
-                width: 200.w,
-                margin: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: AppColors.green3,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.green2,
-                      blurRadius: 10,
-                      offset: const Offset(0, 5),
+              return GestureDetector(
+                onTap: () {
+                  AppCubit.get(context).getTrainerPackagesById(trainer.id.toString()); // Fetch trainer packages using trainer ID
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Booktrainer(trainer: trainer),
                     ),
-                  ],
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                child: Row(
-                  children: [
-                    trainer.image != null
-                        ? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20.0),
-                        child: Image.network(
-                          trainer.image!,
-                          width: 70,
-                          height: 70,
-                          fit: BoxFit.cover,
-                        ),
+                  );
+                },
+                child: Container(
+                  width: 200.w,
+                  margin: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: AppColors.green3,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.green2,
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
                       ),
-                    )
-                        : Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(Icons.image, size: 70),
-                    ),
-                    const SizedBox(width: 10.0),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          trainer.fullName??"",
-                          style: TextStyle(
-                            color: AppColors.black.withOpacity(0.7),
-                            fontWeight: FontWeight.w800,
+                    ],
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Row(
+                    children: [
+                      trainer.image != null
+                          ? Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20.0),
+                                child: Image.network(
+                                  trainer.image!,
+                                  width: 70,
+                                  height: 70,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(Icons.image, size: 70),
+                            ),
+                      const SizedBox(width: 10.0),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            trainer.fullName ?? "",
+                            style: TextStyle(
+                              color: AppColors.black.withOpacity(0.7),
+                              fontWeight: FontWeight.w800,
+                            ),
                           ),
-                        ),
-                        Text(
-                          trainer.city??"",
-                          style: TextStyle(
-                            color: AppColors.black.withOpacity(0.4),
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12.0,
+                          Text(
+                            trainer.city ?? "",
+                            style: TextStyle(
+                              color: AppColors.black.withOpacity(0.4),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12.0,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               );
             },

@@ -205,44 +205,6 @@ class AppCubit extends Cubit<AppStates> {
     emit(AppChangeSearchFunction());
   }
 
-  // Future<void> trainerSearchFunction() async {
-  //   await getTrainers();
-  //   var newItems = [];
-  //   var names = [];
-  //   log("meraaaaaaaaaaaaaaaa");
-  //   log(searchQuery);
-  //   if (trainers != null) {
-  //     for (var itemData in trainers) {
-  //       if (itemData.fullName
-  //               .toLowerCase()
-  //               .contains(searchQuery.toLowerCase()) ||
-  //           searchQuery.isEmpty) {
-  //         names.add(itemData);
-  //         log("full:${itemData.fullName}");
-  //         if (itemData.city == selectedCity || selectedCity == "All") {
-  //           newItems.add(itemData);
-  //           log("filter:${itemData.fullName}");
-  //         }
-  //       }
-  //     }
-  //     log("meraaaaaaaaaaaaaaaa");
-
-  //     log("${newItems}");
-  //     if (names.isEmpty) {
-  //       filteredTrainers = newItems;
-  //     } else if (newItems.isEmpty) {
-  //       filteredTrainers = names;
-  //     } else {
-  //       filteredTrainers = getCommonElementsTwo(newItems, names);
-  //     }
-  //   }
-  //   log("filter:${filteredTrainers[0].fullName}");
-  //   log("//////////////////////////////");
-  //   log('$trainers');
-
-  //   emit(AppChangeSearchFunction());
-  // }
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   List<TrainingPackage> packages = [];
   List<String> packagesId = [];
@@ -262,6 +224,31 @@ class AppCubit extends Cubit<AppStates> {
     ref.add(newPackage.toJson());
     getTrainerPackages();
     emit(PackageAdded(newPackage));
+  }
+
+  Future<void> getTrainerPackagesById(String trainerId) async {
+    emit(GetTrainerPackagesLoadingState());
+    packages = [];
+    packagesId = [];
+
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(trainerId)
+          .collection('Package')
+          .get();
+
+      List<TrainingPackage> trainerPackages =
+          snapshot.docs.map((e) => TrainingPackage.fromJson(e.data())).toList();
+      List<String> newPackagesId = snapshot.docs.map((e) => e.id).toList();
+
+      packages = trainerPackages;
+      packagesId = newPackagesId;
+      log("${snapshot.docs.length}");
+      emit(GetTrainerPackagesSuccessState());
+    } catch (error) {
+      emit(GetTrainerPackagesErrorState(error.toString()));
+    }
   }
 
   void getTrainerPackages() async {
@@ -370,9 +357,19 @@ class AppCubit extends Cubit<AppStates> {
 
       for (var doc in snapshot.docs) {
         if (doc.data()["Type"] == "Trainer") {
-          newTrainers.add(UserModel.fromJson(doc.data()));
+          // doc.data()['Id'] = doc.id; 
+          newTrainers.add(UserModel(id: doc.id.toString(), 
+          phoneNumber: doc.data()['PhoneNumber'],
+          fullName: doc.data()['Name'],
+          email: doc.data()['Email'],
+          type: UserType.trainer,
+          city: doc.data()['City'],
+          region: doc.data()['Region'],
+          image: doc.data()['Image'],
+          ));
         }
       }
+      log("${newTrainers[0].id}samy");
       trainers = newTrainers;
       filteredTrainers = newTrainers;
 
