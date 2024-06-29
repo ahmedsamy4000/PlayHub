@@ -52,14 +52,22 @@ class ChatbotData {
 
 final List<String> keywords = [
   'who are you',
-  'what is flutter',
-  'what is your name',
-  'sorry'
+  'how can i find a playground near me',
+  'how do i book a playground',
+  'how can i find and book a trainer',
+  'how do i leave a review for a playground or trainer',
+  'how do i update my profile information',
+  'can i see a history of my bookings',
+  'how do i know if a playground or trainer is available'
 ];
 
 final List<String> responses = [
-  'I am a bot created by Iksoft Original, a proud Ghanaian',
-  'Flutter transforms the app development process. Build, test, and deploy beautiful mobile, web, desktop, and embedded apps from a single codebase.',
-  'my name is Chatbot , iam here to help you',
-  'Good! i have forgiven you. dont do that again!'
+  'I am a Mobile application used to book playgrounds and search for experienced trainers that make it easy to book and play more than type of sports',
+  'You can find nearby playgrounds by using the (Search For Playgrounds) feature on the main screen. Just enter your City  or Region and Filter your category, and we will show you all available playgrounds in your area',
+  'First select the desired play ground and then the available time will be shown to you, you can press on the time and the order details will be ready on screen then you will be redirected to payment process then you will be able to see your book order on your profile',
+  'You can find trainers by browsing the (Trainers) section. Select a trainer to view their profile and availability, then book a session that suits you',
+  'First you can choose Feedback Section and write your Review about Trainer or playground then you will get the response in short time',
+  'You can go to the Profile screen from the bottom navigation bar and select edite profile from the menu then you can easly update your profile informatoion',
+  'First you will go to your profile page and the tab bar will be shown to you with all categories, you can select the desired category to see your book Order',
+  'PlayHub automatically show the available playgrounds and trainers for you '
 ];
