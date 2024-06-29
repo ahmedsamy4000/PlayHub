@@ -66,6 +66,7 @@ class AppCubit extends Cubit<AppStates> {
     emit(AppChangeBottomNavBarScreen());
   }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   TextEditingController searchController = TextEditingController();
   String searchQuery = "";
   String selectedCategory = "All";
@@ -87,16 +88,21 @@ class AppCubit extends Cubit<AppStates> {
 
   void changeSelectedCategory(String val) {
     selectedCategory = val;
+    searchFunction();
     emit(AppChangeSelectedCategory());
   }
 
-  void changeSelectedCity(String city) {
+  Future<void> changeSelectedCity(String city) async {
     selectedCity = city;
-    searchFunction();
+    if (currentSearchTabIndex == 0) {
+      await searchFunction();
+    } else {
+      await trainerSearchFunction();
+    }
     emit(AppChangeSelectedCity());
   }
 
-  List<T> getCommonElements<T>(List<T> list1, List<T> list2) {
+  List<T> getCommonElementsTwo<T>(List<T> list1, List<T> list2) {
     // Convert lists to sets
     Set<T> set1 = list1.toSet();
     Set<T> set2 = list2.toSet();
@@ -108,11 +114,42 @@ class AppCubit extends Cubit<AppStates> {
     return intersection.toList();
   }
 
+  List<T> getCommonElementsThree<T>(
+      List<T> list1, List<T> list2, List<T> list3) {
+    // Convert lists to sets
+    Set<T> set1 = list1.toSet();
+    Set<T> set2 = list2.toSet();
+    Set<T> set3 = list3.toSet();
+
+    // Find the intersection of the three sets
+    Set<T> intersection = set1.intersection(set2).intersection(set3);
+
+    // Convert the result back to a list
+    return intersection.toList();
+  }
+
+  Future<void> changeTabIndex(int index) async {
+    currentSearchTabIndex = index;
+    changeSearchQuery("");
+    changeSelectedCategory("All");
+    changeSelectedCity("All");
+    trainers = [];
+    filteredTrainers = [];
+    items = [];
+
+    if (currentSearchTabIndex == 0) {
+      await searchFunction();
+    } else {
+      await trainerSearchFunction();
+    }
+  }
+
   Future<void> searchFunction() async {
     final snapshot =
         await FirebaseFirestore.instance.collection('PlayGrounds').get();
     var newItems = [];
     var names = [];
+    var category = [];
     for (var doc in snapshot.docs) {
       var itemData = doc.data();
       if (itemData['Name']
@@ -125,18 +162,17 @@ class AppCubit extends Cubit<AppStates> {
       if (itemData['City'] == selectedCity || selectedCity == "All") {
         newItems.add(itemData);
       }
-
-      // log("$items");
-      // log("$matchesCity");
-      // log("$selectedCity");
-      // items = matchesCity
+      if (itemData['CategoryId'] == selectedCategory ||
+          selectedCategory == "All") {
+        category.add(itemData);
+      }
     }
     if (names.isEmpty) {
       items = newItems;
     } else if (newItems.isEmpty) {
       items = names;
     } else {
-      items = getCommonElements(newItems, names);
+      items = getCommonElementsThree(newItems, names, category);
     }
 
     log("$items");
@@ -148,50 +184,66 @@ class AppCubit extends Cubit<AppStates> {
     await getTrainers();
     var newItems = [];
     var names = [];
-    log("meraaaaaaaaaaaaaaaa");
-    log(searchQuery);
+
     if (trainers != null) {
       for (var itemData in trainers) {
+        log("Trainer: ${itemData.fullName}, City: ${itemData.city}");
         if (itemData.fullName
                 .toLowerCase()
                 .contains(searchQuery.toLowerCase()) ||
             searchQuery.isEmpty) {
           names.add(itemData);
-          log("full:${itemData.fullName}");
-          if (itemData.city == selectedCity || selectedCity == "All") {
-            newItems.add(itemData);
-            log("filter:${itemData.fullName}");
-          }
+        }
+        if (itemData.city == selectedCity || selectedCity == "All") {
+          newItems.add(itemData);
+          log("filter:${itemData.city}");
         }
       }
-      log("meraaaaaaaaaaaaaaaa");
-
-      log("${newItems}");
-      if (names.isEmpty) {
-        filteredTrainers = newItems;
-      } else if (newItems.isEmpty) {
-        filteredTrainers = names;
-      } else {
-        filteredTrainers = getCommonElements(newItems, names);
-      }
+      filteredTrainers = getCommonElementsTwo(newItems, names);
     }
-    log("filter:${filteredTrainers[0].fullName}");
-    log("//////////////////////////////");
-    log('$trainers');
 
     emit(AppChangeSearchFunction());
   }
 
-  void changeTabIndex(int index) async {
-    currentSearchTabIndex = index;
+  // Future<void> trainerSearchFunction() async {
+  //   await getTrainers();
+  //   var newItems = [];
+  //   var names = [];
+  //   log("meraaaaaaaaaaaaaaaa");
+  //   log(searchQuery);
+  //   if (trainers != null) {
+  //     for (var itemData in trainers) {
+  //       if (itemData.fullName
+  //               .toLowerCase()
+  //               .contains(searchQuery.toLowerCase()) ||
+  //           searchQuery.isEmpty) {
+  //         names.add(itemData);
+  //         log("full:${itemData.fullName}");
+  //         if (itemData.city == selectedCity || selectedCity == "All") {
+  //           newItems.add(itemData);
+  //           log("filter:${itemData.fullName}");
+  //         }
+  //       }
+  //     }
+  //     log("meraaaaaaaaaaaaaaaa");
 
-    if (currentSearchTabIndex == 0) {
-      await searchFunction();
-    } else {
-      await trainerSearchFunction();
-    }
-  }
+  //     log("${newItems}");
+  //     if (names.isEmpty) {
+  //       filteredTrainers = newItems;
+  //     } else if (newItems.isEmpty) {
+  //       filteredTrainers = names;
+  //     } else {
+  //       filteredTrainers = getCommonElementsTwo(newItems, names);
+  //     }
+  //   }
+  //   log("filter:${filteredTrainers[0].fullName}");
+  //   log("//////////////////////////////");
+  //   log('$trainers');
 
+  //   emit(AppChangeSearchFunction());
+  // }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   List<TrainingPackage> packages = [];
   List<String> packagesId = [];
 
@@ -469,13 +521,13 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   void openGoogleMaps() async {
-    try{
-  final Uri url = Uri.parse('https://maps.app.goo.gl/b9CaJBh9qhcuCzg68');
-  await launchUrl(url);
-    } catch(e){
+    try {
+      final Uri url = Uri.parse('https://maps.app.goo.gl/b9CaJBh9qhcuCzg68');
+      await launchUrl(url);
+    } catch (e) {
       log('errrrorrrrrrr: $e');
     }
-}
+  }
 
   Future<void> changePassword(BuildContext context,
       {required String currentPassword, required String newPassword}) async {

@@ -31,7 +31,7 @@ class TrainingPackage {
       // id: json['id'] as String,
       // title: json['title'] as String,
       description: json['description'] as String,
-      price: json['price'] as double,
+      price: (json['price'] as num).toDouble(),
       duration: json['duration'] as int,
       trainerId: json['trainerId'] as String,
     );
