@@ -40,7 +40,11 @@
     "UPassword": "Update Password", 
     "Time": "Time",
     "Date": "Date",
-    "PM": "PM"
+    "PM": "PM",
+    "Categories": "Categories",
+    "Playgrounds": "Playgrounds",
+    "Favorites": "Favorites",
+    "Trainers": "Trainers"
 }
 
 

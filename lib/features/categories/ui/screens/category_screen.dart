@@ -58,7 +58,7 @@ class CategoryScreen extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => PlayGroundScreen(
-                                          name, city, imageUrl, playgroundId),),);
+                                          name, city, imageUrl, playgroundId, playground['Map']),),);
                             },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(

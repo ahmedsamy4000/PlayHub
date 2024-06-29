@@ -525,7 +525,7 @@ class ProfileScreen extends StatelessWidget {
                                                             name,
                                                             city,
                                                             imageUrl,
-                                                            playgroundId),
+                                                            playgroundId, playground.location),
                                                   ),
                                                 );
                                               },

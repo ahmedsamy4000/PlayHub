@@ -39,8 +39,14 @@ class FloatingActionMenu extends StatelessWidget {
           onPressed: () {
             AppCubit.get(context).searchFunction().then((_) {
               if (AppCubit.get(context).state is AppChangeSearchFunction) {
-                Navigator.push(
+                AppCubit.get(context).getFavoritesTrainers().then((_){
+                  if(AppCubit.get(context).state is GetFavoritesTrainersSuccessState)
+                  {
+                    Navigator.push(
                     context, MaterialPageRoute(builder: (context) => Search()));
+              }
+                  
+                });
               }
             });
           },

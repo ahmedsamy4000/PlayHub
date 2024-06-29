@@ -5,7 +5,7 @@ import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
-import 'package:playhub/features/favorites/ui/screens/favorites_playgrounds_screen.dart';
+import 'package:playhub/features/favorites/ui/widgets/favorites_playgrounds.dart';
 import 'package:playhub/generated/l10n.dart';
 import 'package:playhub/screens/HomeScreen/home.dart';
 import 'package:playhub/screens/SearchScreen/search.dart';

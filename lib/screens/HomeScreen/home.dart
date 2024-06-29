@@ -7,7 +7,9 @@ import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/features/categories/ui/screens/category_screen.dart';
-import 'package:playhub/features/favorites/ui/screens/favorites_playgrounds_screen.dart';
+import 'package:playhub/features/favorites/ui/screens/favorites_screen.dart';
+import 'package:playhub/features/favorites/ui/widgets/favorites_playgrounds.dart';
+import 'package:playhub/generated/l10n.dart';
 import 'package:playhub/screens/FeedbackScreen/feedbackscreen.dart';
 import 'package:playhub/screens/HomeScreen/CategoryCard.dart';
 import 'package:playhub/screens/HomeScreen/floatingactionmenu.dart';
@@ -49,7 +51,7 @@ class Home extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const FavoritesPlaygroundsScreen(),
+                      builder: (context) => const FavoritesScreen(),
                     ),
                   );
                 }
@@ -73,7 +75,7 @@ class Home extends StatelessWidget {
               // Text('Welcome Reem Hatem'),
               const SizedBox(height: 16),
               Text(
-                'Categories',
+                S.of(context).Categories,
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               StreamBuilder(
@@ -143,7 +145,7 @@ class Home extends StatelessWidget {
               ),
               SizedBox(height: 16),
               Text(
-                'Playgrounds',
+                S.of(context).Playgrounds,
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               StreamBuilder(
@@ -179,7 +181,7 @@ class Home extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => PlayGroundScreen(
-                                        name, city, imageUrl, playgroundId)));
+                                        name, city, imageUrl, playgroundId, playground['Map'])));
                           },
                           child: Container(
                             width: 200.w,

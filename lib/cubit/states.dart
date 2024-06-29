@@ -169,3 +169,17 @@ class ChangeLanguageSuccessState extends AppStates {}
 class ChangeLanguageErrorState extends AppStates {}
 
 class LoadLanguageSuccessState extends AppStates {}
+
+class AddTrainerToFavoritesSuccessState extends AppStates {}
+
+class AddTrainerToFavoritesErrorState extends AppStates {}
+
+class DeleteTrainerFromFavoritesSuccessState extends AppStates {}
+
+class DeleteTrainerFromFavoritesErrorState extends AppStates {}
+
+class GetFavoritesTrainersLoadingState extends AppStates {}
+
+class GetFavoritesTrainersSuccessState extends AppStates {}
+
+class GetFavoritesTrainersErrorState extends AppStates {}

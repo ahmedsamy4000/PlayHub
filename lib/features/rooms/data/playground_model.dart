@@ -5,6 +5,7 @@ class Playground {
   final String name;
   final String ownerId;
   final String region;
+  final String location;
 
   Playground({
     required this.categoryId,
@@ -13,6 +14,7 @@ class Playground {
     required this.name,
     required this.ownerId,
     required this.region,
+    required this.location
   });
 
   factory Playground.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class Playground {
       name: json['Name'] ?? '',
       ownerId: json['Owner_Id'] ?? '',
       region: json['Region'] ?? '',
+      location: json['Map'] ?? ''
     );
   }
 
@@ -34,6 +37,7 @@ class Playground {
       'Name': name,
       'Owner_Id': ownerId,
       'Region': region,
+      'Map': location
     };
   }
 }

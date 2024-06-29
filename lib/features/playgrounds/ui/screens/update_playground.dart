@@ -35,6 +35,8 @@ class UpdatePlaygroundScreen extends StatelessWidget {
     cityController.text = playground.city;
     TextEditingController regionController = TextEditingController();
     regionController.text = playground.region;
+    TextEditingController locationController = TextEditingController();
+    locationController.text = playground.location;
     cubit.playgroundImage = playground.image;
     return Scaffold(
         backgroundColor: AppColors.white,
@@ -87,6 +89,12 @@ class UpdatePlaygroundScreen extends StatelessWidget {
                                 keyboardType: TextInputType.text,
                               ),
                               30.verticalSpace,
+                              CustomTextFormField(
+                                controller: locationController,
+                                label: 'Location',
+                                keyboardType: TextInputType.text,
+                              ),
+                              30.verticalSpace,
                               GestureDetector(
                                 onTap: () {
                                   cubit.pickPlaygroundImageFromGallery();
@@ -105,7 +113,7 @@ class UpdatePlaygroundScreen extends StatelessWidget {
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 8.0),
                                         child: Text(
-                                          'Update Image',
+                                          'Change Image',
                                           style: TextStyle(
                                               fontFamily: 'Open Sans',
                                               fontWeight: FontWeight.bold,
@@ -160,6 +168,7 @@ class UpdatePlaygroundScreen extends StatelessWidget {
                                               city: cityController.text,
                                               region: regionController.text,
                                               image: cubit.playgroundImage,
+                                              location: locationController.text,
                                               pid: id)
                                           .then((_) {
                                         if (cubit.state

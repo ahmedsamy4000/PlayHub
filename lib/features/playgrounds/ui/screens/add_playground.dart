@@ -20,6 +20,7 @@ class AddPlaygroundScreen extends StatelessWidget {
   TextEditingController categoryController = TextEditingController();
   TextEditingController cityController = TextEditingController();
   TextEditingController regionController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
   bool isError = false;
   List<String> categories;
 
@@ -80,6 +81,13 @@ class AddPlaygroundScreen extends StatelessWidget {
                                     validator: Validator.notEmpty,
                                     controller: regionController,
                                     label: 'Region',
+                                    keyboardType: TextInputType.text,
+                                  ),
+                                  30.verticalSpace,
+                                  CustomTextFormField(
+                                    validator: Validator.notEmpty,
+                                    controller: locationController,
+                                    label: 'Location',
                                     keyboardType: TextInputType.text,
                                   ),
                                   30.verticalSpace,
@@ -159,7 +167,8 @@ class AddPlaygroundScreen extends StatelessWidget {
                                                       categoryController.text,
                                                   city: cityController.text,
                                                   region: regionController.text,
-                                                  image: cubit.playgroundImage)
+                                                  image: cubit.playgroundImage,
+                                                  location: locationController.text)
                                               .then((_) {
                                             if (cubit.state
                                                 is AddNewPlaygroundSuccessState) {

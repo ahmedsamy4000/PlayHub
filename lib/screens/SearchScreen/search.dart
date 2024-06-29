@@ -31,19 +31,20 @@ class Search extends StatelessWidget {
                   Expanded(
                     child: TextField(
                       controller: AppCubit.get(context).searchController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Search',
                         hintStyle: TextStyle(color: AppColors.grey),
                         border: InputBorder.none,
                       ),
-                      style: TextStyle(color: AppColors.black),
+                      style: const TextStyle(color: AppColors.black),
                       onChanged: (value) {
                         AppCubit.get(context).changeSearchQuery(value);
                       },
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.filter_list, color: AppColors.darkGreen),
+                    icon: const Icon(Icons.filter_list,
+                        color: AppColors.darkGreen),
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -66,8 +67,8 @@ class Search extends StatelessWidget {
                   AppCubit.get(context).changeTabIndex(index);
                 },
                 tabs: [
-                  Tab(text: 'Playgrounds'),
-                  Tab(text: 'Trainer'),
+                  const Tab(text: 'Playgrounds'),
+                  const Tab(text: 'Trainer'),
                 ],
               ),
             ),
@@ -142,7 +143,7 @@ class Search extends StatelessWidget {
         ),
         Expanded(
           child: ListView.builder(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             itemCount: AppCubit.get(context).items.length,
             itemBuilder: (context, index) {
               final playground = AppCubit.get(context).items[index];
@@ -164,10 +165,10 @@ class Search extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppColors.green3,
                     boxShadow: [
-                      BoxShadow(
+                      const BoxShadow(
                         color: AppColors.green2,
                         blurRadius: 10,
-                        offset: const Offset(0, 5),
+                        offset: Offset(0, 5),
                       ),
                     ],
                     borderRadius: BorderRadius.circular(20.0),
@@ -187,8 +188,8 @@ class Search extends StatelessWidget {
                                 ),
                               ),
                             )
-                          : Padding(
-                              padding: const EdgeInsets.all(8.0),
+                          : const Padding(
+                              padding: EdgeInsets.all(8.0),
                               child: Icon(Icons.image, size: 70),
                             ),
                       const SizedBox(width: 10.0),
@@ -228,19 +229,20 @@ class Search extends StatelessWidget {
     return BlocBuilder<AppCubit, AppStates>(
       builder: (context, state) {
         if (state is GetTrainersLoadingState) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (state is GetTrainersErrorState) {
-          return Center(child: Text('Failed to load trainers'));
+          return const Center(child: Text('Failed to load trainers'));
         } else {
           return ListView.builder(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             itemCount: AppCubit.get(context).filteredTrainers.length,
             itemBuilder: (context, index) {
               final trainer = AppCubit.get(context).filteredTrainers[index];
+              log(trainer.id);
               return GestureDetector(
                 onTap: () {
-                  AppCubit.get(context).getTrainerPackagesById(trainer.id.toString()); // Fetch trainer packages using trainer ID
-
+                  AppCubit.get(context).getTrainerPackagesById(trainer.id
+                      .toString()); // Fetch trainer packages using trainer ID
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -254,10 +256,10 @@ class Search extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppColors.green3,
                     boxShadow: [
-                      BoxShadow(
+                      const BoxShadow(
                         color: AppColors.green2,
                         blurRadius: 10,
-                        offset: const Offset(0, 5),
+                        offset: Offset(0, 5),
                       ),
                     ],
                     borderRadius: BorderRadius.circular(20.0),
@@ -277,8 +279,8 @@ class Search extends StatelessWidget {
                                 ),
                               ),
                             )
-                          : Padding(
-                              padding: const EdgeInsets.all(8.0),
+                          : const Padding(
+                              padding: EdgeInsets.all(8.0),
                               child: Icon(Icons.image, size: 70),
                             ),
                       const SizedBox(width: 10.0),
@@ -303,6 +305,46 @@ class Search extends StatelessWidget {
                           ),
                         ],
                       ),
+                      const Spacer(),
+                      !AppCubit.get(context)
+                              .favoritesTrainersId
+                              .contains(trainer.id)
+                          ? IconButton(
+                              icon: const Icon(
+                                Icons.favorite_border_rounded,
+                                color: AppColors.darkGreen,
+                                size: 30,
+                              ),
+                              onPressed: () {
+                                AppCubit.get(context)
+                                    .addTrainerToFavorites(trainer.id)
+                                    .then((_) {
+                                  if (AppCubit.get(context).state
+                                      is AddPlaygroundToFavoritesSuccessState) {
+                                    AppCubit.get(context)
+                                        .getFavoritesPlaygrounds();
+                                  }
+                                });
+                              },
+                            )
+                          : IconButton(
+                              icon: const Icon(
+                                Icons.favorite_rounded,
+                                color: AppColors.darkGreen,
+                                size: 30,
+                              ),
+                              onPressed: () {
+                                AppCubit.get(context)
+                                    .deletePlaygroundFromFavorites(trainer.id)
+                                    .then((_) {
+                                  if (AppCubit.get(context).state
+                                      is DeletePlaygroundFromFavoritesSuccessState) {
+                                    AppCubit.get(context)
+                                        .getFavoritesPlaygrounds();
+                                  }
+                                });
+                              },
+                            ),
                     ],
                   ),
                 ),

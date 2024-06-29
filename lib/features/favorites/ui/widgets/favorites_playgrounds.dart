@@ -7,38 +7,37 @@ import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/screens/playgroundScreen/playgroundscreen.dart';
 
-class FavoritesPlaygroundsScreen extends StatelessWidget {
-  const FavoritesPlaygroundsScreen({super.key});
+class FavoritesPlaygrounds extends StatelessWidget {
+  const FavoritesPlaygrounds({super.key});
 
   @override
   Widget build(BuildContext context) {
     var cubit = BlocProvider.of<AppCubit>(context);
     return BlocBuilder<AppCubit, AppStates>(
-        builder: (context, state) =>
-            state is GetFavoritesPlaygroundsLoadingState
-                ? const Scaffold(body: Center(child: CircularProgressIndicator()))
-                : Scaffold(
-                    appBar: AppBar(
-                      title: const Text('Favorites'),
-                    ),
-                    body: ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+        builder: (context, state) => state
+                is GetFavoritesPlaygroundsLoadingState
+            ? const Center(child: CircularProgressIndicator())
+            : state is GetFavoritesPlaygroundsSuccessState
+                ? cubit.favoritesPlaygrounds.isEmpty
+                    ? const Center(
+                        child: Text('No Favorites Playgrounds Yet.'),
+                      )
+                    : ListView.builder(
                         itemCount: cubit.favoritesPlaygrounds.length,
                         itemBuilder: (context, index) {
-                          final playground = cubit.favoritesPlaygrounds[index];
-                          final name = playground['Name'];
-                          final city = playground['City'];
-                          final imageUrl = playground['Image'];
-                          final playgroundId = cubit.playgroundsId[index];
-
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => PlayGroundScreen(
-                                          name, city, imageUrl, playgroundId),),);
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PlayGroundScreen(
+                                      cubit.favoritesPlaygrounds[index]['Name'],
+                                      cubit.favoritesPlaygrounds[index]['City'],
+                                      cubit.favoritesPlaygrounds[index]
+                                          ['Image'],
+                                      cubit.playgroundsId[index], cubit.favoritesPlaygrounds[index]['Map']),
+                                ),
+                              );
                             },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
@@ -49,8 +48,12 @@ class FavoritesPlaygroundsScreen extends StatelessWidget {
                                   color: AppColors.white,
                                   child: Row(
                                     children: [
-                                      imageUrl != null
-                                          ? Image.network(imageUrl,
+                                      cubit.favoritesPlaygrounds[index]
+                                                  ['Image'] !=
+                                              null
+                                          ? Image.network(
+                                              cubit.favoritesPlaygrounds[index]
+                                                  ['Image'],
                                               width: 120,
                                               height: 100,
                                               fit: BoxFit.cover)
@@ -61,7 +64,8 @@ class FavoritesPlaygroundsScreen extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            name,
+                                            cubit.favoritesPlaygrounds[index]
+                                                ['Name'],
                                             style: const TextStyle(
                                               fontFamily: 'Open Sans',
                                               fontSize: 18,
@@ -69,7 +73,7 @@ class FavoritesPlaygroundsScreen extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                            "${playground['Region']}, $city",
+                                            "${cubit.favoritesPlaygrounds[index]['Region']}, ${cubit.favoritesPlaygrounds[index]['City']}",
                                             style: const TextStyle(
                                               fontFamily: 'Open Sans',
                                               fontSize: 15,
@@ -81,30 +85,30 @@ class FavoritesPlaygroundsScreen extends StatelessWidget {
                                       ),
                                       const Spacer(),
                                       IconButton(
-                                      icon: const Icon(
-                                        Icons.close,
-                                        color: AppColors.darkGreen,
-                                        size: 30,
+                                        icon: const Icon(
+                                          Icons.close,
+                                          color: AppColors.darkGreen,
+                                          size: 30,
+                                        ),
+                                        onPressed: () {
+                                          cubit
+                                              .deletePlaygroundFromFavorites(
+                                                  cubit.playgroundsId[index])
+                                              .then((_) {
+                                            if (cubit.state
+                                                is DeletePlaygroundFromFavoritesSuccessState) {
+                                              cubit.getFavoritesPlaygrounds();
+                                            }
+                                          });
+                                        },
                                       ),
-                                      onPressed: () {
-                                        cubit.deletePlaygroundFromFavorites(playgroundId).then((_){
-                                          if(cubit.state is DeletePlaygroundFromFavoritesSuccessState)
-                                          {
-                                            cubit.getFavoritesPlaygrounds();
-                                          }
-                                        });
-                                      },
-                                    ),
                                     ],
                                   ),
                                 ),
                               ),
                             ),
                           );
-                        },
-                      )
-                  ));
+                        })
+                : Container());
   }
 }
-
-

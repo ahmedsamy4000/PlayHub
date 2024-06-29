@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -14,7 +16,8 @@ class PlayGroundScreen extends StatefulWidget {
   final String? image;
   final String? city;
   final String? id;
-  const PlayGroundScreen(this.name, this.city, this.image, this.id,
+  final String location;
+  const PlayGroundScreen(this.name, this.city, this.image, this.id, this.location,
       {super.key});
 
   @override
@@ -45,6 +48,11 @@ class _PlayGroundScreenState extends State<PlayGroundScreen> {
         backgroundColor: AppColors.white,
         title: Text(widget.name!),
         centerTitle: true,
+        actions: [
+          IconButton(onPressed: (){
+            cubit.openGoogleMaps(widget.location);
+          }, icon: const Icon(Icons.location_city))
+        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
