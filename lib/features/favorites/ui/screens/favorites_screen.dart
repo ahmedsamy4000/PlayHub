@@ -11,6 +11,7 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var cubit = BlocProvider.of<AppCubit>(context);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -23,14 +24,17 @@ class FavoritesScreen extends StatelessWidget {
               Tab(text: S.of(context).Playgrounds),
               Tab(text: S.of(context).Trainers),
             ],
+            onTap: (index) async {
+              cubit.changeFavoritesTab(index);
+            },
           ),
         ),
         body: const TabBarView(
-                children: [
-                  FavoritesPlaygrounds(),
-                  FavoritesTrainers(),
-                ],
-              ),
+          children: [
+            FavoritesPlaygrounds(),
+            FavoritesTrainers(),
+          ],
+        ),
       ),
     );
   }

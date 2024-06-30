@@ -238,7 +238,6 @@ class Search extends StatelessWidget {
             itemCount: AppCubit.get(context).filteredTrainers.length,
             itemBuilder: (context, index) {
               final trainer = AppCubit.get(context).filteredTrainers[index];
-              log(trainer.id);
               return GestureDetector(
                 onTap: () {
                   AppCubit.get(context).getTrainerPackagesById(trainer.id
@@ -308,7 +307,7 @@ class Search extends StatelessWidget {
                       const Spacer(),
                       !AppCubit.get(context)
                               .favoritesTrainersId
-                              .contains(trainer.id)
+                              .contains(AppCubit.get(context).trainersIds[index])
                           ? IconButton(
                               icon: const Icon(
                                 Icons.favorite_border_rounded,
@@ -320,9 +319,9 @@ class Search extends StatelessWidget {
                                     .addTrainerToFavorites(trainer.id)
                                     .then((_) {
                                   if (AppCubit.get(context).state
-                                      is AddPlaygroundToFavoritesSuccessState) {
+                                      is AddTrainerToFavoritesSuccessState) {
                                     AppCubit.get(context)
-                                        .getFavoritesPlaygrounds();
+                                        .getFavoritesTrainers();
                                   }
                                 });
                               },
@@ -335,12 +334,12 @@ class Search extends StatelessWidget {
                               ),
                               onPressed: () {
                                 AppCubit.get(context)
-                                    .deletePlaygroundFromFavorites(trainer.id)
+                                    .deleteTrainerFromFavorites(AppCubit.get(context).trainersIds[index])
                                     .then((_) {
                                   if (AppCubit.get(context).state
-                                      is DeletePlaygroundFromFavoritesSuccessState) {
+                                      is DeleteTrainerFromFavoritesSuccessState) {
                                     AppCubit.get(context)
-                                        .getFavoritesPlaygrounds();
+                                        .getFavoritesTrainers();
                                   }
                                 });
                               },

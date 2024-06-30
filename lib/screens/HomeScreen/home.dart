@@ -48,12 +48,16 @@ class Home extends StatelessWidget {
             onPressed: () {
               cubit.getFavoritesPlaygrounds().then((_) {
                 if (cubit.state is GetFavoritesPlaygroundsSuccessState) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const FavoritesScreen(),
-                    ),
-                  );
+                  cubit.getFavoritesTrainers().then((_) {
+                    if (cubit.state is GetFavoritesTrainersSuccessState) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const FavoritesScreen(),
+                        ),
+                      );
+                    }
+                  });
                 }
               });
             },
@@ -113,12 +117,12 @@ class Home extends StatelessWidget {
                             onTap: () {
                               cubit.getFavoritesPlaygrounds().then((_) {
                                 if (cubit.state
-                                is GetFavoritesPlaygroundsSuccessState) {
+                                    is GetFavoritesPlaygroundsSuccessState) {
                                   cubit
                                       .getCategoryPlaygrounds(categoryId)
                                       .then((_) {
                                     if (cubit.state
-                                    is GetCategoryPlaygroundsSuccessState) {
+                                        is GetCategoryPlaygroundsSuccessState) {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -181,7 +185,11 @@ class Home extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => PlayGroundScreen(
-                                        name, city, imageUrl, playgroundId, playground['Map'])));
+                                        name,
+                                        city,
+                                        imageUrl,
+                                        playgroundId,
+                                        playground['Map'])));
                           },
                           child: Container(
                             width: 200.w,
@@ -203,28 +211,28 @@ class Home extends StatelessWidget {
                                   children: [
                                     imageUrl != null
                                         ? Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: ClipRRect(
-                                        borderRadius:
-                                        BorderRadius.circular(20.0),
-                                        child: Image.network(
-                                          imageUrl,
-                                          width: 70,
-                                          height: 70,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    )
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0),
+                                              child: Image.network(
+                                                imageUrl,
+                                                width: 70,
+                                                height: 70,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          )
                                         : Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Icon(Icons.image, size: 70),
-                                    ),
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Icon(Icons.image, size: 70),
+                                          ),
                                     const SizedBox(width: 10.0),
                                     Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           name,

@@ -73,6 +73,7 @@ class AppCubit extends Cubit<AppStates> {
   String selectedCategory = "All";
   String selectedCity = "All";
   List trainers = [];
+  List<String> trainersIds = [];
   List filteredTrainers = [];
   List items = [];
   int currentSearchTabIndex = 0;
@@ -142,6 +143,19 @@ class AppCubit extends Cubit<AppStates> {
       await searchFunction();
     } else {
       await trainerSearchFunction();
+    }
+  }
+
+  Future<void> changeFavoritesTab(int index) async {
+    favoritesId = [];
+    favoritesPlaygrounds = [];
+    favoritesTrainers = [];
+    favoritesTrainersId = [];
+
+    if (index == 0) {
+      await getFavoritesPlaygrounds();
+    } else {
+      await getFavoritesTrainers();
     }
   }
 
@@ -394,11 +408,13 @@ class AppCubit extends Cubit<AppStates> {
     emit(GetTrainersLoadingState());
     try {
       List newTrainers = [];
+       List<String> ids = [];
       final snapshot =
           await FirebaseFirestore.instance.collection('Users').get();
 
       for (var doc in snapshot.docs) {
         if (doc.data()["Type"] == "Trainer") {
+         ids.add(doc.data()['Id']);
           // doc.data()['Id'] = doc.id;
           newTrainers.add(UserModel(
             id: doc.id.toString(),
@@ -414,6 +430,7 @@ class AppCubit extends Cubit<AppStates> {
       }
       log("${newTrainers[0].id}samy");
       trainers = newTrainers;
+      trainersIds = ids;
       filteredTrainers = newTrainers;
 
       log("-------------------------------------");
@@ -798,6 +815,7 @@ class AppCubit extends Cubit<AppStates> {
 
   Future<void> deletePlaygroundFromFavorites(String id) async {
     try {
+      log(id);
       late var pid;
       final snapshot = await FirebaseFirestore.instance
           .collection('Users')
@@ -825,7 +843,6 @@ class AppCubit extends Cubit<AppStates> {
   List<String> favoritesId = [];
 
   Future<void> getFavoritesPlaygrounds() async {
-    favoritesPlaygrounds = [];
     emit(GetFavoritesPlaygroundsLoadingState());
     try {
       List<String> ids = [];
@@ -869,23 +886,21 @@ class AppCubit extends Cubit<AppStates> {
 
   Future<void> deleteTrainerFromFavorites(String id) async {
     try {
-      // late var tid;
+      late var tid;
+      final snapshot = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(LocalStorage().currentId)
+          .collection('TFavorites')
+          .get();
+      for (var doc in snapshot.docs) {
+        if (id == doc.data()['Id']) tid = doc.id;
+      }
       await FirebaseFirestore.instance
           .collection('Users')
           .doc(LocalStorage().currentId)
           .collection('TFavorites')
-          .doc(id)
+          .doc(tid)
           .delete();
-      // for (var doc in snapshot.docs) {
-      //   if (id == doc.data()['Id']) tid = doc.id;
-      // }
-      // await FirebaseFirestore.instance
-      //     .collection('Users')
-      //     .doc(LocalStorage().currentId)
-      //     .collection('PFavorites')
-      //     .doc(tid)
-      //     .delete();
-      getFavoritesPlaygrounds();
       emit(DeleteTrainerFromFavoritesSuccessState());
     } catch (e) {
       log('$e');
@@ -898,6 +913,7 @@ class AppCubit extends Cubit<AppStates> {
 
   Future<void> getFavoritesTrainers() async {
     favoritesTrainers = [];
+    favoritesTrainersId = [];
     emit(GetFavoritesTrainersLoadingState());
     try {
       List<String> ids = [];
