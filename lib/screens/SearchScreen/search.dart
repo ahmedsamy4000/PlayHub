@@ -307,7 +307,7 @@ class Search extends StatelessWidget {
                       const Spacer(),
                       !AppCubit.get(context)
                               .favoritesTrainersId
-                              .contains(AppCubit.get(context).trainersIds[index])
+                              .contains(trainer.id)
                           ? IconButton(
                               icon: const Icon(
                                 Icons.favorite_border_rounded,
@@ -334,7 +334,7 @@ class Search extends StatelessWidget {
                               ),
                               onPressed: () {
                                 AppCubit.get(context)
-                                    .deleteTrainerFromFavorites(AppCubit.get(context).trainersIds[index])
+                                    .deleteTrainerFromFavorites(trainer.id)
                                     .then((_) {
                                   if (AppCubit.get(context).state
                                       is DeleteTrainerFromFavoritesSuccessState) {

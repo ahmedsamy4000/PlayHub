@@ -80,6 +80,16 @@ class S {
     );
   }
 
+  /// `Admin`
+  String get Admin {
+    return Intl.message(
+      'Admin',
+      name: 'Admin',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Edit Information`
   String get pop1 {
     return Intl.message(
@@ -300,10 +310,10 @@ class S {
     );
   }
 
-  /// `Don\'t have an account? `
+  /// `Don't have an account? `
   String get RegisterQuestion {
     return Intl.message(
-      'Don\\\'t have an account? ',
+      'Don\'t have an account? ',
       name: 'RegisterQuestion',
       desc: '',
       args: [],

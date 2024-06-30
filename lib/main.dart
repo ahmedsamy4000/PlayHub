@@ -78,10 +78,10 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
         playSound: true,
         icon: '@mipmap/ic_launcher',
       )));
-
 }
 
 Future<void> main() async {
+  // await LocalStorage().saveUserData(null);
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPreferences.getInstance();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -101,7 +101,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) => AppCubit()..fillWeek(),
+        create: (context) => AppCubit()
+          ..fillWeek()
+          ..getHomePlaygrounds()..getCategories(),
         child: ScreenUtilInit(
             designSize: const Size(360, 960),
             minTextAdapt: true,

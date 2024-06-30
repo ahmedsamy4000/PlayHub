@@ -19,6 +19,7 @@ import 'package:playhub/features/authentication/data/user_model.dart';
 import 'package:playhub/features/Trainer/data/trainer_package_model.dart';
 import 'package:playhub/features/profile/ui/screens/profile_screen.dart';
 import 'package:playhub/features/reservations/booking_screen.dart';
+import 'package:playhub/features/rooms/data/category_model.dart';
 import 'package:playhub/features/rooms/data/playground_model.dart';
 import 'package:playhub/features/rooms/ui/screens/rooms_screen.dart';
 import 'package:playhub/models/bookingmodel.dart';
@@ -137,7 +138,7 @@ class AppCubit extends Cubit<AppStates> {
     changeSelectedCity("All");
     trainers = [];
     filteredTrainers = [];
-    items = [];
+    // items = [];
 
     if (currentSearchTabIndex == 0) {
       await searchFunction();
@@ -341,7 +342,8 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
-  void addPackageBooking(String trainerId, String trainerName, int idx) async {
+  Future<void> addPackageBooking(
+      String trainerId, String trainerName, int idx) async {
     emit(AddPackageBookingLoadingState());
 
     var userData = LocalStorage().userData;
@@ -354,7 +356,7 @@ class AppCubit extends Cubit<AppStates> {
       trainerId: trainerId,
       trainerName: trainerName,
       playerId: LocalStorage().currentId,
-      playerName: userData.fullName, 
+      playerName: userData.fullName,
       packageId: packagesId[idx],
     );
 
@@ -408,13 +410,13 @@ class AppCubit extends Cubit<AppStates> {
     emit(GetTrainersLoadingState());
     try {
       List newTrainers = [];
-       List<String> ids = [];
+      List<String> ids = [];
       final snapshot =
           await FirebaseFirestore.instance.collection('Users').get();
 
       for (var doc in snapshot.docs) {
         if (doc.data()["Type"] == "Trainer") {
-         ids.add(doc.data()['Id']);
+          ids.add(doc.data()['Id']);
           // doc.data()['Id'] = doc.id;
           newTrainers.add(UserModel(
             id: doc.id.toString(),
@@ -870,12 +872,22 @@ class AppCubit extends Cubit<AppStates> {
       final doc =
           await FirebaseFirestore.instance.collection('Users').doc(id).get();
       if (doc.exists) {
-        var trainer = UserModel.fromJson(doc.data()!);
+        var trainer = UserModel(
+          id: id,
+          phoneNumber: doc.data()?['PhoneNumber'],
+          fullName: doc.data()?['Name'],
+          email: doc.data()?['Email'],
+          type: UserType.trainer,
+          city: doc.data()?['City'],
+          region: doc.data()?['Region'],
+          image: doc.data()?['Image'],
+        );
         await FirebaseFirestore.instance
             .collection('Users')
             .doc(LocalStorage().currentId)
             .collection('TFavorites')
             .add(trainer.toJson());
+        getFavoritesTrainers();
         emit(AddTrainerToFavoritesSuccessState());
       }
     } catch (e) {
@@ -901,6 +913,7 @@ class AppCubit extends Cubit<AppStates> {
           .collection('TFavorites')
           .doc(tid)
           .delete();
+      getFavoritesTrainers();
       emit(DeleteTrainerFromFavoritesSuccessState());
     } catch (e) {
       log('$e');
@@ -937,17 +950,21 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   List<String> categoriesNames = [];
+  List<CategoryModel> categories = [];
 
   Future<void> getCategories() async {
     categoriesNames = [];
     List<String> names = [];
+    List<CategoryModel> myCategories = [];
     final snapshot =
         await FirebaseFirestore.instance.collection('Categories').get();
     for (var doc in snapshot.docs) {
       names.add(doc.data()['Name']);
+      myCategories.add(CategoryModel.fromJson(doc.data()));
     }
     categoriesNames = names;
-    emit(GetCategoriesSuccessState());
+    categories = myCategories;
+    // emit(GetCategoriesSuccessState());
   }
 
   String? playgroundImage;
@@ -1118,11 +1135,57 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
+  List<Playground> homePlaygrounds = [];
+  List<String> homePlaygroundsIds = [];
+
+  Future<void> getHomePlaygrounds() async {
+    try {
+      List<Map<String, int>> filtered = [];
+      List<Map<String, int>> homeIds = [];
+      List<Playground> home = [];
+      List<String> ids = [];
+
+      final snapshot =
+          await FirebaseFirestore.instance.collection('PlayGrounds').get();
+      for (var doc in snapshot.docs) {
+        final orders = await FirebaseFirestore.instance
+            .collection('PlayGrounds')
+            .doc(doc.id)
+            .collection('Orders')
+            .get();
+        if (orders.docs.isNotEmpty) {
+          filtered.add({doc.id: orders.docs.length});
+        }
+      }
+      filtered.sort((a, b) => b.values.first.compareTo(a.values.first));
+
+      if (filtered.length >= 3) {
+        homeIds = filtered.sublist(0, 3);
+      } else {
+        homeIds = filtered;
+      }
+      for (var p in homeIds) {
+        for (var doc in snapshot.docs) {
+          if (doc.id == p.keys.first) {
+            home.add(Playground.fromJson(doc.data()));
+            ids.add(doc.id);
+          }
+        }
+      }
+      homePlaygrounds = home;
+      homePlaygroundsIds = ids;
+      // emit(GetHomePlaygroundsSuccessState());
+    } catch (e) {
+      log('$e');
+      // emit(GetHomePlaygroundsErrorState());
+    }
+  }
+
   List<Map<String, int>> playgroundStatistics = [];
-  List<Map<String, int>> homePlaygrounds = [];
   late int sum = 0;
 
   Future<void> Pola(String month) async {
+    emit(GetStatisticsLoadingState());
     sum = 0;
     playgroundStatistics = [];
     try {
@@ -1146,12 +1209,6 @@ class AppCubit extends Cubit<AppStates> {
         }
       }
       filtered.sort((a, b) => b.values.first.compareTo(a.values.first));
-
-      if (filtered.length >= 3) {
-        homePlaygrounds = filtered.sublist(0, 3);
-      } else {
-        homePlaygrounds = filtered;
-      }
 
       if (filtered.length >= 5) {
         playgroundStatistics = filtered.sublist(0, 5);

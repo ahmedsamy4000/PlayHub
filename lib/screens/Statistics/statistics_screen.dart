@@ -9,7 +9,7 @@ import 'package:playhub/cubit/states.dart';
 
 class StatisticsScreen extends StatelessWidget {
   StatisticsScreen({super.key});
-  final colors = [Colors.red, Colors.blue, Colors.green, Colors.yellow];
+  final colors = [Colors.red, Colors.blue, Colors.green, const Color.fromARGB(255, 158, 145, 145), AppColors.darkGreen];
   final List<String> items = [
     '01',
     '02',
@@ -31,12 +31,10 @@ class StatisticsScreen extends StatelessWidget {
     return BlocBuilder<AppCubit, AppStates>(
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: AppColors.white,
           appBar: AppBar(
-            backgroundColor: AppColors.white,
             title: const Text('Dashboard'),
           ),
-          body: SingleChildScrollView(
+          body: state is GetStatisticsLoadingState ?  const Center(child: CircularProgressIndicator(),) : SingleChildScrollView(
             child: Column(
               children: [
                 Row(
@@ -84,7 +82,7 @@ class StatisticsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                cubit.playgroundStatistics.length == 0 ? Container() :
+                cubit.playgroundStatistics.isEmpty ? Container() :
                 Container(
                   width: double.infinity,
                   padding: EdgeInsets.all(150),
@@ -102,7 +100,7 @@ class StatisticsScreen extends StatelessWidget {
                             value: count.toDouble(),
                             title:
                                 '$category\n${((count / cubit.sum) * 100).toInt()}%',
-                            radius: 80,
+                            radius: 70,
                             titleStyle: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,

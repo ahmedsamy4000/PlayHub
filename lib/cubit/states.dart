@@ -75,9 +75,17 @@ class AddNewOrderSuccessState extends AppStates {}
 
 class AddNewOrderErrorState extends AppStates {}
 
+class GetStatisticsLoadingState extends AppStates {}
+
 class GetStatisticsSuccessState extends AppStates {}
 
 class GetStatisticsErrorState extends AppStates {}
+
+class GetHomePlaygroundsLoadingState extends AppStates {}
+
+class GetHomePlaygroundsSuccessState extends AppStates {}
+
+class GetHomePlaygroundsErrorState extends AppStates {}
 
 class ChangeMonthSuccessState extends AppStates {}
 

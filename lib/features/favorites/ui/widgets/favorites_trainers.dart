@@ -5,6 +5,7 @@ import 'package:playhub/common/fade_in_slide.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
+import 'package:playhub/features/Trainer/ui/BookTrainer.dart';
 import 'package:playhub/screens/playgroundScreen/playgroundscreen.dart';
 
 class FavoritesTrainers extends StatelessWidget {
@@ -14,8 +15,7 @@ class FavoritesTrainers extends StatelessWidget {
   Widget build(BuildContext context) {
     var cubit = BlocProvider.of<AppCubit>(context);
     return BlocBuilder<AppCubit, AppStates>(
-        builder: (context, state) => state
-                is GetFavoritesTrainersLoadingState
+        builder: (context, state) => state is GetFavoritesTrainersLoadingState
             ? const Center(child: CircularProgressIndicator())
             : state is GetFavoritesTrainersSuccessState
                 ? cubit.favoritesTrainers.isEmpty
@@ -27,15 +27,14 @@ class FavoritesTrainers extends StatelessWidget {
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () {
+                              cubit.getTrainerPackagesById(cubit
+                                  .favoritesTrainers[index]
+                                  .id!); // Fetch trainer packages using trainer ID
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => PlayGroundScreen(
-                                      cubit.favoritesPlaygrounds[index]['Name'],
-                                      cubit.favoritesPlaygrounds[index]['City'],
-                                      cubit.favoritesPlaygrounds[index]
-                                          ['Image'],
-                                      cubit.playgroundsId[index], cubit.favoritesPlaygrounds[index]['Map']),
+                                  builder: (context) => Booktrainer(
+                                      trainer: cubit.favoritesTrainers[index]),
                                 ),
                               );
                             },
@@ -50,35 +49,48 @@ class FavoritesTrainers extends StatelessWidget {
                                     children: [
                                       cubit.favoritesTrainers[index].image ==
                                               null
-                                  ? Padding(
-                                    padding: const EdgeInsets.symmetric(vertical:  16.0, horizontal: 8),
-                                    child: CircleAvatar(
-                                        backgroundColor: AppColors.darkGreen,
-                                        radius: 30,
-                                        child: Text(
-                                              '${cubit.favoritesTrainers[index].fullName?[0]}',
-                                          style: const TextStyle(
-                                              fontSize: 40,
-                                              color: AppColors.white),
-                                        ),
-                                      ),
-                                  )
-                                  : Padding(
-                                    padding: const EdgeInsets.symmetric(vertical:  16.0, horizontal: 8),
-                                    child: CircleAvatar(
-                                        backgroundColor: AppColors.darkGreen,
-                                        backgroundImage:
-                                            NetworkImage(cubit.favoritesTrainers[index].image!),
-                                        radius: 30,
-                                      ),
-                                  ),
+                                          ? Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 16.0,
+                                                      horizontal: 8),
+                                              child: CircleAvatar(
+                                                backgroundColor:
+                                                    AppColors.darkGreen,
+                                                radius: 30,
+                                                child: Text(
+                                                  '${cubit.favoritesTrainers[index].fullName?[0]}',
+                                                  style: const TextStyle(
+                                                      fontSize: 40,
+                                                      color: AppColors.white),
+                                                ),
+                                              ),
+                                            )
+                                          : Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 16.0,
+                                                      horizontal: 8),
+                                              child: CircleAvatar(
+                                                backgroundColor:
+                                                    AppColors.darkGreen,
+                                                backgroundImage: NetworkImage(
+                                                    cubit
+                                                        .favoritesTrainers[
+                                                            index]
+                                                        .image!),
+                                                radius: 30,
+                                              ),
+                                            ),
                                       10.horizontalSpace,
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            cubit.favoritesTrainers[index].fullName ?? '',
+                                            cubit.favoritesTrainers[index]
+                                                    .fullName ??
+                                                '',
                                             style: const TextStyle(
                                               fontFamily: 'Open Sans',
                                               fontSize: 18,
@@ -86,7 +98,9 @@ class FavoritesTrainers extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                            cubit.favoritesTrainers[index].city ?? '',
+                                            cubit.favoritesTrainers[index]
+                                                    .city ??
+                                                '',
                                             style: const TextStyle(
                                               fontFamily: 'Open Sans',
                                               fontSize: 15,
@@ -105,8 +119,8 @@ class FavoritesTrainers extends StatelessWidget {
                                         ),
                                         onPressed: () {
                                           cubit
-                                              .deleteTrainerFromFavorites(
-                                                  cubit.trainersIds[index])
+                                              .deleteTrainerFromFavorites(cubit
+                                                  .favoritesTrainers[index].id!)
                                               .then((_) {
                                             if (cubit.state
                                                 is DeleteTrainerFromFavoritesSuccessState) {
@@ -123,6 +137,5 @@ class FavoritesTrainers extends StatelessWidget {
                           );
                         })
                 : Container());
-  
   }
 }

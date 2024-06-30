@@ -366,7 +366,10 @@ class ProfileScreen extends StatelessWidget {
                                               : userData.type ==
                                                       UserType.trainer
                                                   ? S.of(context).Trainer
-                                                  : S.of(context).Owner,
+                                                  : userData.type ==
+                                                          UserType.admin
+                                                      ? S.of(context).Admin
+                                                      : S.of(context).Owner,
                                       style: const TextStyle(
                                           color: AppColors.darkGray,
                                           fontSize: 15,
@@ -525,7 +528,9 @@ class ProfileScreen extends StatelessWidget {
                                                             name,
                                                             city,
                                                             imageUrl,
-                                                            playgroundId, playground.location),
+                                                            playgroundId,
+                                                            playground
+                                                                .location),
                                                   ),
                                                 );
                                               },
