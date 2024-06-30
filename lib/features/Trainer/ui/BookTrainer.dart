@@ -7,9 +7,9 @@ import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/core/padding.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
+import 'package:playhub/features/Trainer/widgets/book_trainer_package.dart';
 import 'package:playhub/features/authentication/data/user_model.dart';
 import 'package:playhub/features/authentication/ui/widgets/custom_login_button.dart';
-import 'package:playhub/screens/playgroundScreen/book_screen.dart';
 
 class Booktrainer extends StatelessWidget {
   final UserModel trainer; // Accept trainer data
@@ -214,14 +214,14 @@ class Booktrainer extends StatelessWidget {
                                           child: LoginButton(
                                             onTap: () {
                                               showAnimatedDialog(
-                                                  context,
-                                                  package.description,
-                                                  package.duration.toString(),
-                                                  package.price.toString(),
-                                                  "cubit.playground!",
-                                                  "date",
-                                                  "10",
-                                                  "200Egp");
+                                                context,
+                                                package.description,
+                                                package.duration.toString(),
+                                                package.price.toString(),
+                                                trainer.id.toString(),
+                                                trainer.fullName.toString(),
+                                                index,
+                                              );
                                             },
                                             text: "Book",
                                             gradiantColor: AppColors

@@ -14,6 +14,7 @@ import 'package:playhub/common/data/local/local_storage.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/cubit/states.dart';
+import 'package:playhub/features/Trainer/data/booking_package.dart';
 import 'package:playhub/features/authentication/data/user_model.dart';
 import 'package:playhub/features/profile/data/trainer_package_model.dart';
 import 'package:playhub/features/profile/ui/screens/profile_screen.dart';
@@ -326,6 +327,47 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
+  void addPackageBooking(String trainerId, String trainerName, int idx) async {
+    emit(AddPackageBookingLoadingState());
+
+    var userData = LocalStorage().userData;
+    if (userData == null) {
+      emit(AddPackageBookingErrorState('User data not found'));
+      return;
+    }
+
+    final newBooking = PackageBooking(
+      trainerId: trainerId,
+      trainerName: trainerName,
+      playerId: LocalStorage().currentId,
+      playerName: userData.fullName, 
+      packageId: packagesId[idx],
+    );
+
+    CollectionReference trainerRef = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(trainerId)
+        .collection('PackageBooking');
+
+    CollectionReference playerRef = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(LocalStorage().currentId)
+        .collection('PackageBooking');
+
+    try {
+      // Add the package booking to the trainer's collection
+      await trainerRef.add(newBooking.toJson());
+
+      // Add the package booking to the player's collection
+      await playerRef.add(newBooking.toJson());
+
+      emit(AddPackageBookingSuccessState(newBooking));
+    } catch (e) {
+      print(e);
+      emit(AddPackageBookingErrorState(e.toString()));
+    }
+  }
+
   UserModel? userData;
   Future<void> getCurrentUserData() async {
     emit(GetCurrentUserLoadingState());
@@ -519,17 +561,18 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   Future<void> openGoogleMaps(String urlString) async {
-  try {
-    final Uri url = Uri.parse(urlString);
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
-    } else {
-      log('Could not launch $urlString');
+    try {
+      final Uri url = Uri.parse(urlString);
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url);
+      } else {
+        log('Could not launch $urlString');
+      }
+    } catch (e) {
+      log('Error: $e');
     }
-  } catch (e) {
-    log('Error: $e');
   }
-}
+
   Future<void> changePassword(BuildContext context,
       {required String currentPassword, required String newPassword}) async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -929,7 +972,8 @@ class AppCubit extends Cubit<AppStates> {
       required category,
       required city,
       required region,
-      required image, required location}) async {
+      required image,
+      required location}) async {
     try {
       final snapshot =
           await FirebaseFirestore.instance.collection('Categories').get();
@@ -941,7 +985,7 @@ class AppCubit extends Cubit<AppStates> {
         }
       }
       var newPlayground = Playground(
-        location: location,
+          location: location,
           categoryId: id,
           city: city,
           image: image,
@@ -972,7 +1016,8 @@ class AppCubit extends Cubit<AppStates> {
       required category,
       required city,
       required region,
-      required image, required location}) async {
+      required image,
+      required location}) async {
     try {
       final snapshot =
           await FirebaseFirestore.instance.collection('Categories').get();
@@ -984,7 +1029,7 @@ class AppCubit extends Cubit<AppStates> {
         }
       }
       var newPlayground = Playground(
-        location: location,
+          location: location,
           categoryId: id,
           city: city,
           image: image,
@@ -1086,12 +1131,9 @@ class AppCubit extends Cubit<AppStates> {
       }
       filtered.sort((a, b) => b.values.first.compareTo(a.values.first));
 
-      if(filtered.length >= 3)
-      {
-        homePlaygrounds = filtered.sublist(0,3);
-      }
-      else
-      {
+      if (filtered.length >= 3) {
+        homePlaygrounds = filtered.sublist(0, 3);
+      } else {
         homePlaygrounds = filtered;
       }
 

@@ -1,3 +1,4 @@
+import 'package:playhub/features/Trainer/data/booking_package.dart';
 import 'package:playhub/features/profile/data/trainer_package_model.dart';
 
 abstract class AppStates {}
@@ -163,6 +164,20 @@ class GetTrainersLoadingState extends AppStates {}
 class GetTrainersSuccessState extends AppStates {}
 
 class GetTrainersErrorState extends AppStates {}
+
+class AddPackageBookingLoadingState extends AppStates {}
+
+class AddPackageBookingSuccessState extends AppStates {
+  final PackageBooking package;
+
+  AddPackageBookingSuccessState(this.package);
+}
+
+class AddPackageBookingErrorState extends AppStates {
+  final String error;
+
+  AddPackageBookingErrorState(this.error);
+}
 
 class ChangeLanguageSuccessState extends AppStates {}
 

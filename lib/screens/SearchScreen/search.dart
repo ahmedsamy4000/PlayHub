@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
-import 'package:playhub/screens/SearchScreen/BookTrainer.dart';
+import 'package:playhub/features/Trainer/ui/BookTrainer.dart';
 import 'package:playhub/screens/SearchScreen/CityFilterDialog.dart';
 import 'package:playhub/screens/playgroundScreen/playgroundscreen.dart';
 import 'CategoryButton.dart';
