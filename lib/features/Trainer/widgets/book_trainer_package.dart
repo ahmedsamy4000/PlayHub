@@ -23,7 +23,8 @@ void showAnimatedDialog(
     pageBuilder: (context, anim1, anim2) {
       return Align(
         alignment: Alignment.bottomCenter,
-        child: BookPackageScreen(description, duration, price, trainerId, trainerName, index),
+        child: BookPackageScreen(
+            description, duration, price, trainerId, trainerName, index),
       );
     },
     transitionBuilder: (context, anim1, anim2, child) {
@@ -42,7 +43,8 @@ class BookPackageScreen extends StatelessWidget {
   final String? trainerId;
   final String? trainerName;
   final int index;
-  const BookPackageScreen(this.description, this.duration, this.price, this.trainerId, this.trainerName, this.index,
+  const BookPackageScreen(this.description, this.duration, this.price,
+      this.trainerId, this.trainerName, this.index,
       {super.key});
 
   @override
@@ -105,21 +107,46 @@ class BookPackageScreen extends StatelessWidget {
                                 );
                               }
                               return ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.green,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      minimumSize: const Size(200, 50)),
-                                  onPressed: () {
-                                    AppCubit.get(context).addPackageBooking(trainerId.toString(), trainerName.toString(), index);
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text(
-                                    "Confirm",
-                                    style: TextStyle(
-                                        color: AppColors.white, fontSize: 15),
-                                  ));
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.green,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  minimumSize: const Size(200, 50),
+                                ),
+                                onPressed: () async {
+                                  PaymobResponse? response;
+                                  PaymobPayment.instance
+                                      .pay(
+                                    context: context,
+                                    currency: "EGP",
+                                    amountInCents: "20000",
+                                    onPayment: (responsee) {
+                                      response = responsee;
+                                    },
+                                  )
+                                      .then((_) {
+                                    if (response != null &&
+                                        response!.success == true) {
+                                      AppCubit.get(context)
+                                          .addPackageBooking(
+                                              trainerId.toString(),
+                                              trainerName.toString(),
+                                              index)
+                                          .then((_) {
+                                        Navigator.pop(context);
+                                      });
+                                    }
+                                  });
+                                },
+                                child: const Text(
+                                  "Confirm",
+                                  style: TextStyle(
+                                    color: AppColors.white,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              );
                             },
                           ),
                         ))
