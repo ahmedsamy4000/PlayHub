@@ -20,7 +20,7 @@ import 'package:playhub/features/profile/ui/screens/edit_info_screen.dart';
 import 'package:playhub/features/Trainer/widgets/trainer_add_package.dart';
 import 'package:playhub/features/profile/ui/widgets/basketball.dart';
 import 'package:playhub/features/profile/ui/widgets/football.dart';
-import 'package:playhub/features/profile/ui/widgets/package_card.dart';
+import 'package:playhub/features/Trainer/widgets/package_card.dart';
 import 'package:playhub/features/profile/ui/widgets/tennis.dart';
 import 'package:playhub/features/profile/ui/widgets/volleyball.dart';
 import 'package:playhub/features/profile/ui/widgets/workout.dart';
