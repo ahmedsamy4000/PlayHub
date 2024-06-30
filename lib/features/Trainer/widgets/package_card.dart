@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:playhub/common/fade_in_slide.dart';
 import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/cubit/states.dart';
+import 'package:playhub/features/Trainer/widgets/trainer_update_package.dart';
 
 // Define your custom widget
 class PackageWidget extends StatelessWidget {
@@ -51,85 +52,78 @@ class PackageWidget extends StatelessWidget {
                       child: FadeInSlide(
                         duration: 0.5 + (index / 10),
                         child: Card(
-                          color: AppColors.white,
+                          color: AppColors.green1,
                           child: Row(
                             children: [
                               SizedBox(width: 10),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    description,
-                                    style: const TextStyle(
-                                      fontFamily: 'Open Sans',
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    "$price",
-                                    style: const TextStyle(
-                                      fontFamily: 'Open Sans',
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    "$duration",
-                                    style: const TextStyle(
-                                      fontFamily: 'Open Sans',
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      TextButton(
-                                        onPressed: () {
-                                          // cubit.getCategories().then((_) {
-                                          //   if (cubit.state
-                                          //       is GetCategoriesSuccessState) {
-                                          //     Navigator.push(
-                                          //       context,
-                                          //       MaterialPageRoute(
-                                          //         builder: (context) =>
-                                          //             UpdatePlaygroundScreen(
-                                          //           playground: playground,
-                                          //           categories: cubit
-                                          //               .categoriesNames,
-                                          //           id: playgroundId,
-                                          //         ),
-                                          //       ),
-                                          //     );
-                                          //   }
-                                          // });
-                                        },
-                                        child: const Text(
-                                          'UPDATE',
-                                          style: TextStyle(
-                                              color: AppColors.darkGreen,
-                                              fontFamily: 'Open Sans',
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold),
-                                        ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Descrition: $description",
+                                      style: const TextStyle(
+                                        fontFamily: 'Open Sans',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                      SizedBox(width: 30),
-                                      TextButton(
-                                        onPressed: () {
-                                          cubit.deletePackage(cubit.packagesId[index]);
-                                        },
-                                        child: const Text(
-                                          'DELETE',
-                                          style: TextStyle(
-                                              color: AppColors.red,
-                                              fontFamily: 'Open Sans',
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold),
-                                        ),
+                                    ),
+                                    Text(
+                                      "Duration: $duration",
+                                      style: const TextStyle(
+                                        fontFamily: 'Open Sans',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                    ],
-                                  ),
-                                ],
+                                    ),
+                                    Text(
+                                      "Price: $price",
+                                      style: const TextStyle(
+                                        fontFamily: 'Open Sans',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        UpdatePackage(
+                                                            Idx: index)));
+                                          },
+                                          child: const Text(
+                                            'UPDATE',
+                                            style: TextStyle(
+                                                color: AppColors.white,
+                                                fontFamily: 'Open Sans',
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        SizedBox(width: 30),
+                                        TextButton(
+                                          onPressed: () {
+                                            cubit.deletePackage(
+                                                cubit.packagesId[index]);
+                                          },
+                                          child: const Text(
+                                            'DELETE',
+                                            style: TextStyle(
+                                                color: AppColors.red,
+                                                fontFamily: 'Open Sans',
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),

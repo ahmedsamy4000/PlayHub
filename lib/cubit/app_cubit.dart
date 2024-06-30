@@ -280,7 +280,7 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   Future<void> updatePackage({
-    required String packageId,
+    required int packageId,
     required String description,
     required double price,
     required int duration,
@@ -298,7 +298,7 @@ class AppCubit extends Cubit<AppStates> {
           .collection('Users')
           .doc(LocalStorage().currentId)
           .collection('Package')
-          .doc(packageId)
+          .doc(packagesId[packageId])
           .update(updatedPackage.toJson());
 
       getTrainerPackages();
