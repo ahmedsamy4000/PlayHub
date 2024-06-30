@@ -78,6 +78,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
         playSound: true,
         icon: '@mipmap/ic_launcher',
       )));
+
 }
 
 Future<void> main() async {

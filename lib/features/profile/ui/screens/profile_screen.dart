@@ -48,14 +48,14 @@ class ProfileScreen extends StatelessWidget {
               state is ChangeProfilePhotoLoadingState ||
               state is UpdateUserInfoLoadingState
           ? const Scaffold(
-              backgroundColor: AppColors.white,
+              backgroundColor: AppColors.greenBackground,
               body: Center(child: CircularProgressIndicator()))
           : DefaultTabController(
               length: 5,
               child: Scaffold(
-                backgroundColor: Colors.white,
+                backgroundColor: AppColors.greenBackground,
                 appBar: AppBar(
-                  backgroundColor: Colors.white,
+                  backgroundColor: AppColors.greenBackground,
                   actions: [
                     IconButton(
                         onPressed: () {

@@ -32,6 +32,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> {
         child: Center(
           child: Card(
               clipBehavior: Clip.hardEdge,
+              color: AppColors.greenBackground,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18)),
               child: Column(
@@ -61,6 +62,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(20),
                       child: Column(
+
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(

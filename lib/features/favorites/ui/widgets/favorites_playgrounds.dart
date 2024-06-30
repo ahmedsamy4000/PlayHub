@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:playhub/common/fade_in_slide.dart';
 import 'package:playhub/core/app_colors.dart';
+import 'package:playhub/core/padding.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/screens/playgroundScreen/playgroundscreen.dart';
@@ -35,7 +36,8 @@ class FavoritesPlaygrounds extends StatelessWidget {
                                       cubit.favoritesPlaygrounds[index]['City'],
                                       cubit.favoritesPlaygrounds[index]
                                           ['Image'],
-                                      cubit.playgroundsId[index], cubit.favoritesPlaygrounds[index]['Map']),
+                                      cubit.playgroundsId[index],
+                                      cubit.favoritesPlaygrounds[index]['Map']),
                                 ),
                               );
                             },
@@ -44,19 +46,39 @@ class FavoritesPlaygrounds extends StatelessWidget {
                                   horizontal: 16.0, vertical: 8),
                               child: FadeInSlide(
                                 duration: 0.5 + (index / 10),
-                                child: Card(
-                                  color: AppColors.white,
+                                child: Container(
+                                  margin: 5.padVertical,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10.0.r),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        blurRadius: 10.0,
+                                        offset: const Offset(3, 5),
+                                      ),
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.1),
+                                        blurRadius: 10.0,
+                                        offset: const Offset(-1, -1),
+                                      ),
+                                    ],
+                                  ),
                                   child: Row(
                                     children: [
                                       cubit.favoritesPlaygrounds[index]
                                                   ['Image'] !=
                                               null
-                                          ? Image.network(
-                                              cubit.favoritesPlaygrounds[index]
-                                                  ['Image'],
-                                              width: 120,
-                                              height: 100,
-                                              fit: BoxFit.cover)
+                                          ? ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                              child: Image.network(
+                                                  cubit.favoritesPlaygrounds[
+                                                      index]['Image'],
+                                                  width: 120,
+                                                  height: 100,
+                                                  fit: BoxFit.cover),
+                                            )
                                           : const Icon(Icons.image, size: 100),
                                       10.horizontalSpace,
                                       Column(

@@ -108,8 +108,15 @@ class RoomsScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Expanded(
-                    child: TabBarView(
+
+                  state is GetRoomsLoadingState||state is GetAllCategoryLoadingState?
+                    const CircularProgressIndicator():
+                    state is GetAllCategoryErrorState||state is GetRoomsErrorState?
+                    const Center(child: Text("Something error!!",style: TextStyle(
+                      color: AppColors.black
+                    ),)):
+                    Expanded(
+                      child:TabBarView(
                       children: <Widget>[
                         ListView.builder(
                           itemCount: rooms.length,

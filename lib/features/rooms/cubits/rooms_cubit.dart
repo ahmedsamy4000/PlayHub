@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -12,7 +12,6 @@ import 'package:playhub/features/rooms/cubits/rooms_states.dart';
 import 'package:playhub/features/rooms/data/category_model.dart';
 import 'package:playhub/features/rooms/data/playground_model.dart';
 import 'package:playhub/features/rooms/data/room_model.dart';
-
 import '../../../common/send_notification.dart';
 import '../../../core/app_colors.dart';
 
@@ -42,7 +41,7 @@ class RoomsCubit extends Cubit<RoomsStates> {
       }
       emit(GetPlaygroundDataState(playgrounds: playgrounds));
     } catch (e) {
-      print('Error retrieving playgrounds: $e');
+      log('Error retrieving playgrounds: $e');
     }
   }
 
@@ -62,15 +61,6 @@ class RoomsCubit extends Cubit<RoomsStates> {
   }
 
   bool checkValidation({required String? date,required String? time,required String? playground, required String? period, required String? level,required String? category}){
-    log(category!);
-    log(city!);
-    log(date!);
-    log(time!);
-    log(playersNum!);
-    log(playground!);
-    log(period!);
-    log(level!);
-
     if(category==null||city==null||date==null||time==null||playersNum==null||playground==null||period==null||level==null)
     {
       emit(CreateRoomsErrorState());
@@ -111,7 +101,9 @@ class RoomsCubit extends Cubit<RoomsStates> {
         backgroundColor: AppColors.green,
         textColor: AppColors.white,
       );
-      sendAndRetrieveMessage("Let's join the room","${LocalStorage().userData?.fullName} create room in $city $playground@$city",context);
+      log("room created: ${docRef.id}");
+
+      sendNotification(context:context ,currentUserType:LocalStorage().userData?.type, playground: playground,room: room,roomId:docRef.id,roomOwner: LocalStorage().userData );
       emit (createRoomSuccessfully());
     }).catchError((error) {
       Fluttertoast.showToast(
@@ -123,9 +115,25 @@ class RoomsCubit extends Cubit<RoomsStates> {
       );
     });
   }
+Future<void> sendNotification({context,playground,room,roomOwner,roomId,currentUserType}) async {
 
+  // FirebaseMessaging.onMessageOpenedApp.listen((event){
+  //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>RoomDetailsScreen(room: room, roomOwner: roomOwner, roomId: roomId, currentUserType: currentUserType)));
+  // });
+  // var message =await FirebaseMessaging.instance.getInitialMessage();
+  // if(message!=null){
+  //   log("inside message");
+  //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>RoomDetailsScreen(room: room, roomOwner: roomOwner, roomId: roomId, currentUserType: currentUserType)));
+  // }else{
+  //   log("outside message");
+  //
+  // }
+
+  sendAndRetrieveMessage("Let's join the room","${LocalStorage().userData?.fullName} created a room at $playground@ $city",context);
+}
   Future<void> getAllRooms()async{
     try {
+      emit(GetRoomsLoadingState());
       var data = await FirebaseFirestore.instance.collection('Rooms').get();
       List<RoomModel> rooms = [];
       List<UserModel> roomOwners=[];
@@ -141,13 +149,15 @@ class RoomsCubit extends Cubit<RoomsStates> {
       }
       emit(GetRoomsDataState(rooms: rooms,roomOwners:roomOwners,roomsIds:roomsId));
     } catch (e) {
-      print('Error retrieving playgrounds: $e');
+      emit(GetRoomsErrorState());
+      log('Error retrieving playgrounds: $e');
     }
   }
   List<String> categories = [];
 
   void getAllCategory()async{
     try {
+      emit(GetAllCategoryLoadingState());
       var data = await FirebaseFirestore.instance.collection('Categories').get();
 
       for (var document in data.docs) {
@@ -156,6 +166,8 @@ class RoomsCubit extends Cubit<RoomsStates> {
       }
       emit(GetAllCategoryState());
     } catch (e) {
+      emit(GetAllCategoryErrorState());
+      log("$e");
     }
   }
 

@@ -17,7 +17,7 @@ Future<void> sendAndRetrieveMessage(String title, String body, BuildContext cont
     provisional: false,
   );
 
-  final serviceAccount = jsonDecode(await DefaultAssetBundle.of(context).loadString('assets/playhub-e2ca5-firebase-adminsdk-inped-df527cddbd.json'));
+  final serviceAccount = jsonDecode(await DefaultAssetBundle.of(context).loadString('assets/playhub-e2ca5-firebase-adminsdk-inped-1893aa8c36.json'));
 
   final auth.ServiceAccountCredentials credentials = auth.ServiceAccountCredentials.fromJson(serviceAccount);
 

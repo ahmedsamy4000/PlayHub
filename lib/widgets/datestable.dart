@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:playhub/core/app_colors.dart';
 import 'package:playhub/cubit/app_cubit.dart';
 
 class DatesPerWeek extends StatefulWidget {
@@ -73,7 +74,7 @@ class DateItem extends StatelessWidget {
         children: [
           Text(formatter.format(date)),
           CircleAvatar(
-            backgroundColor: isSelected ? Colors.blue : Colors.white30,
+            backgroundColor: isSelected ? AppColors.darkGreen : Colors.white30,
             child: Text(
               date.day.toString(),
               style: const TextStyle(
