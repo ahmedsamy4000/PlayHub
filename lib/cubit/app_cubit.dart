@@ -16,7 +16,7 @@ import 'package:playhub/core/enums/type_enum.dart';
 import 'package:playhub/cubit/states.dart';
 import 'package:playhub/features/Trainer/data/booking_package.dart';
 import 'package:playhub/features/authentication/data/user_model.dart';
-import 'package:playhub/features/profile/data/trainer_package_model.dart';
+import 'package:playhub/features/Trainer/data/trainer_package_model.dart';
 import 'package:playhub/features/profile/ui/screens/profile_screen.dart';
 import 'package:playhub/features/reservations/booking_screen.dart';
 import 'package:playhub/features/rooms/data/playground_model.dart';

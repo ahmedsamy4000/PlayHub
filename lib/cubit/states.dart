@@ -1,5 +1,5 @@
 import 'package:playhub/features/Trainer/data/booking_package.dart';
-import 'package:playhub/features/profile/data/trainer_package_model.dart';
+import 'package:playhub/features/Trainer/data/trainer_package_model.dart';
 
 abstract class AppStates {}
 
