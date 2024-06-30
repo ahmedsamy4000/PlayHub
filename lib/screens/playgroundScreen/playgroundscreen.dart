@@ -43,9 +43,9 @@ class _PlayGroundScreenState extends State<PlayGroundScreen> {
     var cubit = BlocProvider.of<AppCubit>(context);
     var userData = LocalStorage().userData;
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.greenBackground,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.greenBackground,
         title: Text(widget.name!),
         centerTitle: true,
         actions: [
@@ -116,8 +116,8 @@ class _PlayGroundScreenState extends State<PlayGroundScreen> {
                               style: ButtonStyle(
                                 backgroundColor: WidgetStateProperty.all(
                                   cubit.playground?.orders[index].booked == true
-                                      ? AppColors.red
-                                      : AppColors.green3,
+                                      ? AppColors.red1
+                                      : AppColors.green2,
                                 ),
                               ),
                               child: Text('${index + 1}:00  PM'),

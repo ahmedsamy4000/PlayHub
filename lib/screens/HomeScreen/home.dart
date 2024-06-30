@@ -22,9 +22,9 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     var cubit = BlocProvider.of<AppCubit>(context);
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.greenBackground,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.greenBackground,
         title: Text(
           'PlayHub',
           textAlign: TextAlign.left,
@@ -113,12 +113,12 @@ class Home extends StatelessWidget {
                             onTap: () {
                               cubit.getFavoritesPlaygrounds().then((_) {
                                 if (cubit.state
-                                    is GetFavoritesPlaygroundsSuccessState) {
+                                is GetFavoritesPlaygroundsSuccessState) {
                                   cubit
                                       .getCategoryPlaygrounds(categoryId)
                                       .then((_) {
                                     if (cubit.state
-                                        is GetCategoryPlaygroundsSuccessState) {
+                                    is GetCategoryPlaygroundsSuccessState) {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -187,7 +187,7 @@ class Home extends StatelessWidget {
                             width: 200.w,
                             margin: const EdgeInsets.all(6),
                             decoration: BoxDecoration(
-                              color: AppColors.green3,
+                              color: AppColors.green2,
                               boxShadow: [
                                 BoxShadow(
                                   color: AppColors.green2,
@@ -203,42 +203,40 @@ class Home extends StatelessWidget {
                                   children: [
                                     imageUrl != null
                                         ? Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(20.0),
-                                              child: Image.network(
-                                                imageUrl,
-                                                width: 70,
-                                                height: 70,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          )
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                        BorderRadius.circular(20.0),
+                                        child: Image.network(
+                                          imageUrl,
+                                          width: 70,
+                                          height: 70,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    )
                                         : Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Icon(Icons.image, size: 70),
-                                          ),
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Icon(Icons.image, size: 70),
+                                    ),
                                     const SizedBox(width: 10.0),
                                     Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           name,
                                           style: TextStyle(
-                                            color: AppColors.black
-                                                .withOpacity(0.7),
+                                            color: AppColors.black,
                                             fontWeight: FontWeight.w800,
                                           ),
                                         ),
                                         Text(
                                           city,
                                           style: TextStyle(
-                                            color: AppColors.black
-                                                .withOpacity(0.4),
+                                            color: AppColors.grey,
                                             fontWeight: FontWeight.w600,
                                             fontSize: 12.0,
                                           ),
@@ -251,7 +249,7 @@ class Home extends StatelessWidget {
                                   right: 10,
                                   bottom: 10,
                                   child: CircleAvatar(
-                                    backgroundColor: AppColors.green,
+                                    backgroundColor: AppColors.green1,
                                     radius: 15,
                                     child: IconButton(
                                       icon: Icon(

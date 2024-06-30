@@ -13,6 +13,7 @@ import 'package:playhub/features/rooms/data/category_model.dart';
 import 'package:playhub/features/rooms/data/playground_model.dart';
 import 'package:playhub/features/rooms/data/room_model.dart';
 
+import '../../../common/send_notification.dart';
 import '../../../core/app_colors.dart';
 
 
@@ -94,7 +95,7 @@ class RoomsCubit extends Cubit<RoomsStates> {
       //emit(GetCurrentUserErrorState());
     }
   }
-  Future<void> createRoom({required String? playground,required String date,required String time,required String? period,required String? level,required String? category})async{
+  Future<void> createRoom({required String? playground,required String date,required String time,required String? period,required String? level,required String? category,required context})async{
 
     RoomModel room =RoomModel(playground: playground!, category: category!, city: city!, date: date, time: time, period: period!, playersNum: playersNum!, comment: comment,level: level!, authUserId: LocalStorage().userData!.id!,players: []);
 
@@ -110,6 +111,7 @@ class RoomsCubit extends Cubit<RoomsStates> {
         backgroundColor: AppColors.green,
         textColor: AppColors.white,
       );
+      sendAndRetrieveMessage("Let's join the room","${LocalStorage().userData?.fullName} create room in $city $playground@$city",context);
       emit (createRoomSuccessfully());
     }).catchError((error) {
       Fluttertoast.showToast(

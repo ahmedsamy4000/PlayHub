@@ -185,7 +185,8 @@ class AddRoomScreen extends StatelessWidget {
                                 time: timeController.text,
                                 period: hoursSearchController.text,
                                 level: levelSearchController.text,
-                                category:categoryController.text
+                                category:categoryController.text,
+                              context: context
                             ).then((_){
                               if(context.read<RoomsCubit>().state is createRoomSuccessfully) {
                                 Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=> Main()) );
