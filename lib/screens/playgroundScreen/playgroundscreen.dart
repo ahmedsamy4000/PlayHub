@@ -51,7 +51,7 @@ class _PlayGroundScreenState extends State<PlayGroundScreen> {
         actions: [
           IconButton(onPressed: (){
             cubit.openGoogleMaps(widget.location);
-          }, icon: const Icon(Icons.location_city))
+          }, icon:  const Icon(Icons.location_on, size: 30,), color: AppColors.darkGreen)
         ],
       ),
       body: Column(

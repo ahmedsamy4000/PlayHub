@@ -39,9 +39,9 @@ class UpdatePlaygroundScreen extends StatelessWidget {
     locationController.text = playground.location;
     cubit.playgroundImage = playground.image;
     return Scaffold(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.greenBackground,
         appBar: AppBar(
-          backgroundColor: AppColors.white,
+          backgroundColor: AppColors.greenBackground,
           title: const Text(
             'Update Playground',
             style: TextStyle(

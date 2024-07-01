@@ -37,9 +37,9 @@ class EditInformationScreen extends StatelessWidget {
     TextEditingController regionController = TextEditingController();
     regionController.text = userData?.region ?? '';
     return Scaffold(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.greenBackground,
         appBar: AppBar(
-          backgroundColor: AppColors.white,
+          backgroundColor: AppColors.greenBackground,
           title: Text(
             S.of(context).pop1,
             style: const TextStyle(

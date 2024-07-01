@@ -33,11 +33,11 @@ class FavoritesPlaygrounds extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => PlayGroundScreen(
-                                  cubit.favoritesPlaygrounds[index]['Name'],
-                                  cubit.favoritesPlaygrounds[index]['City'],
-                                  cubit.favoritesPlaygrounds[index]['Image'],
-                                  cubit.playgroundsId[index],
-                                  cubit.favoritesPlaygrounds[index]['Map']),
+                                  cubit.favoritesPlaygrounds[index]['Name'] ?? '',
+                                  cubit.favoritesPlaygrounds[index]['City'] ?? '',
+                                  cubit.favoritesPlaygrounds[index]['Image'] ?? '',
+                                  cubit.favoritesId[index],
+                                  cubit.favoritesPlaygrounds[index]['Map'] ?? ''),
                             ),
                           );
                         },

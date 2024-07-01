@@ -60,7 +60,7 @@ class ProfileScreen extends StatelessWidget {
                     IconButton(
                         onPressed: () {
                           showMenu(
-                            color: AppColors.white,
+                            color: AppColors.greenBackground,
                             context: context,
                             position: LocalStorage().language == 'en'
                                 ? const RelativeRect.fromLTRB(200, 70, 50, 00)
@@ -99,7 +99,7 @@ class ProfileScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(right: 16),
                       child: PopupMenuButton(
-                          color: Colors.white,
+                        color: AppColors.greenBackground,
                           itemBuilder: (context) => [
                                 PopupMenuItem(
                                   onTap: () {
@@ -237,7 +237,7 @@ class ProfileScreen extends StatelessWidget {
                                         builder: (BuildContext context) {
                                           return Container(
                                             height: 120,
-                                            color: AppColors.white,
+                                            color: AppColors.greenBackground,
                                             child: Column(
                                               children: [
                                                 ListTile(
@@ -601,12 +601,9 @@ class ProfileScreen extends StatelessWidget {
                                                                           .getCategories()
                                                                           .then(
                                                                               (_) {
-                                                                        if (cubit.state
-                                                                            is GetCategoriesSuccessState) {
                                                                           Navigator.push(
                                                                               context,
                                                                               MaterialPageRoute(builder: (context) => UpdatePlaygroundScreen(playground: playground, categories: cubit.categoriesNames, id: playgroundId)));
-                                                                        }
                                                                       });
                                                                     });
                                                                   },
@@ -693,8 +690,6 @@ class ProfileScreen extends StatelessWidget {
                                                 trainerId: userData!.id!,
                                               )))
                                   : cubit.getCategories().then((_) {
-                                      if (cubit.state
-                                          is GetCategoriesSuccessState) {
                                         Navigator.push(context,
                                             MaterialPageRoute(
                                                 builder: (context) {
@@ -702,7 +697,6 @@ class ProfileScreen extends StatelessWidget {
                                             categories: cubit.categoriesNames,
                                           );
                                         }));
-                                      }
                                     });
                             }
                           });

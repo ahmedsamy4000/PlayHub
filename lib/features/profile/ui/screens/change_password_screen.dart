@@ -23,9 +23,9 @@ class ChangePasswordScreen extends StatelessWidget {
     TextEditingController newPassController = TextEditingController();
     TextEditingController confirmPassController = TextEditingController();
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.greenBackground,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.greenBackground,
         title: Text(
           S.of(context).pop2,
           style: const TextStyle(

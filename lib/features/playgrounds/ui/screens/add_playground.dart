@@ -27,13 +27,13 @@ class AddPlaygroundScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cubit = BlocProvider.of<AppCubit>(context);
-    cubit.playgroundImage = null;
+    // cubit.playgroundImage = null;
     return BlocBuilder<AppCubit, AppStates>(
       builder: (context, state) {
         return Scaffold(
-            backgroundColor: AppColors.white,
+            backgroundColor: AppColors.greenBackground,
             appBar: AppBar(
-              backgroundColor: AppColors.white,
+              backgroundColor: AppColors.greenBackground,
               title: const Text(
                 'Add Playground',
                 style: TextStyle(
@@ -168,7 +168,8 @@ class AddPlaygroundScreen extends StatelessWidget {
                                                   city: cityController.text,
                                                   region: regionController.text,
                                                   image: cubit.playgroundImage,
-                                                  location: locationController.text)
+                                                  location:
+                                                      locationController.text)
                                               .then((_) {
                                             if (cubit.state
                                                 is AddNewPlaygroundSuccessState) {

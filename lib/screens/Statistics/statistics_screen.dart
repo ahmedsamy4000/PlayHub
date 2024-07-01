@@ -31,7 +31,9 @@ class StatisticsScreen extends StatelessWidget {
     return BlocBuilder<AppCubit, AppStates>(
       builder: (context, state) {
         return Scaffold(
+          backgroundColor: AppColors.greenBackground,
           appBar: AppBar(
+          backgroundColor: AppColors.greenBackground,
             title: const Text('Dashboard'),
           ),
           body: state is GetStatisticsLoadingState ?  const Center(child: CircularProgressIndicator(),) : SingleChildScrollView(
