@@ -35,7 +35,7 @@ class UpdatePackage extends StatelessWidget {
             appBar: AppBar(
               backgroundColor: AppColors.white,
               title: const Text(
-                'Add Package',
+                'Update Package',
                 style: TextStyle(
                   fontFamily: 'Open Sans',
                   fontWeight: FontWeight.bold,

@@ -89,11 +89,12 @@ class AuthCubit extends Cubit<AuthStates> {
           log("AppUser: ${LocalStorage().userData?.toJson()}");
           LocalStorage().currentId = currentUserDocId;
           log("AppUser: ${LocalStorage().currentId}");
+            BlocProvider.of<AppCubit>(context).createPages();
         });
         log("AppUser: $userData");
-
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Main()));
+          BlocProvider.of<AppCubit>(context).changeScreenIdx(0);
       });
     } on FirebaseAuthException catch (e) {
       log(e.message!);
