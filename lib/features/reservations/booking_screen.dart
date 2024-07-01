@@ -220,24 +220,33 @@ class BookingScreen extends StatelessWidget {
                                             color: AppColors.black,
                                           ),
                                         ),
-                                        // Text(
-                                        //   "Duration: ${duration}",
-                                        //   style: const TextStyle(
-                                        //     fontFamily: 'Open Sans',
-                                        //     fontSize: 15,
-                                        //     color: AppColors.black,
-                                        //     fontWeight: FontWeight.bold,
-                                        //   ),
-                                        // ),
-                                        // Text(
-                                        //   "Price: ${price}",
-                                        //   style: const TextStyle(
-                                        //     fontFamily: 'Open Sans',
-                                        //     fontSize: 15,
-                                        //     color: AppColors.black,
-                                        //     fontWeight: FontWeight.bold,
-                                        //   ),
-                                        // ),
+                                        Text(
+                                          "Description: ${package['description']}",
+                                          style: const TextStyle(
+                                            fontFamily: 'Open Sans',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColors.black,
+                                          ),
+                                        ),
+                                        Text(
+                                          "Duration: ${package['duration']}",
+                                          style: const TextStyle(
+                                            fontFamily: 'Open Sans',
+                                            fontSize: 15,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          "Price: ${package['price']}",
+                                          style: const TextStyle(
+                                            fontFamily: 'Open Sans',
+                                            fontSize: 15,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
