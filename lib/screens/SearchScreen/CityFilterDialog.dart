@@ -45,44 +45,37 @@ class CityFilterDialog extends StatelessWidget {
               },
             ),
             ListTile(
-              title: Text('PortSaid', style: TextStyle(color: Colors.white)),
-              onTap: () {
-                onCitySelected('PortSaid');
-                Navigator.of(context).pop();
-              },
-            ),
-            ListTile(
               title: Text('Damietta', style: TextStyle(color: Colors.white)),
               onTap: () {
-                onCitySelected('PortSaid');
+                onCitySelected('Damietta');
                 Navigator.of(context).pop();
               },
             ),
             ListTile(
               title: Text('Suez', style: TextStyle(color: Colors.white)),
               onTap: () {
-                onCitySelected('PortSaid');
+                onCitySelected('Suez');
                 Navigator.of(context).pop();
               },
             ),
             ListTile(
               title: Text('ELmansoura', style: TextStyle(color: Colors.white)),
               onTap: () {
-                onCitySelected('PortSaid');
+                onCitySelected('ELmansoura');
                 Navigator.of(context).pop();
               },
             ),
             ListTile(
               title: Text('Elfayoum', style: TextStyle(color: Colors.white)),
               onTap: () {
-                onCitySelected('PortSaid');
+                onCitySelected('Elfayoum');
                 Navigator.of(context).pop();
               },
             ),
             ListTile(
               title: Text('Esmailia', style: TextStyle(color: Colors.white)),
               onTap: () {
-                onCitySelected('PortSaid');
+                onCitySelected('Esmailia');
                 Navigator.of(context).pop();
               },
             ),
