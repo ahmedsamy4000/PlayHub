@@ -29,7 +29,8 @@ class FavoritesTrainers extends StatelessWidget {
                             onTap: () {
                               cubit.getTrainerPackagesById(cubit
                                   .favoritesTrainers[index]
-                                  .id!); // Fetch trainer packages using trainer ID
+                                  .id!); 
+                                  cubit.getPlayerBookedPackage();// Fetch trainer packages using trainer ID
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

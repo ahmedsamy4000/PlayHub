@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -211,8 +213,10 @@ class Booktrainer extends StatelessWidget {
                                         ),
                                         Positioned(
                                           right: 8,
-                                          child: LoginButton(
+                                          child: !(cubit.playerPackagesId.contains(cubit.packagesId[index]))? LoginButton(
                                             onTap: () {
+                                              log('${cubit.packagesId[index]}');
+                                              log('${cubit.playerPackagesId}');
                                               showAnimatedDialog(
                                                 context,
                                                 package.description,
@@ -224,6 +228,14 @@ class Booktrainer extends StatelessWidget {
                                               );
                                             },
                                             text: "Book",
+                                            gradiantColor: AppColors
+                                                .loginGradiantColorButton,
+                                            tapedGradiantColor: AppColors
+                                                .loginGradiantColorButtonTaped,
+                                          ) : LoginButton(
+                                            onTap: () {
+                                            },
+                                            text: "Booked",
                                             gradiantColor: AppColors
                                                 .loginGradiantColorButton,
                                             tapedGradiantColor: AppColors

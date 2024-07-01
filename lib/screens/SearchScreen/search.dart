@@ -241,7 +241,9 @@ class Search extends StatelessWidget {
               return GestureDetector(
                 onTap: () {
                   AppCubit.get(context).getTrainerPackagesById(trainer.id
-                      .toString()); // Fetch trainer packages using trainer ID
+                      .toString());
+                       // Fetch trainer packages using trainer ID
+                       AppCubit.get(context).getPlayerBookedPackage();
                   Navigator.push(
                     context,
                     MaterialPageRoute(

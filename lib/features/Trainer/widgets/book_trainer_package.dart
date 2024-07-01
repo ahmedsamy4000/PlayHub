@@ -134,6 +134,9 @@ class BookPackageScreen extends StatelessWidget {
                                               trainerName.toString(),
                                               index)
                                           .then((_) {
+                                        AppCubit.get(context)
+                                            .getPlayerBookedPackage();
+
                                         Navigator.pop(context);
                                       });
                                     }

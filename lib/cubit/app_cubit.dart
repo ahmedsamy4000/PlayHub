@@ -291,8 +291,10 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   List<Map<String, dynamic>> playerPackageBooked = [];
+  List<String> playerPackagesId = [];
   Future<void> getPlayerBookedPackage() async {
     List<Map<String, dynamic>> newPackageBooked = [];
+    List<String> ids = [];
     try {
       final playerBookings = await FirebaseFirestore.instance
           .collection('Users')
@@ -301,8 +303,10 @@ class AppCubit extends Cubit<AppStates> {
           .get();
       for (var doc in playerBookings.docs) {
         newPackageBooked.add(doc.data());
+        ids.add(doc.data()['packageId']);
       }
       playerPackageBooked = newPackageBooked;
+      playerPackagesId = ids;
       log('////////////////////${playerPackageBooked}');
       emit(GetPlayerBookedPackageSuccessState());
     } catch (e) {
