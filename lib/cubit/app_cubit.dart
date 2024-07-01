@@ -1013,6 +1013,11 @@ class AppCubit extends Cubit<AppStates> {
     categories = myCategories;
     // emit(GetCategoriesSuccessState());
   }
+   TextEditingController nameController = TextEditingController();
+  TextEditingController categoryController = TextEditingController();
+  TextEditingController cityController = TextEditingController();
+  TextEditingController regionController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
 
   String? playgroundImage;
   Future pickPlaygroundImageFromGallery() async {

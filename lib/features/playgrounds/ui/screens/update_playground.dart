@@ -52,7 +52,7 @@ class UpdatePlaygroundScreen extends StatelessWidget {
           ),
         ),
         body: BlocBuilder<AppCubit, AppStates>(
-          builder: (context, state) => state is GetCurrentUserLoadingState
+          builder: (context, state) => state is GetCurrentUserLoadingState || state is PickPlaygroundImageLoadingState
               ? const Center(child: CircularProgressIndicator())
               : Center(
                   child: SingleChildScrollView(

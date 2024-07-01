@@ -16,11 +16,6 @@ import 'package:playhub/features/rooms/ui/widgets/Custom_dropdown.dart';
 class AddPlaygroundScreen extends StatelessWidget {
   AddPlaygroundScreen({super.key, required this.categories});
   final formKey = GlobalKey<FormState>();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController categoryController = TextEditingController();
-  TextEditingController cityController = TextEditingController();
-  TextEditingController regionController = TextEditingController();
-  TextEditingController locationController = TextEditingController();
   bool isError = false;
   List<String> categories;
 
@@ -57,7 +52,7 @@ class AddPlaygroundScreen extends StatelessWidget {
                                 children: [
                                   CustomTextFormField(
                                     validator: Validator.notEmpty,
-                                    controller: nameController,
+                                    controller: cubit.nameController,
                                     label: 'Playground Name',
                                     keyboardType: TextInputType.text,
                                   ),
@@ -66,27 +61,27 @@ class AddPlaygroundScreen extends StatelessWidget {
                                     items: categories,
                                     hint: "Category",
                                     colors: AppColors.loginGradiantColorButton,
-                                    searchController: categoryController,
+                                    searchController: cubit.categoryController,
                                     isError: isError,
                                   ),
                                   30.verticalSpace,
                                   CustomTextFormField(
                                     validator: Validator.notEmpty,
-                                    controller: cityController,
+                                    controller: cubit.cityController,
                                     label: 'City',
                                     keyboardType: TextInputType.text,
                                   ),
                                   30.verticalSpace,
                                   CustomTextFormField(
                                     validator: Validator.notEmpty,
-                                    controller: regionController,
+                                    controller: cubit.regionController,
                                     label: 'Region',
                                     keyboardType: TextInputType.text,
                                   ),
                                   30.verticalSpace,
                                   CustomTextFormField(
                                     validator: Validator.notEmpty,
-                                    controller: locationController,
+                                    controller: cubit.locationController,
                                     label: 'Location',
                                     keyboardType: TextInputType.text,
                                   ),
@@ -162,20 +157,30 @@ class AddPlaygroundScreen extends StatelessWidget {
                                             cubit.playgroundImage != null) {
                                           cubit
                                               .addNewPlayground(
-                                                  name: nameController.text,
-                                                  category:
-                                                      categoryController.text,
-                                                  city: cityController.text,
-                                                  region: regionController.text,
+                                                  name:
+                                                      cubit.nameController.text,
+                                                  category: cubit
+                                                      .categoryController.text,
+                                                  city:
+                                                      cubit.cityController.text,
+                                                  region: cubit
+                                                      .regionController.text,
                                                   image: cubit.playgroundImage,
-                                                  location:
-                                                      locationController.text)
+                                                  location: cubit
+                                                      .locationController.text)
                                               .then((_) {
                                             if (cubit.state
                                                 is AddNewPlaygroundSuccessState) {
                                               cubit.getOwnerPlaygrounds();
                                               Navigator.pop(context);
                                               cubit.playgroundImage = null;
+                                              cubit.nameController.text = '';
+                                              cubit.categoryController.text =
+                                                  '';
+                                              cubit.cityController.text = '';
+                                              cubit.regionController.text = '';
+                                              cubit.locationController.text =
+                                                  '';
                                             }
                                           });
                                         } else {
