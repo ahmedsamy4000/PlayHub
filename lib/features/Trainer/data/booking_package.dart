@@ -5,6 +5,9 @@ class PackageBooking {
   String? playerId;
   String? playerName;
   String playerEmail;
+  String description;
+  int duration;
+  double price;
 
   PackageBooking({
     required this.packageId,
@@ -13,6 +16,9 @@ class PackageBooking {
     this.playerId,
     this.playerName,
     required this.playerEmail,
+    required this.description,
+    required this.duration,
+    required this.price,
   });
 
   Map<String, dynamic> toJson() {
@@ -23,6 +29,9 @@ class PackageBooking {
       'playerId': playerId,
       'playerName': playerName,
       'playerEmail': playerEmail,
+      'description': description,
+      'price': price,
+      'duration': duration,
     };
   }
 
@@ -34,7 +43,9 @@ class PackageBooking {
       playerId: json['playerId'] as String?,
       playerName: json['playerName'] as String?,
       playerEmail: json['playerEmail'] as String,
-
+      description: json['description'] as String,
+      price: (json['price'] as num).toDouble(),
+      duration: json['duration'] as int,
     );
   }
 }

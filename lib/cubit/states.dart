@@ -177,6 +177,10 @@ class GetTrainerBookedPackageErrorState extends AppStates {}
 
 class GetTrainersErrorState extends AppStates {}
 
+class GetPlayerBookedPackageSuccessState extends AppStates {}
+
+class GetPlayerBookedPackageErrorState extends AppStates {}
+
 class AddPackageBookingLoadingState extends AppStates {}
 
 class AddPackageBookingSuccessState extends AppStates {

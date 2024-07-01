@@ -24,6 +24,9 @@ class BookingScreen extends StatelessWidget {
     if (userData?.type == UserType.trainer) {
       cubit.getTrainerPackages();
     }
+    if (userData?.type == UserType.player) {
+      cubit.getPlayerBookedPackage();
+    }
     return BlocBuilder<AppCubit, AppStates>(
       builder: (context, state) {
         return userData?.type == UserType.playgroundOwner
@@ -101,7 +104,7 @@ class BookingScreen extends StatelessWidget {
             : userData?.type == UserType.trainer
                 ? Scaffold(
                     appBar: AppBar(
-                      title: Text('Trainers'),
+                      title: Text('Packages'),
                     ),
                     body: ListView.builder(
                       shrinkWrap: true,
@@ -115,18 +118,19 @@ class BookingScreen extends StatelessWidget {
 
                         return GestureDetector(
                           onTap: () {
-                            cubit.getTrainerBookedPackage(cubit.packagesId[index]).then((_){
+                            cubit
+                                .getTrainerBookedPackage(
+                                    cubit.packagesId[index])
+                                .then((_) {
                               Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PackageReservation(
-                                        trainerId: package.trainerId,
-                                        packageId: cubit.packagesId[index],
-                                      )),
-                            );
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => PackageReservation(
+                                          trainerId: package.trainerId,
+                                          packageId: cubit.packagesId[index],
+                                        )),
+                              );
                             });
-
-                            
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
@@ -182,7 +186,69 @@ class BookingScreen extends StatelessWidget {
                       },
                     ),
                   )
-                : Container();
+                : Scaffold(
+                    appBar: AppBar(
+                      title: Text('Trainers Reservations'),
+                    ),
+                    body: ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: cubit.playerPackageBooked.length,
+                      itemBuilder: (context, index) {
+                        final package = cubit.playerPackageBooked[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 8),
+                          child: FadeInSlide(
+                            duration: 0.5 + (index / 10),
+                            child: Card(
+                              color: AppColors.green1,
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Trainer Name: ${package['trainerName']}",
+                                          style: const TextStyle(
+                                            fontFamily: 'Open Sans',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColors.black,
+                                          ),
+                                        ),
+                                        // Text(
+                                        //   "Duration: ${duration}",
+                                        //   style: const TextStyle(
+                                        //     fontFamily: 'Open Sans',
+                                        //     fontSize: 15,
+                                        //     color: AppColors.black,
+                                        //     fontWeight: FontWeight.bold,
+                                        //   ),
+                                        // ),
+                                        // Text(
+                                        //   "Price: ${price}",
+                                        //   style: const TextStyle(
+                                        //     fontFamily: 'Open Sans',
+                                        //     fontSize: 15,
+                                        //     color: AppColors.black,
+                                        //     fontWeight: FontWeight.bold,
+                                        //   ),
+                                        // ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
       },
     );
   }
