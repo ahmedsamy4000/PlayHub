@@ -1024,8 +1024,6 @@ class AppCubit extends Cubit<AppStates> {
           await ImagePicker().pickImage(source: ImageSource.gallery);
       if (returnedImage != null) {
         File selectedImage = File(returnedImage.path);
-        User? user = FirebaseAuth.instance.currentUser;
-        if (user != null) {
           String uniqueID = DateTime.now().millisecondsSinceEpoch.toString();
           Reference ref = storage.ref().child('playground_images/$uniqueID');
           UploadTask uploadTask = ref.putFile(selectedImage);
@@ -1035,7 +1033,6 @@ class AppCubit extends Cubit<AppStates> {
           playgroundImage = await ref.getDownloadURL();
 
           emit(PickPlaygroundImageSuccessState());
-        }
       }
     } catch (e) {
       emit(PickPlaygroundImageErrorState());
