@@ -267,6 +267,29 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
+  List<Map<String, dynamic>> packageBooked = [];
+  Future<void> getTrainerBookedPackage(String packageId) async {
+    List<Map<String, dynamic>> newPackageBooked = [];
+    log('$packageId');
+    try {
+      final trainerBookings = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(LocalStorage().currentId)
+          .collection('PackageBooking')
+          .get();
+      for (var doc in trainerBookings.docs) {
+        if (doc.data()['packageId'] == packageId) {
+          newPackageBooked.add(doc.data());
+        }
+      }
+      packageBooked = newPackageBooked;
+      log('////////////////////${packageBooked}');
+      emit(GetTrainerBookedPackageSuccessState());
+    } catch (e) {
+      emit(GetTrainerBookedPackageErrorState());
+    }
+  }
+
   void getTrainerPackages() async {
     emit(GetTrainerPackagesLoadingState());
     List<TrainingPackage> trainerPackages = [];
@@ -357,7 +380,8 @@ class AppCubit extends Cubit<AppStates> {
       trainerName: trainerName,
       playerId: LocalStorage().currentId,
       playerName: userData.fullName,
-      packageId: packagesId[idx],
+      packageId: packagesId[idx], 
+      playerEmail: userData.email??'',
     );
 
     CollectionReference trainerRef = FirebaseFirestore.instance

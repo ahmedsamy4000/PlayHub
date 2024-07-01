@@ -4,6 +4,7 @@ class PackageBooking {
   String? trainerName;
   String? playerId;
   String? playerName;
+  String playerEmail;
 
   PackageBooking({
     required this.packageId,
@@ -11,6 +12,7 @@ class PackageBooking {
     this.trainerName,
     this.playerId,
     this.playerName,
+    required this.playerEmail,
   });
 
   Map<String, dynamic> toJson() {
@@ -20,6 +22,7 @@ class PackageBooking {
       'trainerName': trainerName,
       'playerId': playerId,
       'playerName': playerName,
+      'playerEmail': playerEmail,
     };
   }
 
@@ -30,6 +33,8 @@ class PackageBooking {
       trainerName: json['trainerName'] as String?,
       playerId: json['playerId'] as String?,
       playerName: json['playerName'] as String?,
+      playerEmail: json['playerEmail'] as String,
+
     );
   }
 }
